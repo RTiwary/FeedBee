@@ -1,5 +1,21 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render, redirect
+from django.contrib.auth import logout
+from django.urls import reverse
+from apps.teachers.models import *
 
 # Create your views here.
-@user_passes_test(lambda user: True if user.get_access('bulk_email') else False, login_url='/user/login')
+def add_class(request):
+    return render(request, "teachers/add_class.html")
+
+def teacher_dashboard(request):
+    return render(request, "teachers/dashboard.html")
+
+def view_classes(request):
+    return render(request, "teachers/view_classes.html")
+
+def suggest_feature(request):
+    return render(request, "teachers/suggest_feature.html")
+
+def logout_request(request):
+    logout(request)
+    return redirect(reverse("homepage"))

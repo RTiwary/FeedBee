@@ -13,21 +13,3 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, related_name="teacher_profile")
-
-
-# @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     print('****', created)
-#     if instance.is_teacher:
-#         Teacher.objects.get_or_create(user=instance)
-#     else:
-#         Student.objects.get_or_create(user=instance)
-#
-#
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-#     print('_-----')
-#     if instance.is_teacher:
-#         instance.intern_profile.save()
-#     else:
-#         HRProfile.objects.get_or_create(user=instance)
