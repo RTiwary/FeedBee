@@ -26,7 +26,9 @@ def teacher_dashboard(request):
     return render(request, "teachers/dashboard.html")
 
 def view_classes(request):
-    return render(request, "teachers/view_classes.html")
+    teacher = request.user.teacher_profile
+    class_list = Classroom.objects.filter(teacher_id=teacher.id)
+    return render(request, "teachers/view_classes.html", {'class_list': class_list})
 
 def suggest_feature(request):
     return render(request, "teachers/suggest_feature.html")

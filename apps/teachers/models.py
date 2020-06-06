@@ -4,7 +4,7 @@ from apps.users.models import *
 # Create your models here.
 class Classroom(models.Model):
     name = models.CharField(max_length=100, null=True)
-    teacher = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name="teacher")
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="teacher", null=True)
     students = models.ManyToManyField(Student, related_name="students")
 
 class Survey(models.Model):
