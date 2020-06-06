@@ -30,6 +30,11 @@ def view_classes(request):
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
     return render(request, "teachers/view_classes.html", {'class_list': class_list})
 
+def view_surveys(request, classroom_id):
+    survey_list = Survey.objects.filter(classroom_id=classroom_id)
+    return render(request, "teachers/view_surveys.html", {'survey_list': survey_list})
+
+
 def suggest_feature(request):
     return render(request, "teachers/suggest_feature.html")
 

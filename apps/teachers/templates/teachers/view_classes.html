@@ -2,19 +2,24 @@
 
 {% block content %}
     {% if class_list %}
-        <table>
-            <tr>
-                <th width=100em><br>Class</th>
-                <th><br>Students</th>
-            </tr>
-
-            {% for class in class_list %}
-                <tr>
-                    <td width=100em>{{ class.name }}</td>
-                    <td>{{ class.students.count }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div class=" container text-center table-responsive text-nowrap" style="margin-top: 5em; text-align: center">
+            <table class="table table-light table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                      <th style="width: 25px">Class</th>
+                      <th style="width: 25px">Students</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for class in class_list %}
+                        <tr>
+                            <td><a href="/teacher/{{ class.id }}/view_surveys" >{{ class.name }}</a></td>
+                            <td>{{ class.students.count }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <br>No classrooms are available.
     {% endif %}
