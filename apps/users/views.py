@@ -18,6 +18,7 @@ def register_student(request):
             user.is_student = True
             user.save()
             Student.objects.create(user=user)
+            login(request, user)
             return redirect("/")
     else:
         form = RegistrationForm()
@@ -31,6 +32,7 @@ def register_teacher(request):
             user.is_teacher = True
             user.save()
             Teacher.objects.create(user=user)
+            login(request, user)
             return redirect(reverse("teacher_dashboard"))
     else:
         form = RegistrationForm()
