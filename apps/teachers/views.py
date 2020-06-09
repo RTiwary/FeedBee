@@ -3,8 +3,11 @@ from django.contrib.auth import logout
 from django.urls import reverse
 from .forms import ClassroomCreationForm
 from apps.teachers.models import *
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
+@login_required
+@permission_required("user.is_teacher", raise_exception=True)
 def add_class(request):
     if request.method == 'POST':
         form = ClassroomCreationForm(request.POST)
@@ -19,25 +22,36 @@ def add_class(request):
 
     return render(request, "teachers/add_class.html", {'form': form})
 
+@login_required
+@permission_required("user.is_teacher", raise_exception=True)
 def add_recurring_questions(request):
     return render(request, "teachers/add_recurring_questions.html")
 
+@login_required
+@permission_required("user.is_teacher", raise_exception=True)
 def teacher_dashboard(request):
     return render(request, "teachers/dashboard.html")
 
+@login_required
+@permission_required("user.is_teacher", raise_exception=True)
 def view_classes(request):
     teacher = request.user.teacher_profile
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
     return render(request, "teachers/view_classes.html", {'class_list': class_list})
 
+@login_required
+@permission_required("user.is_teacher", raise_exception=True)
 def view_surveys(request, classroom_id):
     survey_list = Survey.objects.filter(classroom_id=classroom_id)
     return render(request, "teachers/view_surveys.html", {'survey_list': survey_list})
 
-
+@login_required
+@permission_required("user.is_teacher", raise_exception=True)
 def suggest_feature(request):
     return render(request, "teachers/suggest_feature.html")
 
+@login_required
+@permission_required("user.is_teacher", raise_exception=True)
 def logout_request(request):
     logout(request)
     return redirect(reverse("homepage"))

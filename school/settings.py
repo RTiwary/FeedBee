@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'new_school',
         'USER': 'postgres',
-        'PASSWORD': 'Pistons1',
+        'PASSWORD': 'Celtics1',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -132,3 +132,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'users.User'
+
+# Login url info
+LOGIN_URL = 'login'
