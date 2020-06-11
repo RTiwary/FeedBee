@@ -1,0 +1,20 @@
+{% extends "teachers/base.html" %}
+
+{% block content %}
+    <style>
+        .asteriskField {
+            display: none;
+        }
+    </style>
+
+    {% load crispy_forms_tags %}
+    <div class="row justify-content-center">
+        <form method="POST" class="form-group" style="">
+            <br>
+            <br>
+            {% csrf_token %}
+            {{ form | crispy}}
+            <button type="submit" class="btn btn-primary">Create Question</button>
+        </form>
+    </div>
+{% endblock content %}

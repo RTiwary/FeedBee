@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.urls import reverse
-from .forms import ClassroomCreationForm
+from .forms import ClassroomCreationForm, QuestionTypeForm
 from apps.teachers.models import *
 from itertools import chain
 
@@ -20,8 +20,41 @@ def add_class(request):
 
     return render(request, "teachers/add_class.html", {'form': form})
 
-def add_recurring_question(request):
-    return render(request, "teachers/add_recurring_question.html")
+def choose_question_type(request, survey_id):
+    if request.method == 'POST':
+        form = QuestionTypeForm(request.POST)
+        if form.is_valid():
+            question_type_choice = form.cleaned_data["question_type_choice"]
+            if question_type_choice == "boolean":
+                return redirect("add_boolean_question", survey_id=survey_id)
+            elif question_type_choice == "text":
+                return redirect("add_text_question", survey_id=survey_id)
+            elif question_type_choice == "mc":
+                return redirect("add_mc_question", survey_id=survey_id)
+            elif question_type_choice == "checkbox":
+                return redirect("add_checkbox_question", survey_id=survey_id)
+
+    else:
+        form = QuestionTypeForm()
+    return render(request, "teachers/choose_question_type.html", {'form': form})
+
+#somehow need to display the question order from othe questions
+
+def add_boolean_question(request, survey_id):
+    # create a form, can probably use modelforms. for this teacher would just have to set the question text
+    return render(request, "teachers/add_boolean_question.html", {'survey_id': survey_id})
+
+def add_text_question(request, survey_id):
+    # same as boolean question, just have to set the question text.
+    return render(request, "teachers/add_text_question.html", {'survey_id': survey_id})
+
+def add_mc_question(request, survey_id):
+    # for this form we can make the first 2 answer fields required and the next 3 optional
+    return render(request, "teachers/add_mc_question.html", {'survey_id': survey_id})
+
+def add_checkbox_question(request, survey_id):
+    # same as above.
+    return render(request, "teachers/add_checkbox_question.html", {'survey_id': survey_id})
 
 def view_recurring_questions(request, classroom_id):
     base_survey_queryset = Survey.objects.filter(name="Base").filter(classroom_id=classroom_id)
@@ -39,7 +72,8 @@ def view_recurring_questions(request, classroom_id):
     recurring_question_list = list(chain(recurring_boolean_questions, recurring_text_questions, recurring_mc_questions,
                                          recurring_checkbox_questions))
 
-    return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list})
+    return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list,
+                                                                      "base_survey_id": baseSurvey.pk})
 
 def teacher_dashboard(request):
     return render(request, "teachers/dashboard.html")

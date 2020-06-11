@@ -17,11 +17,13 @@ class Survey(models.Model):
 class BooleanQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="boolean_questions")
     question_text = models.CharField(max_length=500, null=True)
+
     question_rank = models.IntegerField(null=True, blank=False)
 
 class TextQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="text_questions")
     question_text = models.CharField(max_length=500, null=True)
+
     question_rank = models.IntegerField(null=True, blank=False)
 
 class MultipleChoiceQuestion(models.Model):
