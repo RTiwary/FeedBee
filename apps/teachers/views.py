@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.urls import reverse
-from .forms import ClassroomCreationForm, QuestionTypeForm
+from .forms import *
 from apps.teachers.models import *
 from itertools import chain
 
@@ -38,18 +38,41 @@ def choose_question_type(request, survey_id):
         form = QuestionTypeForm()
     return render(request, "teachers/choose_question_type.html", {'form': form})
 
-#somehow need to display the question order from othe questions
+#somehow need to display the question order from other questions
 
 def add_boolean_question(request, survey_id):
-    # create a form, can probably use modelforms. for this teacher would just have to set the question text
-    return render(request, "teachers/add_boolean_question.html", {'survey_id': survey_id})
+    if request.method == 'POST':
+        form = BooleanQuestionForm(request.POST)
+        if form.is_valid():
+            survey = Survey.objects.get(pk=survey_id)
+            boolean_question = form.save(commit=False)
+            boolean_question.survey = survey
+            objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
+                            survey.mc_questions.count() + survey.checkbox_questions.count()
+            boolean_question.question_rank = objects_count + 1
+            boolean_question.save()
+            classroom_id = survey.classroom.pk
+            if survey.name == "Base":
+                return redirect("view_recurring_questions", classroom_id=classroom_id)
+    else:
+        form = BooleanQuestionForm()
+    return render(request, "teachers/add_boolean_question.html", {'form': form})
 
 def add_text_question(request, survey_id):
-    # same as boolean question, just have to set the question text.
+    if request.method == 'POST':
+        form = TextQuestionForm(request.POST)
+        if form.is_valid():
+            survey = Survey.objects.get(pk=survey_id)
+            classroom_id = survey.classroom.pk
+            if survey.name == "Base":
+                return redirect("view_recurring_questions", classroom_id=classroom_id)
+    else:
+        form = TextQuestionForm()
     return render(request, "teachers/add_text_question.html", {'survey_id': survey_id})
 
 def add_mc_question(request, survey_id):
     # for this form we can make the first 2 answer fields required and the next 3 optional
+
     return render(request, "teachers/add_mc_question.html", {'survey_id': survey_id})
 
 def add_checkbox_question(request, survey_id):
