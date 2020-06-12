@@ -3,8 +3,14 @@ from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from apps.teachers.models import CheckboxQuestion, TextQuestion, BooleanQuestion, MultipleChoiceQuestion, Survey
+from django.contrib.auth.decorators import login_required, user_passes_test
 
+# test for if user is student
+def is_student(user):
+    return user.is_student
 
+@login_required
+@user_passes_test(is_student)
 def take_quiz(request, pk):
     quiz = get_object_or_404(Survey, pk=pk)
     student = request.user.student
