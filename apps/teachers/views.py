@@ -63,12 +63,18 @@ def add_text_question(request, survey_id):
         form = TextQuestionForm(request.POST)
         if form.is_valid():
             survey = Survey.objects.get(pk=survey_id)
+            text_question = form.save(commit=False)
+            text_question.survey = survey
+            objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
+                            survey.mc_questions.count() + survey.checkbox_questions.count()
+            text_question.question_rank = objects_count + 1
+            text_question.save()
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
     else:
         form = TextQuestionForm()
-    return render(request, "teachers/add_text_question.html", {'survey_id': survey_id})
+    return render(request, "teachers/add_text_question.html", {'form': form})
 
 def add_mc_question(request, survey_id):
     # for this form we can make the first 2 answer fields required and the next 3 optional
