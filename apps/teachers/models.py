@@ -1,11 +1,11 @@
-from django.db import models
 from apps.users.models import *
 
-# Create your models here.
+
 class Classroom(models.Model):
     name = models.CharField(max_length=100, null=True)
-    teacher = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name="teacher")
-    students = models.ManyToManyField(Student, related_name="students")
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="classroom")
+    students = models.ManyToManyField(Student, related_name="classroom")
+
 
 class Survey(models.Model):
     name = models.CharField(max_length=100, null=True)
@@ -13,20 +13,21 @@ class Survey(models.Model):
     unit = models.CharField(max_length=75, null=True)
     school_year = models.CharField(max_length=9, null=True)
     term = models.CharField(max_length=1, null=True)
+    completed_students = models.ManyToManyField(Student, related_name="survey")
+    creation_date = models.DateTimeField(auto_now_add=True, null=True)
+
 
 class BooleanQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     question_text = models.CharField(max_length=500, null=True)
     question_rank = models.IntegerField(null=True, blank=False)
 
-    recurring = models.BooleanField(null=True)
 
 class TextQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     question_text = models.CharField(max_length=500, null=True)
     question_rank = models.IntegerField(null=True, blank=False)
 
-    recurring = models.BooleanField(null=True)
 
 class MultipleChoiceQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
@@ -40,7 +41,6 @@ class MultipleChoiceQuestion(models.Model):
 
     question_rank = models.IntegerField(null=True, blank=False)
 
-    recurring = models.BooleanField(null=True)
 
 class CheckboxQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
@@ -53,5 +53,3 @@ class CheckboxQuestion(models.Model):
     option_e = models.CharField(max_length=200, null=True, blank=True)
 
     question_rank = models.IntegerField(null=True, blank=False)
-
-    recurring = models.BooleanField(null=True)

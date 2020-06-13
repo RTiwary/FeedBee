@@ -1,0 +1,64 @@
+{% extends "students/base.html" %}
+{% block title %} Take Survey {% endblock %}
+
+{% block content %}
+    <h1>survey.name</h1>
+    <form>
+        {% csrf_token %}
+        {% for i in range(len(questions)) %}
+            {% q = questions[i] %}
+            {% if type(q) == BooleanQuestion %}
+                <h2>q.question_text</h2>
+                <ul>
+                    <li><input type="radio", value="chosen", name=q.name>{{ "True" }}</li>
+                    <li><input type="radio", value="chosen", name=q.name>{{ "False" }}</li>
+                </ul>
+            {% endif %}
+            {% if type(q) == TextQuestion %}
+                <h2>q.question_text</h2>
+                <input type="text", name=q.name>
+            {% endif %}
+            {% if type(q) == MultipleChoiceQuestion %}
+                <h2>q.question_text</h2>
+                <ul>
+                    {% if q.option_a != null %}
+                        <li><input type="radio", value="chosen", name=q.name>{{ q.option_a }}</li>
+                    {% endif %}
+                    {% if q.option_b != null %}
+                        <li><input type="radio", value="chosen", name=q.name>{{ q.option_b }}</li>
+                    {% endif %}
+                    {% if q.option_c != null %}
+                        <li><input type="radio", value="chosen", name=q.name>{{ q.option_c }}</li>
+                    {% endif %}
+                    {% if q.option_d != null %}
+                        <li><input type="radio", value="chosen", name=q.name>{{ q.option_d }}</li>
+                    {% endif %}
+                    {% if q.option_e != null %}
+                        <li><input type="radio", value="chosen", name=q.name>{{ q.option_e }}</li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            {% if type(q) == CheckboxQuestion %}
+                <h2>q.question_text</h2>
+                <ul>
+                    {% if q.option_a != null %}
+                        <li><input type="checkbox", value="chosen", name=q.name>{{ q.option_a }}</li>
+                    {% endif %}
+                    {% if q.option_b != null %}
+                        <li><input type="checkbox", value="chosen", name=q.name>{{ q.option_b }}</li>
+                    {% endif %}
+                    {% if q.option_c != null %}
+                        <li><input type="checkbox", value="chosen", name=q.name>{{ q.option_c }}</li>
+                    {% endif %}
+                    {% if q.option_d != null %}
+                        <li><input type="checkbox", value="chosen", name=q.name>{{ q.option_d }}</li>
+                    {% endif %}
+                    {% if q.option_e != null %}
+                        <li><input type="checkbox", value="chosen", name=q.name>{{ q.option_e }}</li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+        <button type="submit", name="submit", value="submit">Submit</button>
+    </form>
+{% endblock %}

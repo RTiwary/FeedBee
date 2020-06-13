@@ -18,7 +18,7 @@ def register_student(request):
             user.is_student = True
             user.save()
             Student.objects.create(user=user)
-            return redirect("/")
+            return redirect(reverse("student_dashboard"))
     else:
         form = RegistrationForm()
     return render(request, "users/register.html", {"form": form})
@@ -48,7 +48,7 @@ def login_request(request):
                 if user.is_teacher:
                     return redirect(reverse("teacher_dashboard"))
                 else:
-                    return redirect('/') #TODO: change this to student dashboard & add logout view there
+                    return redirect('student_dashboard')
 
             else:
                 messages.error(request, "Invalid username or password.")
