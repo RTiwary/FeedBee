@@ -3,9 +3,18 @@ from django.contrib.auth import logout
 from django.urls import reverse
 from .forms import *
 from apps.teachers.models import *
+from django.contrib.auth.decorators import login_required, user_passes_test
 from itertools import chain
 
 # Create your views here.
+
+# tests if user is teacher
+def is_teacher(user):
+    return user.is_teacher
+
+
+@login_required
+@user_passes_test(is_teacher)
 def add_class(request):
     if request.method == 'POST':
         form = ClassroomCreationForm(request.POST)
@@ -20,6 +29,8 @@ def add_class(request):
 
     return render(request, "teachers/add_class.html", {'form': form})
 
+@login_required
+@user_passes_test(is_teacher)
 def choose_question_type(request, survey_id):
     if request.method == 'POST':
         form = QuestionTypeForm(request.POST)
@@ -40,6 +51,8 @@ def choose_question_type(request, survey_id):
 
 #somehow need to display the question order from other questions
 
+@login_required
+@user_passes_test(is_teacher)
 def add_boolean_question(request, survey_id):
     if request.method == 'POST':
         form = BooleanQuestionForm(request.POST)
@@ -58,6 +71,8 @@ def add_boolean_question(request, survey_id):
         form = BooleanQuestionForm()
     return render(request, "teachers/add_boolean_question.html", {'form': form})
 
+@login_required
+@user_passes_test(is_teacher)
 def add_text_question(request, survey_id):
     if request.method == 'POST':
         form = TextQuestionForm(request.POST)
@@ -76,6 +91,8 @@ def add_text_question(request, survey_id):
         form = TextQuestionForm()
     return render(request, "teachers/add_text_question.html", {'form': form})
 
+@login_required
+@user_passes_test(is_teacher)
 def add_mc_question(request, survey_id):
     # for this form we can make the first 2 answer fields required and the next 3 optional
     if request.method == 'POST':
@@ -95,6 +112,8 @@ def add_mc_question(request, survey_id):
         form = MultipleChoiceQuestionForm()
     return render(request, "teachers/add_mc_question.html", {'form': form})
 
+@login_required
+@user_passes_test(is_teacher)
 def add_checkbox_question(request, survey_id):
     # same as above.
     if request.method == 'POST':
@@ -114,6 +133,8 @@ def add_checkbox_question(request, survey_id):
         form = CheckboxQuestionForm()
     return render(request, "teachers/add_checkbox_question.html", {'form': form})
 
+@login_required
+@user_passes_test(is_teacher)
 def view_recurring_questions(request, classroom_id):
     base_survey_queryset = Survey.objects.filter(name="Base").filter(classroom_id=classroom_id)
     if not base_survey_queryset:
@@ -133,21 +154,32 @@ def view_recurring_questions(request, classroom_id):
     return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list,
                                                                       "base_survey_id": baseSurvey.pk})
 
+@login_required
+@user_passes_test(is_teacher)
 def teacher_dashboard(request):
     return render(request, "teachers/dashboard.html")
 
+@login_required
+@user_passes_test(is_teacher)
 def view_classes(request):
     teacher = request.user.teacher_profile
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
     return render(request, "teachers/view_classes.html", {'class_list': class_list})
 
+@login_required
+@user_passes_test(is_teacher)
 def view_surveys(request, classroom_id):
     survey_list = Survey.objects.filter(classroom_id=classroom_id)
     return render(request, "teachers/view_surveys.html", {'survey_list': survey_list})
 
+
+@login_required
+@user_passes_test(is_teacher)
 def suggest_feature(request):
     return render(request, "teachers/suggest_feature.html")
 
+@login_required
+@user_passes_test(is_teacher)
 def logout_request(request):
     logout(request)
     return redirect(reverse("homepage"))
