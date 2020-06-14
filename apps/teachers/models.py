@@ -3,14 +3,9 @@ from apps.users.models import *
 
 class Classroom(models.Model):
     name = models.CharField(max_length=100, null=True)
-<<<<<<< HEAD
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="classroom")
-    students = models.ManyToManyField(Student, related_name="classroom")
-
-=======
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="classrooms", null=True)
     students = models.ManyToManyField(Student, related_name="classrooms")
->>>>>>> master
+
 
 class Survey(models.Model):
     name = models.CharField(max_length=100, null=True)
@@ -18,7 +13,7 @@ class Survey(models.Model):
     unit = models.CharField(max_length=75, null=True)
     school_year = models.CharField(max_length=9, null=True)
     term = models.CharField(max_length=1, null=True)
-    completed_students = models.ManyToManyField(Student, related_name="survey")
+    completed_students = models.ManyToManyField(Student, related_name="surveys")
     creation_date = models.DateTimeField(auto_now_add=True, null=True)
 
 
@@ -26,19 +21,13 @@ class BooleanQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="boolean_questions")
     question_text = models.CharField(max_length=500, null=True)
 
-<<<<<<< HEAD
-=======
     question_rank = models.IntegerField(null=True, blank=False)
->>>>>>> master
 
 class TextQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="text_questions")
     question_text = models.CharField(max_length=500, null=True)
 
-<<<<<<< HEAD
-=======
     question_rank = models.IntegerField(null=True, blank=False)
->>>>>>> master
 
 class MultipleChoiceQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="mc_questions")
@@ -52,10 +41,7 @@ class MultipleChoiceQuestion(models.Model):
 
     question_rank = models.IntegerField(null=True, blank=False)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 class CheckboxQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="checkbox_questions")
     question_text = models.CharField(max_length=500, null=True)

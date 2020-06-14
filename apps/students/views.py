@@ -3,12 +3,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from itertools import chain
 
 # Create your views here.
-<<<<<<< HEAD
 from django.urls import reverse
 
 from apps.students.forms import JoinClassForm
 from apps.teachers.models import CheckboxQuestion, TextQuestion, BooleanQuestion, MultipleChoiceQuestion, Survey, \
     Classroom
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 def join_class(request):
@@ -48,25 +48,15 @@ def suggest_feature(request):
 def logout_request(request):
     logout(request)
     return redirect(reverse("homepage"))
-=======
-from apps.teachers.models import CheckboxQuestion, TextQuestion, BooleanQuestion, MultipleChoiceQuestion, Survey
-from django.contrib.auth.decorators import login_required, user_passes_test
->>>>>>> master
 
 # test for if user is student
 def is_student(user):
     return user.is_student
 
-<<<<<<< HEAD
-def take_survey(request, pk):
-    survey = get_object_or_404(Survey, pk=pk)
-=======
 @login_required
 @user_passes_test(is_student)
-def take_quiz(request, pk):
-    quiz = get_object_or_404(Survey, pk=pk)
-    student = request.user.student
->>>>>>> master
+def take_survey(request, pk):
+    survey = get_object_or_404(Survey, pk=pk)
 
     baseBoolQuestions = BooleanQuestion.objects.filter(survey__name="Base").latest('creation_date')
     baseMCQuestions = MultipleChoiceQuestion.objects.filter(survey__name="Base").latest('creation_date')
