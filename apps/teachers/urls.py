@@ -12,6 +12,7 @@ urlpatterns = [
     path('<int:classroom_id>/view_recurring_questions/', views.view_recurring_questions, name="view_recurring_questions"),
     path('view_classes/', views.view_classes, name="view_classes"),
     path('<int:classroom_id>/view_surveys/', views.view_surveys, name="view_surveys"),
+    path('<int:classroom_id>/add_survey/', views.add_survey, name="add_survey"),
     path('suggest_feature/', views.suggest_feature, name="suggest_feature"),
     path('logout/', views.logout_request, name="logout"),
 ]

@@ -5,6 +5,9 @@ from apps.teachers.models import BooleanQuestion, TextQuestion, MultipleChoiceQu
 class ClassroomCreationForm(forms.Form):
     class_name = forms.CharField(label='Class Name', max_length=100)
 
+class SurveyCreationForm(forms.Form):
+    survey_name = forms.CharField(label='Survey Name', max_length=100)
+
 QUESTION_TYPE_CHOICES=[('boolean','True or False'), ('text','Short Answer'), ('mc','Multiple Choice'),
                        ('checkbox','Checkbox')]
 

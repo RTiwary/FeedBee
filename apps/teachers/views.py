@@ -169,9 +169,28 @@ def view_classes(request):
 @login_required
 @user_passes_test(is_teacher)
 def view_surveys(request, classroom_id):
+    teacher = request.user.teacher_profile
+    class_list = Classroom.objects.filter(teacher_id=teacher.id, id=classroom_id)
+    class_name = class_list.values('name')
     survey_list = Survey.objects.filter(classroom_id=classroom_id)
-    return render(request, "teachers/view_surveys.html", {'survey_list': survey_list})
+    return render(request, "teachers/view_surveys.html", {'classroom_id': classroom_id,
+                                                          'class_name': class_name,
+                                                          'survey_list': survey_list})
 
+@login_required
+@user_passes_test(is_teacher)
+def add_survey(request, classroom_id):
+    if request.method == 'POST':
+        form = SurveyCreationForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data["survey_name"]
+            Survey.objects.create(name=name, classroom_id=classroom_id)
+            return redirect("view_surveys", classroom_id=classroom_id)
+
+    else:
+        form = SurveyCreationForm()
+
+    return render(request, "teachers/add_survey.html", {'form': form})
 
 @login_required
 @user_passes_test(is_teacher)
