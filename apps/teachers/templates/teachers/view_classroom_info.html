@@ -1,0 +1,63 @@
+{% extends "teachers/base.html" %}
+
+{% block content %}
+    <style>
+        .scrollable {
+            height: 320px;
+            overflow: scroll;
+        }
+    </style>
+
+    <br>
+    <h1 class="display-3 row justify-content-center">{{ classroom.name }}</h1>
+    <br>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card ">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Quick Info</h5>
+                    <ul class="list-group list-group-flush">
+                        <div class="row">
+                            <div class="col-10">
+                                <li class="list-group-item">Classroom Code:</li>
+                                <li class="list-group-item">Student Count:</li>
+                                <li class="list-group-item">Surveys Created:</li>
+                            </div>
+                            <div class="col-2">
+                                <strong><li class="list-group-item">{{ classroom.pk }}</li></strong>
+                                <strong><li class="list-group-item">{{ classroom.students.count }}</li></strong>
+                                <strong><li class="list-group-item">{{ classroom.surveys.count }}</li></strong>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Recurring Questions</h5>
+                    <p class="card-text">These are the questions that display growth over time! They are
+                        automatically repeated on every survey you create – so there's no need to keep
+                        adding them. You can view detailed <strong>cumulative data</strong> about student
+                        responses to these questions on your dashboard.</p>
+                    <a href="{% url 'view_recurring_questions' classroom.pk %}" class="btn btn-primary">View Recurring Questions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-sm-12">
+            <div class="card scrollable" style="margin-top: 2em">
+                <h5 class="card-header text-center">My Surveys</h5>
+                <ul class="list-group list-group-flush">
+                    {% for survey in surveys %}
+                        <li class="list-group-item">{{ survey.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
