@@ -9,6 +9,8 @@
 
     {% load crispy_forms_tags %}
     <br>
+    <input type="button" class="btn btn-primary" value="Back" onclick="history.back()">
+    <br>
     <div class="row justify-content-center">
         <h2>Add Multiple Choice Question</h2>
     </div>
@@ -18,7 +20,35 @@
             <br>
             <br>
             {% csrf_token %}
-            {{ form | crispy}}
+            <div class="row">
+                <div class="col">
+                    {{ form.question_text | as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form.option_a | as_crispy_field }}
+                </div>
+                <div class="col">
+                    {{ form.option_b | as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form.option_c | as_crispy_field }}
+                </div>
+                <div class="col">
+                    {{ form.option_d | as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form.option_e | as_crispy_field }}
+                </div>
+                <div class="col">
+                </div>
+            </div>
+            <br>
             <button type="submit" class="btn btn-primary">Create Question</button>
         </form>
     </div>

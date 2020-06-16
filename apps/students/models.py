@@ -6,7 +6,7 @@ from apps.users.models import *
 
 class BooleanAnswer(models.Model):
     question = models.ForeignKey(BooleanQuestion, on_delete=models.CASCADE)
-    answer = models.BooleanField()
+    answer = models.BooleanField(null=True)
 
 
 class TextAnswer(models.Model):
