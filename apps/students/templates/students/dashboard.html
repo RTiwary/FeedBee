@@ -1,0 +1,31 @@
+{% extends "students/base.html" %}
+
+{% block content %}
+    <h2>Pending Surveys</h2>
+    <div class="card row justify-content-center" style="margin-top: 5em">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Survey</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if empty %}
+                    <tr>
+                        <td class="bg-light text-center font-italic" colspan="4">You have completed all current surveys :)</td>
+                    </tr>
+                {% endif %}
+                {% for s in surveys %}
+                    <tr>
+                        <td class="align-middle">{{ s.classroom.name }}</td>
+                        <td class="align-middle">{{ s.name }}</td>
+                        <td class="text-right">
+                            <a href="{% url 'take_survey' s.pk %}" class="btn btn-primary">Take Survey</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}
