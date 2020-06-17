@@ -47,7 +47,8 @@ def choose_question_type(request, survey_id):
 
     else:
         form = QuestionTypeForm()
-    return render(request, "teachers/choose_question_type.html", {'form': form})
+    return render(request, "teachers/choose_question_type.html", {'form': form,
+                                                                  'survey_id': survey_id})
 
 #somehow need to display the question order from other questions
 
@@ -69,7 +70,8 @@ def add_boolean_question(request, survey_id):
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
     else:
         form = BooleanQuestionForm()
-    return render(request, "teachers/add_boolean_question.html", {'form': form})
+    return render(request, "teachers/add_boolean_question.html", {'form': form,
+                                                                  'survey_id': survey_id})
 
 @login_required
 @user_passes_test(is_teacher)
@@ -89,7 +91,8 @@ def add_text_question(request, survey_id):
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
     else:
         form = TextQuestionForm()
-    return render(request, "teachers/add_text_question.html", {'form': form})
+    return render(request, "teachers/add_text_question.html", {'form': form,
+                                                               'survey_id': survey_id})
 
 @login_required
 @user_passes_test(is_teacher)
@@ -110,7 +113,8 @@ def add_mc_question(request, survey_id):
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
     else:
         form = MultipleChoiceQuestionForm()
-    return render(request, "teachers/add_mc_question.html", {'form': form})
+    return render(request, "teachers/add_mc_question.html", {'form': form,
+                                                             'survey_id': survey_id})
 
 @login_required
 @user_passes_test(is_teacher)
@@ -131,7 +135,8 @@ def add_checkbox_question(request, survey_id):
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
     else:
         form = CheckboxQuestionForm()
-    return render(request, "teachers/add_checkbox_question.html", {'form': form})
+    return render(request, "teachers/add_checkbox_question.html", {'form': form,
+                                                                   'survey_id': survey_id})
 
 @login_required
 @user_passes_test(is_teacher)
@@ -153,6 +158,7 @@ def view_recurring_questions(request, classroom_id):
 
     return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list,
                                                                       "base_survey_id": baseSurvey.pk})
+
 
 @login_required
 @user_passes_test(is_teacher)

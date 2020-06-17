@@ -9,11 +9,14 @@
 
     {% load crispy_forms_tags %}
     <br>
-    <input type="button" class="btn btn-primary" value="Back" onclick="history.back()">
-    <br>
-    <div class="row justify-content-center">
-        <h2>Add Multiple Choice Question</h2>
-    </div>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'view_recurring_questions' survey_id %}">View Recurring Questions</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'choose_question_type' survey_id %}">Choose Question Type</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add Multiple Choice Question</li>
+        </ol>
+    </nav>
 
     <div class="row justify-content-center">
         <form method="POST" class="form-group">

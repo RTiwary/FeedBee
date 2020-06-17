@@ -9,7 +9,7 @@ QUESTION_TYPE_CHOICES=[('boolean','True or False'), ('text','Short Answer'), ('m
                        ('checkbox','Checkbox')]
 
 class QuestionTypeForm(forms.Form):
-    question_type_choice = forms.ChoiceField(label = "What Type of Question Would You Like to Create?",
+    question_type_choice = forms.ChoiceField(label="What Type of Question Would You Like to Create?",
                                              choices=QUESTION_TYPE_CHOICES, widget=forms.RadioSelect)
 
 class BooleanQuestionForm(ModelForm):
