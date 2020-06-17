@@ -9,8 +9,12 @@ from apps.students.forms import JoinClassForm
 from apps.teachers.models import CheckboxQuestion, TextQuestion, BooleanQuestion, MultipleChoiceQuestion, Survey, \
     Classroom
 from django.contrib.auth.decorators import login_required, user_passes_test
+# test for if user is student
+def is_student(user):
+    return user.is_student
 
-
+@login_required
+@user_passes_test(is_student)
 def join_class(request):
     if request.method == 'POST':
         form = JoinClassForm(request.POST)
@@ -26,7 +30,8 @@ def join_class(request):
 
     return render(request, "students/join_class.html", {'form': form})
 
-
+@login_required
+@user_passes_test(is_student)
 def student_dashboard(request):
     surveys = Survey.objects.filter(classroom__students__user=request.user)\
         .exclude(completed_students__user=request.user)
@@ -36,22 +41,22 @@ def student_dashboard(request):
         'empty': len(surveys) == 0
     })
 
-
+@login_required
+@user_passes_test(is_student)
 def view_classes(request):
-    return render(request, "students/view_classes.html")
+    class_list = Classroom.objects.filter(students__user=request.user)
+    return render(request, "students/view_classes.html", {'class_list': class_list})
 
-
+@login_required
+@user_passes_test(is_student)
 def suggest_feature(request):
     return render(request, "students/suggest_feature.html")
 
-
+@login_required
+@user_passes_test(is_student)
 def logout_request(request):
     logout(request)
     return redirect(reverse("homepage"))
-
-# test for if user is student
-def is_student(user):
-    return user.is_student
 
 @login_required
 @user_passes_test(is_student)

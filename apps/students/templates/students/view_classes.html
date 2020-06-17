@@ -1,5 +1,33 @@
 {% extends "students/base.html" %}
 
 {% block content %}
-    <h2>View Classes</h2>
+    <div>
+        <h2>View Classes</h2>
+
+        {% if class_list %}
+        <div class=" container text-center table-responsive text-nowrap" style="margin-top: 5em; text-align: center">
+            <table class="table table-light table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                      <th style="width: 25px">Class</th>
+                      <th style="width: 25px">Teacher</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for class in class_list %}
+                        <tr>
+                            <td>{{ class.name }}</td>
+                            <td>Insert Teacher Name</td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <br>No classrooms are available.
+    {% endif %}
+    </div>
 {% endblock content %}
+
+
