@@ -12,7 +12,6 @@ from itertools import chain
 def is_teacher(user):
     return user.is_teacher
 
-
 @login_required
 @user_passes_test(is_teacher)
 def add_class(request):
@@ -50,8 +49,6 @@ def choose_question_type(request, survey_id):
     return render(request, "teachers/choose_question_type.html", {'form': form,
                                                                   'survey_id': survey_id})
 
-#somehow need to display the question order from other questions
-
 @login_required
 @user_passes_test(is_teacher)
 def add_boolean_question(request, survey_id):
@@ -68,6 +65,9 @@ def add_boolean_question(request, survey_id):
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
+            else:
+                return redirect("view_questions", survey_id=survey_id)
+
     else:
         form = BooleanQuestionForm()
     return render(request, "teachers/add_boolean_question.html", {'form': form,
@@ -80,7 +80,7 @@ def add_text_question(request, survey_id):
         form = TextQuestionForm(request.POST)
         if form.is_valid():
             survey = Survey.objects.get(pk=survey_id)
-            text_question = form.save(commit=False)
+            text_question = form.save(commit=False)  # commit=False means we want to get the object from the form w/o saving it to DB
             text_question.survey = survey
             objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
                             survey.mc_questions.count() + survey.checkbox_questions.count()
@@ -89,6 +89,8 @@ def add_text_question(request, survey_id):
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
+            else:
+                return redirect("view_questions", survey_id=survey_id)
     else:
         form = TextQuestionForm()
     return render(request, "teachers/add_text_question.html", {'form': form,
@@ -111,6 +113,8 @@ def add_mc_question(request, survey_id):
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
+            else:
+                return redirect("view_questions", survey_id=survey_id)
     else:
         form = MultipleChoiceQuestionForm()
     return render(request, "teachers/add_mc_question.html", {'form': form,
@@ -133,6 +137,8 @@ def add_checkbox_question(request, survey_id):
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
+            else:
+                return redirect("view_questions", survey=survey_id)
     else:
         form = CheckboxQuestionForm()
     return render(request, "teachers/add_checkbox_question.html", {'form': form,
@@ -174,9 +180,38 @@ def view_classes(request):
 
 @login_required
 @user_passes_test(is_teacher)
-def view_surveys(request, classroom_id):
-    survey_list = Survey.objects.filter(classroom_id=classroom_id)
-    return render(request, "teachers/view_surveys.html", {'survey_list': survey_list})
+def view_questions(request, survey_id):
+    boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
+    text_questions = TextQuestion.objects.filter(survey=survey_id)
+    mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
+    checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
+
+    question_list = list(chain(boolean_questions, text_questions, mc_questions,
+                                         checkbox_questions))
+    return render(request, "teachers/view_questions.html", {"questions": question_list,
+                                                                      "survey_id": survey_id})
+
+@login_required
+@user_passes_test(is_teacher)
+def add_survey(request, classroom_id):
+    if request.method == 'POST':
+        form = SurveyCreationForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data["survey_name"]
+            new_survey = Survey.objects.create(name=name, classroom_id=classroom_id)
+            return redirect("view_questions", survey_id=new_survey.id)
+
+    else:
+        form = SurveyCreationForm()
+
+    return render(request, "teachers/add_survey.html", {'form': form})
+
+@login_required
+@user_passes_test(is_teacher)
+def view_classroom_info(request, classroom_id):
+    classroom = Classroom.objects.get(pk=classroom_id)
+    surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+    return render(request, "teachers/view_classroom_info.html", {'classroom': classroom, 'surveys': surveys})
 
 
 @login_required
