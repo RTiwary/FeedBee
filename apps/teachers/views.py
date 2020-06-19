@@ -50,16 +50,25 @@ def choose_question_type(request, survey_id):
 
 @login_required
 @user_passes_test(is_teacher)
-def add_boolean_question(request, survey_id):
+def add_boolean_question(request, survey_id, question_id=-1): # question_id is an optional parameter
     if request.method == 'POST':
-        form = BooleanQuestionForm(request.POST)
+        if question_id < 0:
+            form = BooleanQuestionForm(request.POST)
+        else:
+            existingQuestion = BooleanQuestion.objects.get(pk=question_id)
+            form = BooleanQuestionForm(request.POST, instance=existingQuestion)
+
+        boolean_question = form.save(commit=False)
         if form.is_valid():
             survey = Survey.objects.get(pk=survey_id)
-            boolean_question = form.save(commit=False)
-            boolean_question.survey = survey
-            objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
-                            survey.mc_questions.count() + survey.checkbox_questions.count()
-            boolean_question.question_rank = objects_count + 1
+            if question_id < 0:
+                boolean_question.survey = survey
+                objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
+                                survey.mc_questions.count() + survey.checkbox_questions.count()
+                boolean_question.question_rank = objects_count + 1
+                boolean_question.question_type = "boolean"
+                boolean_question.save()
+
             boolean_question.save()
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
@@ -68,21 +77,36 @@ def add_boolean_question(request, survey_id):
                 return redirect("view_questions", survey_id=survey_id)
 
     else:
-        form = BooleanQuestionForm()
-    return render(request, "teachers/add_boolean_question.html", {'form': form})
+        if question_id >= 0:
+            existingQuestion = BooleanQuestion.objects.get(pk=question_id)
+            form = BooleanQuestionForm(instance=existingQuestion)
+            action = "Update"  # for the header and button text
+        else:
+            form = BooleanQuestionForm()
+            action = "Add"
+
+    return render(request, "teachers/add_boolean_question.html", {'form': form, 'action': action})
 
 @login_required
 @user_passes_test(is_teacher)
-def add_text_question(request, survey_id):
+def add_text_question(request, survey_id, question_id=-1):
     if request.method == 'POST':
-        form = TextQuestionForm(request.POST)
+        if question_id < 0:
+            form = TextQuestionForm(request.POST)
+        else:
+            existingQuestion = TextQuestion.objects.get(pk=question_id)
+            form = TextQuestionForm(request.POST, instance=existingQuestion)
+
+        text_question = form.save(commit=False)  # commit=False means get the obj w/o saving to the DB
         if form.is_valid():
             survey = Survey.objects.get(pk=survey_id)
-            text_question = form.save(commit=False)  # commit=False means we want to get the object from the form w/o saving it to DB
-            text_question.survey = survey
-            objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
-                            survey.mc_questions.count() + survey.checkbox_questions.count()
-            text_question.question_rank = objects_count + 1
+            if question_id < 0:
+                text_question.survey = survey
+                objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
+                                survey.mc_questions.count() + survey.checkbox_questions.count()
+                text_question.question_rank = objects_count + 1
+                text_question.question_type = "text"
+
             text_question.save()
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
@@ -90,54 +114,87 @@ def add_text_question(request, survey_id):
             else:
                 return redirect("view_questions", survey_id=survey_id)
     else:
-        form = TextQuestionForm()
-    return render(request, "teachers/add_text_question.html", {'form': form})
+        if question_id >= 0:
+            existingQuestion = TextQuestion.objects.get(pk=question_id)
+            form = TextQuestionForm(instance=existingQuestion)
+            action = "Update"  # for the header and button text
+        else:
+            form = TextQuestionForm()
+            action = "Add"
+    return render(request, "teachers/add_text_question.html", {'form': form, 'action': action})
 
 @login_required
 @user_passes_test(is_teacher)
-def add_mc_question(request, survey_id):
-    # for this form we can make the first 2 answer fields required and the next 3 optional
+def add_mc_question(request, survey_id, question_id=-1):
     if request.method == 'POST':
-        form = MultipleChoiceQuestionForm(request.POST)
+        if question_id < 0:
+            form = MultipleChoiceQuestionForm(request.POST)
+        else:
+            existingQuestion = MultipleChoiceQuestion.objects.get(pk=question_id)
+            form = MultipleChoiceQuestionForm(request.POST, instance=existingQuestion)
+
+        mc_question = form.save(commit=False)
         if form.is_valid():
             survey = Survey.objects.get(pk=survey_id)
-            text_question = form.save(commit=False)
-            text_question.survey = survey
-            objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
-                            survey.mc_questions.count() + survey.checkbox_questions.count()
-            text_question.question_rank = objects_count + 1
-            text_question.save()
+            if question_id < 0:
+                mc_question.survey = survey
+                objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
+                                survey.mc_questions.count() + survey.checkbox_questions.count()
+                mc_question.question_rank = objects_count + 1
+                mc_question.question_type = "mc"
+
+            mc_question.save()
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
             else:
                 return redirect("view_questions", survey_id=survey_id)
     else:
-        form = MultipleChoiceQuestionForm()
-    return render(request, "teachers/add_mc_question.html", {'form': form})
+        if question_id >= 0:
+            existingQuestion = MultipleChoiceQuestion.objects.get(pk=question_id)
+            form = MultipleChoiceQuestionForm(instance=existingQuestion)
+            action = "Update"  # for the header and button text
+        else:
+            form = MultipleChoiceQuestionForm()
+            action = "Add"
+    return render(request, "teachers/add_mc_question.html", {'form': form, 'action': action})
 
 @login_required
 @user_passes_test(is_teacher)
-def add_checkbox_question(request, survey_id):
-    # same as above.
+def add_checkbox_question(request, survey_id, question_id=-1):
     if request.method == 'POST':
-        form = CheckboxQuestionForm(request.POST)
+        if question_id < 0:
+            form = CheckboxQuestionForm(request.POST)
+        else:
+            existingQuestion = CheckboxQuestion.objects.get(pk=question_id)
+            form = CheckboxQuestionForm(request.POST, instance=existingQuestion)
+
+        checkbox_question = form.save(commit=False)
         if form.is_valid():
             survey = Survey.objects.get(pk=survey_id)
-            text_question = form.save(commit=False)
-            text_question.survey = survey
-            objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
-                            survey.mc_questions.count() + survey.checkbox_questions.count()
-            text_question.question_rank = objects_count + 1
-            text_question.save()
+            if question_id < 0:
+                checkbox_question.survey = survey
+                objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
+                                survey.mc_questions.count() + survey.checkbox_questions.count()
+                checkbox_question.question_rank = objects_count + 1
+                checkbox_question.question_type = "checkbox"
+
+            checkbox_question.save()
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
             else:
                 return redirect("view_questions", survey=survey_id)
     else:
-        form = CheckboxQuestionForm()
-    return render(request, "teachers/add_checkbox_question.html", {'form': form})
+        if question_id >= 0:
+            existingQuestion = CheckboxQuestion.objects.get(pk=question_id)
+            form = CheckboxQuestionForm(instance=existingQuestion)
+            action = "Update"  # for the header and button text
+        else:
+            form = CheckboxQuestionForm()
+            action = "Add"
+
+    return render(request, "teachers/add_checkbox_question.html", {'form': form, 'action': action})
 
 @login_required
 @user_passes_test(is_teacher)

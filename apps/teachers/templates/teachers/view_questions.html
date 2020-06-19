@@ -25,7 +25,15 @@
                 <div class="list-group-item">
                     <div class="row">
                         <div class="col-10">
-                            {{ question.question_text }}
+                            <a href="{% if question.question_type == "boolean" %}
+                            {% url 'add_boolean_question' survey_id=survey_id question_id=question.pk %}
+                            {% elif question.question_type == "text" %}
+                            {% url 'add_text_question' survey_id=survey_id question_id=question.pk %}
+                            {% elif question.question_type == "mc" %}
+                            {% url 'add_mc_question' survey_id=survey_id question_id=question.pk %}
+                            {% elif question.question_type == "checkbox" %}
+                            {% url 'add_checkbox_question_question' survey_id=survey_id question_id=question.pk %}
+                            {% endif %}">{{ question.question_text }}</a>
                         </div>
                     </div>
                 </div>
@@ -37,9 +45,4 @@
         </div>
 
     </div>
-
-    <script>$(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-        });
-    </script>
 {% endblock content %}
