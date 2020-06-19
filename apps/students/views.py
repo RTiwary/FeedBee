@@ -4,7 +4,7 @@ from itertools import chain
 
 # Create your views here.
 from django.urls import reverse
-
+from apps.users.models import *
 from apps.students.forms import JoinClassForm
 from apps.teachers.models import CheckboxQuestion, TextQuestion, BooleanQuestion, MultipleChoiceQuestion, Survey, \
     Classroom
@@ -44,7 +44,22 @@ def student_dashboard(request):
 @login_required
 @user_passes_test(is_student)
 def view_classes(request):
-    class_list = Classroom.objects.filter(students__user=request.user)
+    classes = Classroom.objects.filter(students__user=request.user)
+
+    # getting teacher for each class and converting teacher id to user id
+    teacher_list = Classroom.objects.filter(students__user=request.user).values_list('teacher')
+    teacher_ids = []
+    for teacher in teacher_list:
+        teach = Teacher.objects.filter(pk=teacher[0]).values_list('user_id')
+        teacher_ids.append(teach)
+
+    # getting each teacher's name
+    teachers = []
+    for ids in teacher_ids:
+        teacher_name = User.objects.filter(pk=ids[0][0]).values('first_name', 'last_name')
+        teachers.append(teacher_name.get())
+
+    class_list = zip(classes, teachers)
     return render(request, "students/view_classes.html", {'class_list': class_list})
 
 @login_required
