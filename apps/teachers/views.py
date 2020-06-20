@@ -30,6 +30,30 @@ def add_class(request):
 
 @login_required
 @user_passes_test(is_teacher)
+def delete_class(request, classroom_id):
+    classroom = Classroom.objects.get(pk=classroom_id)
+    classroom.delete()
+    return redirect("view_classes")
+
+@login_required
+@user_passes_test(is_teacher)
+def edit_class(request, classroom_id):
+    if request.method == 'POST':
+        form = ClassroomEditForm(request.POST)
+        if form.is_valid():
+            new_name = form.cleaned_data["class_name"]
+            classroom = Classroom.objects.get(pk=classroom_id)
+            classroom.name = new_name
+            surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+            return render(request, "teachers/view_classroom_info.html", {'classroom': classroom, 'surveys': surveys})
+    else:
+        form = ClassroomEditForm()
+    classroom = Classroom.objects.get(pk=classroom_id)
+    surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+    return render(request, "teachers/view_classroom_info.html", {'classroom': classroom, 'surveys': surveys})
+
+@login_required
+@user_passes_test(is_teacher)
 def choose_question_type(request, survey_id):
     if request.method == 'POST':
         form = QuestionTypeForm(request.POST)
@@ -164,7 +188,6 @@ def view_recurring_questions(request, classroom_id):
 
     return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list,
                                                                       "base_survey_id": baseSurvey.pk})
-
 
 @login_required
 @user_passes_test(is_teacher)

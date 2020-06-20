@@ -110,14 +110,9 @@
                 <h1>Delete Classroom</h1>
                 <p>Are you sure you want to delete this classroom?</p>
                 <button onclick="document.getElementById('id01').style.display='none'; document.getElementById('id02').style.display='none';" type="button" class="btn btn-primary">Cancel</button>
-                <button type="button" class="btn btn-danger">Delete</button>
+                <a href="{% url 'delete_class' classroom.pk %}" type="button" class="btn btn-danger">Delete</a>
         </div>
     </div>
-
-
-
-
-
 
     <div class="row">
         <div class="col-sm-6">
