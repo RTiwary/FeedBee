@@ -23,9 +23,7 @@
                                     <li class="list-group-item">
                                         {{ survey.name }}
                                         <span class="pull-right">
-                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">
-                                                Take Survey
-                                            </a>
+                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">Take Survey</a>
                                         </span>
                                     </li>
                                 {% endfor %}
@@ -34,7 +32,7 @@
                             {% if completed %}
                                 {% for survey in completed %}
                                         <li class="list-group-item">
-                                            {{ completed.name }}
+                                            {{ survey.name }}
                                             <span class="pull-right">
                                                 <button type="button" class="btn btn-secondary">Completed</button>
                                             </span>
