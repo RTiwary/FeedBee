@@ -7,6 +7,10 @@
             overflow: scroll;
         }
 
+        .asteriskField {
+            display: none;
+        }
+
         * {box-sizing: border-box}
 
         /* The Modal (background) */
@@ -30,41 +34,14 @@
             position: fixed;
             display: none; /* Hidden by default */
             background-color: #fefefe;
-            margin-left: 30%;
-            /*margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-            border: 1px solid #888;
-            width: 30%; /* Could be more or less, depending on screen size */
-            height: 25%;
-        }
-
-        /* Style the horizontal ruler */
-        hr {
-            border: 1px solid #f1f1f1;
-            margin-bottom: 25px;
-        }
-
-        /* The Modal Close Button (x) */
-        .close {
-            position: absolute;
-            right: 35px;
-            top: 15px;
-            font-size: 40px;
-            font-weight: bold;
-            color: #f1f1f1;
-        }
-
-        /* Clear floats */
-        .clearfix::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
-
-        /* Change styles for cancel button and delete button on extra small screens */
-        @media screen and (max-width: 300px) {
-            .cancelbtn, .deletebtn {
-                width: 100%;
-            }
+            top: 50%;
+            left: 50%;
+            margin: 0 auto;
+            margin-left: -200px;
+            margin-top: -200px;
+            padding: 20px;
+            width: auto;
+            height: auto;
         }
     </style>
     <script>
@@ -101,11 +78,10 @@
 
             </div>
             <div class="col-sm">
-                <h1 class="display-3 row justify-content-center">{{ classroom.name }}</h1>
+                <h1 class="display-3 row justify-content-center" style="white-space: nowrap;">{{ classroom.name }}</h1>
             </div>
             <div class="col-sm">
                 <br>
-
                 <button onclick="document.getElementById('id01').style.display='block';
                 document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right;">
                     <i class="fa fa-trash-alt"></i> Delete</button>
@@ -133,7 +109,6 @@
     <div id="id04" class="modal-content">
         <div class="container" style="text-align: center">
             <h1>Edit Classroom Name</h1>
-
             {% load crispy_forms_tags %}
             <form method="POST" class="form-group">
                 {% csrf_token %}
