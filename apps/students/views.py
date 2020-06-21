@@ -64,6 +64,12 @@ def view_classes(request):
 
 @login_required
 @user_passes_test(is_student)
+def view_surveys(request, classroom_id):
+    surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+    return render(request, "students/view_surveys.html", {'surveys': surveys})
+
+@login_required
+@user_passes_test(is_student)
 def suggest_feature(request):
     return render(request, "students/suggest_feature.html")
 

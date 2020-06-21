@@ -1,0 +1,32 @@
+{% extends "students/base.html" %}
+
+{% block content %}
+    <style>
+        .scrollable {
+            height: 320px;
+            overflow: scroll;
+        }
+    </style>
+
+    <div class="container">
+        <br>
+        <h2 class="display-3 row justify-content-center">Surveys</h2>
+    </div>
+    {% if surveys %}
+        <div class="container">
+            <div class="row ">
+                <div class="col-sm-12">
+                    <div class="card scrollable" style="margin-top: 2em">
+                        <ul class="list-group list-group-flush">
+                            {% for survey in surveys %}
+                                <li class="list-group-item">{{ survey.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <br>No surveys are available.
+    {% endif %}
+{% endblock content %}
