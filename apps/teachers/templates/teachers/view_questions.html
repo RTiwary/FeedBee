@@ -4,7 +4,7 @@
     <div class="content">
         <br>
         <div class="row justify-content-center">
-            <h2>View Questions</h2>
+            <h2>View Questions For {{ survey.name }}</h2>
         </div>
 
 
@@ -26,13 +26,13 @@
                     <div class="row">
                         <div class="col-10">
                             <a href="{% if question.question_type == "boolean" %}
-                            {% url 'add_boolean_question' survey_id=survey_id question_id=question.pk %}
+                            {% url 'add_boolean_question' survey_id=survey.pk question_id=question.pk %}
                             {% elif question.question_type == "text" %}
-                            {% url 'add_text_question' survey_id=survey_id question_id=question.pk %}
+                            {% url 'add_text_question' survey_id=survey.pk question_id=question.pk %}
                             {% elif question.question_type == "mc" %}
-                            {% url 'add_mc_question' survey_id=survey_id question_id=question.pk %}
+                            {% url 'add_mc_question' survey_id=survey.pk question_id=question.pk %}
                             {% elif question.question_type == "checkbox" %}
-                            {% url 'add_checkbox_question_question' survey_id=survey_id question_id=question.pk %}
+                            {% url 'add_checkbox_question' survey_id=survey.pk question_id=question.pk %}
                             {% endif %}">{{ question.question_text }}</a>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                 {% endfor %}
             </div>
             <div class="card-footer">
-                <a href="{% url 'choose_question_type' survey_id %}" class="btn btn-primary btn-sm">Add question</a>
+                <a href="{% url 'choose_question_type' survey.pk %}" class="btn btn-primary btn-sm">Add question</a>
             </div>
         </div>
 

@@ -31,6 +31,13 @@ def add_class(request):
 @login_required
 @user_passes_test(is_teacher)
 def choose_question_type(request, survey_id):
+    # for the breadcrumb to know whether to display view recurring questions or view questions
+    survey = Survey.objects.get(pk=survey_id)
+    if survey.name == "Base":
+        question_format = "Recurring"
+    else:
+        question_format = ""
+
     if request.method == 'POST':
         form = QuestionTypeForm(request.POST)
         if form.is_valid():
@@ -46,11 +53,20 @@ def choose_question_type(request, survey_id):
 
     else:
         form = QuestionTypeForm()
-    return render(request, "teachers/choose_question_type.html", {'form': form})
+    return render(request, "teachers/choose_question_type.html", {'form': form, 'survey': survey,
+                                                                  'question_format': question_format})
 
 @login_required
 @user_passes_test(is_teacher)
 def add_boolean_question(request, survey_id, question_id=-1): # question_id is an optional parameter
+    survey = Survey.objects.get(pk=survey_id)
+
+    # for the breadcrumb to know whether to display view recurring questions or view questions
+    if survey.name == "Base":
+        question_format = "Recurring"
+    else:
+        question_format = ""
+
     if request.method == 'POST':
         if question_id < 0:
             form = BooleanQuestionForm(request.POST)
@@ -60,7 +76,6 @@ def add_boolean_question(request, survey_id, question_id=-1): # question_id is a
 
         boolean_question = form.save(commit=False)
         if form.is_valid():
-            survey = Survey.objects.get(pk=survey_id)
             if question_id < 0:
                 boolean_question.survey = survey
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
@@ -85,11 +100,21 @@ def add_boolean_question(request, survey_id, question_id=-1): # question_id is a
             form = BooleanQuestionForm()
             action = "Add"
 
-    return render(request, "teachers/add_boolean_question.html", {'form': form, 'action': action})
+    return render(request, "teachers/add_boolean_question.html", {'form': form, 'survey': survey, 'action': action,
+                                                                  'question_format': question_format})
+
 
 @login_required
 @user_passes_test(is_teacher)
 def add_text_question(request, survey_id, question_id=-1):
+    survey = Survey.objects.get(pk=survey_id)
+
+    # for the breadcrumb to know whether to display view recurring questions or view questions
+    if survey.name == "Base":
+        question_format = "Recurring"
+    else:
+        question_format = ""
+
     if request.method == 'POST':
         if question_id < 0:
             form = TextQuestionForm(request.POST)
@@ -99,7 +124,6 @@ def add_text_question(request, survey_id, question_id=-1):
 
         text_question = form.save(commit=False)  # commit=False means get the obj w/o saving to the DB
         if form.is_valid():
-            survey = Survey.objects.get(pk=survey_id)
             if question_id < 0:
                 text_question.survey = survey
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
@@ -121,11 +145,20 @@ def add_text_question(request, survey_id, question_id=-1):
         else:
             form = TextQuestionForm()
             action = "Add"
-    return render(request, "teachers/add_text_question.html", {'form': form, 'action': action})
+    return render(request, "teachers/add_text_question.html", {'form': form,  'survey': survey, 'action': action,
+                                                               'question_format': question_format})
 
 @login_required
 @user_passes_test(is_teacher)
 def add_mc_question(request, survey_id, question_id=-1):
+    survey = Survey.objects.get(pk=survey_id)
+
+    # for the breadcrumb to know whether to display view recurring questions or view questions
+    if survey.name == "Base":
+        question_format = "Recurring"
+    else:
+        question_format = ""
+
     if request.method == 'POST':
         if question_id < 0:
             form = MultipleChoiceQuestionForm(request.POST)
@@ -135,7 +168,6 @@ def add_mc_question(request, survey_id, question_id=-1):
 
         mc_question = form.save(commit=False)
         if form.is_valid():
-            survey = Survey.objects.get(pk=survey_id)
             if question_id < 0:
                 mc_question.survey = survey
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
@@ -157,11 +189,20 @@ def add_mc_question(request, survey_id, question_id=-1):
         else:
             form = MultipleChoiceQuestionForm()
             action = "Add"
-    return render(request, "teachers/add_mc_question.html", {'form': form, 'action': action})
+    return render(request, "teachers/add_mc_question.html", {'form': form, 'survey': survey, 'action': action,
+                                                             'question_format': question_format})
 
 @login_required
 @user_passes_test(is_teacher)
 def add_checkbox_question(request, survey_id, question_id=-1):
+    survey = Survey.objects.get(pk=survey_id)
+
+    # for the breadcrumb to know whether to display view recurring questions or view questions
+    if survey.name == "Base":
+        question_format = "Recurring"
+    else:
+        question_format = ""
+
     if request.method == 'POST':
         if question_id < 0:
             form = CheckboxQuestionForm(request.POST)
@@ -171,7 +212,6 @@ def add_checkbox_question(request, survey_id, question_id=-1):
 
         checkbox_question = form.save(commit=False)
         if form.is_valid():
-            survey = Survey.objects.get(pk=survey_id)
             if question_id < 0:
                 checkbox_question.survey = survey
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
@@ -184,7 +224,7 @@ def add_checkbox_question(request, survey_id, question_id=-1):
             if survey.name == "Base":
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
             else:
-                return redirect("view_questions", survey=survey_id)
+                return redirect("view_questions", survey_id=survey_id)
     else:
         if question_id >= 0:
             existingQuestion = CheckboxQuestion.objects.get(pk=question_id)
@@ -194,7 +234,9 @@ def add_checkbox_question(request, survey_id, question_id=-1):
             form = CheckboxQuestionForm()
             action = "Add"
 
-    return render(request, "teachers/add_checkbox_question.html", {'form': form, 'action': action})
+    return render(request, "teachers/add_checkbox_question.html", {'form': form, 'survey': survey, 'action': action,
+                                                                   'question_format': question_format})
+
 
 @login_required
 @user_passes_test(is_teacher)
@@ -217,6 +259,7 @@ def view_recurring_questions(request, classroom_id):
     return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list,
                                                                       "base_survey_id": baseSurvey.pk})
 
+
 @login_required
 @user_passes_test(is_teacher)
 def teacher_dashboard(request):
@@ -232,6 +275,8 @@ def view_classes(request):
 @login_required
 @user_passes_test(is_teacher)
 def view_questions(request, survey_id):
+    survey = Survey.objects.get(pk=survey_id)
+
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
     text_questions = TextQuestion.objects.filter(survey=survey_id)
     mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
@@ -240,7 +285,7 @@ def view_questions(request, survey_id):
     question_list = list(chain(boolean_questions, text_questions, mc_questions,
                                          checkbox_questions))
     return render(request, "teachers/view_questions.html", {"questions": question_list,
-                                                                      "survey_id": survey_id})
+                                                                      "survey": survey})
 
 @login_required
 @user_passes_test(is_teacher)
