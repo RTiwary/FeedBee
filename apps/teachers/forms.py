@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from apps.teachers.models import BooleanQuestion, TextQuestion, MultipleChoiceQuestion, CheckboxQuestion
+from apps.teachers.models import *
 
 class ClassroomCreationForm(forms.Form):
     class_name = forms.CharField(label='Class Name', max_length=100)

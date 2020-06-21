@@ -37,23 +37,6 @@ def delete_class(request, classroom_id):
 
 @login_required
 @user_passes_test(is_teacher)
-def edit_class(request, classroom_id):
-    if request.method == 'POST':
-        form = ClassroomEditForm(request.POST)
-        if form.is_valid():
-            new_name = form.cleaned_data["class_name"]
-            classroom = Classroom.objects.get(pk=classroom_id)
-            classroom.name = new_name
-            surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
-            return render(request, "teachers/view_classroom_info.html", {'classroom': classroom, 'surveys': surveys})
-    else:
-        form = ClassroomEditForm()
-    classroom = Classroom.objects.get(pk=classroom_id)
-    surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
-    return render(request, "teachers/view_classroom_info.html", {'classroom': classroom, 'surveys': surveys})
-
-@login_required
-@user_passes_test(is_teacher)
 def choose_question_type(request, survey_id):
     if request.method == 'POST':
         form = QuestionTypeForm(request.POST)
@@ -232,10 +215,19 @@ def add_survey(request, classroom_id):
 @login_required
 @user_passes_test(is_teacher)
 def view_classroom_info(request, classroom_id):
+    if request.method == 'POST':
+        classroom = Classroom.objects.get(pk=classroom_id)
+        form = ClassroomEditForm(request.POST, initial={'class_name': classroom.name})
+        if form.is_valid():
+            new_name = form.cleaned_data["class_name"]
+            classroom.name = new_name
+            classroom.save()
+            surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+            return render(request, "teachers/view_classroom_info.html", {'form': form, 'classroom': classroom, 'surveys': surveys})
     classroom = Classroom.objects.get(pk=classroom_id)
     surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
-    return render(request, "teachers/view_classroom_info.html", {'classroom': classroom, 'surveys': surveys})
-
+    form = ClassroomEditForm(initial={'class_name': classroom.name})
+    return render(request, "teachers/view_classroom_info.html", {'form': form, 'classroom': classroom, 'surveys': surveys})
 
 @login_required
 @user_passes_test(is_teacher)

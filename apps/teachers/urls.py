@@ -5,7 +5,6 @@ urlpatterns = [
     path('teacher_dashboard/', views.teacher_dashboard, name="teacher_dashboard"),
     path('add_class/', views.add_class, name="add_class"),
     path('<int:classroom_id>/delete_class/', views.delete_class, name="delete_class"),
-    path('<int:classroom_id>/edit_class/', views.edit_class, name="edit_class"),
     path('add_boolean_question/<int:survey_id>/', views.add_boolean_question, name="add_boolean_question"),
     path('add_text_question/<int:survey_id>/', views.add_text_question, name="add_text_question"),
     path('add_mc_question/<int:survey_id>/', views.add_mc_question, name="add_mc_question"),
