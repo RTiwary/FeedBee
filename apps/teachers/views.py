@@ -187,15 +187,29 @@ def view_classes(request):
 @login_required
 @user_passes_test(is_teacher)
 def view_questions(request, survey_id):
+    if request.method == 'POST':
+        survey = Survey.objects.get(pk=survey_id)
+        form = SurveyEditForm(request.POST, initial={'survey_name': survey.name})
+        if form.is_valid():
+            new_name = form.cleaned_data["survey_name"]
+            survey.name = new_name
+            survey.save()
+            boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
+            text_questions = TextQuestion.objects.filter(survey=survey_id)
+            mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
+            checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
+            question_list = list(chain(boolean_questions, text_questions, mc_questions,
+                                       checkbox_questions))
+            return render(request, "teachers/view_questions.html", {'form': form, "questions": question_list, "survey": survey})
+    survey = Survey.objects.get(pk=survey_id)
+    form = SurveyEditForm(initial={'survey_name': survey.name})
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
     text_questions = TextQuestion.objects.filter(survey=survey_id)
     mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
     checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
-
     question_list = list(chain(boolean_questions, text_questions, mc_questions,
-                                         checkbox_questions))
-    return render(request, "teachers/view_questions.html", {"questions": question_list,
-                                                                      "survey_id": survey_id})
+                               checkbox_questions))
+    return render(request, "teachers/view_questions.html", {'form': form, "questions": question_list, "survey": survey})
 
 @login_required
 @user_passes_test(is_teacher)
@@ -211,6 +225,14 @@ def add_survey(request, classroom_id):
         form = SurveyCreationForm()
 
     return render(request, "teachers/add_survey.html", {'form': form})
+
+@login_required
+@user_passes_test(is_teacher)
+def delete_survey(request, survey_id):
+    survey = Survey.objects.get(pk=survey_id)
+    classroom = Classroom.objects.get(pk=survey.classroom.pk)
+    survey.delete()
+    return redirect("view_classroom_info", classroom_id=classroom.pk)
 
 @login_required
 @user_passes_test(is_teacher)

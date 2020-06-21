@@ -11,6 +11,9 @@ class ClassroomEditForm(forms.Form):
 class SurveyCreationForm(forms.Form):
     survey_name = forms.CharField(label='Survey Name', max_length=100)
 
+class SurveyEditForm(forms.Form):
+    survey_name = forms.CharField(label='Survey Name', max_length=100)
+
 QUESTION_TYPE_CHOICES=[('boolean','True or False'), ('text','Short Answer'), ('mc','Multiple Choice'),
                        ('checkbox','Checkbox')]
 
