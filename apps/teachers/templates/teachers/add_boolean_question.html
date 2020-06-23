@@ -16,23 +16,30 @@
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'view_recurring_questions' survey_id %}">View Recurring Questions</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'choose_question_type' survey_id %}">Choose Question Type</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Add True/False Question</li>
+            <li class="breadcrumb-item">
+                <a href=
+                "{% if question_format == "Recurring" %}{% url 'view_recurring_questions' survey.classroom.pk %}
+                 {% else %}{% url 'view_questions' survey.pk %}
+                 {% endif %}
+                ">View {{ question_format }} Questions</a>
+            </li>
+            {% if action == "Add" %}
+            <li class="breadcrumb-item"><a href="{% url 'choose_question_type' survey.pk %}">Choose Question Type</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ action }} True/False Question</li>
         </ol>
     </nav>
 
     <div class="justify-content-center">
         <form method="POST" class="form-group">
-            <br>
             {% csrf_token %}
             <div class="row">
                 <div class="col">
                     {{ form.question_text | as_crispy_field }}
                 </div>
             </div>
-            <br>
-            <button type="submit" class="btn btn-primary">Create Question</button>
+
+            <button type="submit" style="margin-top: 10px" class="btn btn-primary">{{ action }} Question</button>
         </form>
     </div>
 {% endblock content %}
