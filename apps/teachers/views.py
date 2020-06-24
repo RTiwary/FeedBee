@@ -244,6 +244,23 @@ def add_checkbox_question(request, survey_id, question_id=-1):
     return render(request, "teachers/add_checkbox_question.html", {'form': form, 'survey': survey, 'action': action,
                                                                    'question_format': question_format})
 
+@login_required
+@user_passes_test(is_teacher)
+def delete_question(request, survey_id, question_id, type_id):
+    if type_id == "boolean":
+        question = BooleanQuestion.objects.filter(pk=question_id, survey=survey_id)
+        question.delete()
+    elif type_id == "text":
+        question = TextQuestion.objects.filter(pk=question_id, survey=survey_id)
+        question.delete()
+    elif type_id == "mc":
+        question = MultipleChoiceQuestion.objects.filter(pk=question_id, survey=survey_id)
+        question.delete()
+    elif type_id == "checkbox":
+        question = CheckboxQuestion.objects.filter(pk=question_id, survey=survey_id)
+        question.delete()
+    return redirect("view_questions", survey_id=survey_id)
+
 
 @login_required
 @user_passes_test(is_teacher)

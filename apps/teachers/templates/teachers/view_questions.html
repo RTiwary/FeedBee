@@ -121,11 +121,14 @@
         <div class="card">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-10">
+                    <div class="col-8">
                         <strong>Questions</strong>
                     </div>
                     <div class="col-2">
-                        <strong>Responses</strong>
+                        <strong>Question Type</strong>
+                    </div>
+                    <div class="col-2">
+                        <strong>Actions</strong>
                     </div>
                 </div>
             </div>
@@ -133,8 +136,10 @@
                 {% for question in questions %}
                 <div class="list-group-item">
                     <div class="row">
-                        <div class="col-10">
-                            <a href="{% if question.question_type == "boolean" %}
+                        <div class="col-lg">
+{#                        width: 700px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;#}
+                        <p style="width: 700px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                           <a href="{% if question.question_type == "boolean" %}
                             {% url 'add_boolean_question' survey_id=survey.pk question_id=question.pk %}
                             {% elif question.question_type == "text" %}
                             {% url 'add_text_question' survey_id=survey.pk question_id=question.pk %}
@@ -143,6 +148,22 @@
                             {% elif question.question_type == "checkbox" %}
                             {% url 'add_checkbox_question' survey_id=survey.pk question_id=question.pk %}
                             {% endif %}">{{ question.question_text }}</a>
+                        </p>
+
+                        </div>
+                        <div class="col-2">
+                            {% if question.question_type == "boolean" %}
+                                True/False
+                            {% elif question.question_type == "text" %}
+                                Short Answer
+                            {% elif question.question_type == "mc" %}
+                                Multiple Choice
+                            {% elif question.question_type == "checkbox" %}
+                                Checkbox
+                            {% endif %}
+                        </div>
+                        <div class="col-2">
+                            <a href="{% url 'delete_question' survey_id=survey.pk question_id=question.pk type_id=question.question_type %}" type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></a>
                         </div>
                     </div>
                 </div>
