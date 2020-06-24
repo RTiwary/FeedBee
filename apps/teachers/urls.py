@@ -20,6 +20,7 @@ urlpatterns = [
     path('<int:classroom_id>/add_survey/', views.add_survey, name="add_survey"),
     path('<int:survey_id>/delete_survey/', views.delete_survey, name="delete_survey"),
     path('<int:survey_id>/view_questions/', views.view_questions, name="view_questions"),
+    path('<int:survey_id>/view_results/', views.view_results, name="view_results"),
     path('suggest_feature/', views.suggest_feature, name="suggest_feature"),
     path('logout/', views.logout_request, name="logout"),
 ]

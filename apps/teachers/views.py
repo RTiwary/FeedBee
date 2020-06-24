@@ -329,6 +329,12 @@ def delete_survey(request, survey_id):
 
 @login_required
 @user_passes_test(is_teacher)
+def view_results(request, survey_id):
+    survey = Survey.objects.get(pk=survey_id)
+    return render(request, "teachers/view_results.html", {"survey": survey})
+
+@login_required
+@user_passes_test(is_teacher)
 def view_classroom_info(request, classroom_id):
     if request.method == 'POST':
         classroom = Classroom.objects.get(pk=classroom_id)
