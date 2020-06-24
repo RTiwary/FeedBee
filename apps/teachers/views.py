@@ -5,6 +5,7 @@ from .forms import *
 from apps.teachers.models import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from itertools import chain
+import operator
 
 # Create your views here.
 
@@ -249,16 +250,14 @@ def add_checkbox_question(request, survey_id, question_id=-1):
 def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
     if type_id == "boolean":
         question = BooleanQuestion.objects.filter(pk=question_id, survey=survey_id)
-        question.delete()
     elif type_id == "text":
         question = TextQuestion.objects.filter(pk=question_id, survey=survey_id)
-        question.delete()
     elif type_id == "mc":
         question = MultipleChoiceQuestion.objects.filter(pk=question_id, survey=survey_id)
-        question.delete()
     elif type_id == "checkbox":
         question = CheckboxQuestion.objects.filter(pk=question_id, survey=survey_id)
-        question.delete()
+    # TODO: Query for all questions with higher rank than the one to be deleted and decrement
+    question.delete()
     survey = Survey.objects.get(pk=survey_id)
     classroom_id = survey.classroom.pk
     if survey.name == "Base":
@@ -297,6 +296,7 @@ def view_questions(request, survey_id):
     mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
     checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
     question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
+    question_list = sorted(question_list, key=operator.attrgetter('question_rank'))
     return render(request, "teachers/view_questions.html", {'form': form, "questions": question_list, "survey": survey})
 
 
@@ -315,6 +315,7 @@ def view_recurring_questions(request, classroom_id):
     recurring_checkbox_questions = CheckboxQuestion.objects.filter(survey=baseSurvey)
     recurring_question_list = list(chain(recurring_boolean_questions, recurring_text_questions, recurring_mc_questions,
                                          recurring_checkbox_questions))
+    recurring_question_list = sorted(recurring_question_list, key=operator.attrgetter('question_rank'))
     return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list,
                                                                       "base_survey_id": baseSurvey.pk})
 
