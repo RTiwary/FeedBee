@@ -246,7 +246,7 @@ def add_checkbox_question(request, survey_id, question_id=-1):
 
 @login_required
 @user_passes_test(is_teacher)
-def delete_question(request, survey_id, question_id, type_id):
+def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
     if type_id == "boolean":
         question = BooleanQuestion.objects.filter(pk=question_id, survey=survey_id)
         question.delete()
@@ -259,29 +259,13 @@ def delete_question(request, survey_id, question_id, type_id):
     elif type_id == "checkbox":
         question = CheckboxQuestion.objects.filter(pk=question_id, survey=survey_id)
         question.delete()
-    return redirect("view_questions", survey_id=survey_id)
-
-
-@login_required
-@user_passes_test(is_teacher)
-def view_recurring_questions(request, classroom_id):
-    base_survey_queryset = Survey.objects.filter(name="Base").filter(classroom_id=classroom_id)
-    if not base_survey_queryset:
-        survey_classroom = Classroom.objects.get(id=classroom_id)
-        baseSurvey = Survey.objects.create(name="Base", classroom=survey_classroom)
+    survey = Survey.objects.get(pk=survey_id)
+    classroom_id = survey.classroom.pk
+    if survey.name == "Base":
+        return redirect("view_recurring_questions", classroom_id=classroom_id)
     else:
-        baseSurvey = base_survey_queryset[0]
+        return redirect("view_questions", survey_id=survey_id)
 
-    recurring_boolean_questions = BooleanQuestion.objects.filter(survey=baseSurvey)
-    recurring_text_questions = TextQuestion.objects.filter(survey=baseSurvey)
-    recurring_mc_questions = MultipleChoiceQuestion.objects.filter(survey=baseSurvey)
-    recurring_checkbox_questions = CheckboxQuestion.objects.filter(survey=baseSurvey)
-
-    recurring_question_list = list(chain(recurring_boolean_questions, recurring_text_questions, recurring_mc_questions,
-                                         recurring_checkbox_questions))
-
-    return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list,
-                                                                      "base_survey_id": baseSurvey.pk})
 
 @login_required
 @user_passes_test(is_teacher)
@@ -305,21 +289,35 @@ def view_questions(request, survey_id):
             new_name = form.cleaned_data["survey_name"]
             survey.name = new_name
             survey.save()
-            boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
-            text_questions = TextQuestion.objects.filter(survey=survey_id)
-            mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
-            checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
-            question_list = list(chain(boolean_questions, text_questions, mc_questions,
-                                       checkbox_questions))
-            return render(request, "teachers/view_questions.html", {'form': form, "questions": question_list, "survey": survey})
-    survey = Survey.objects.get(pk=survey_id)
-    form = SurveyEditForm(initial={'survey_name': survey.name})
+    else:
+        survey = Survey.objects.get(pk=survey_id)
+        form = SurveyEditForm(initial={'survey_name': survey.name})
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
     text_questions = TextQuestion.objects.filter(survey=survey_id)
     mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
     checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
     question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
     return render(request, "teachers/view_questions.html", {'form': form, "questions": question_list, "survey": survey})
+
+
+@login_required
+@user_passes_test(is_teacher)
+def view_recurring_questions(request, classroom_id):
+    base_survey_queryset = Survey.objects.filter(name="Base").filter(classroom_id=classroom_id)
+    if not base_survey_queryset:
+        survey_classroom = Classroom.objects.get(id=classroom_id)
+        baseSurvey = Survey.objects.create(name="Base", classroom=survey_classroom)
+    else:
+        baseSurvey = base_survey_queryset[0]
+    recurring_boolean_questions = BooleanQuestion.objects.filter(survey=baseSurvey)
+    recurring_text_questions = TextQuestion.objects.filter(survey=baseSurvey)
+    recurring_mc_questions = MultipleChoiceQuestion.objects.filter(survey=baseSurvey)
+    recurring_checkbox_questions = CheckboxQuestion.objects.filter(survey=baseSurvey)
+    recurring_question_list = list(chain(recurring_boolean_questions, recurring_text_questions, recurring_mc_questions,
+                                         recurring_checkbox_questions))
+    return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list,
+                                                                      "base_survey_id": baseSurvey.pk})
+
 
 @login_required
 @user_passes_test(is_teacher)
@@ -354,11 +352,10 @@ def view_classroom_info(request, classroom_id):
             new_name = form.cleaned_data["class_name"]
             classroom.name = new_name
             classroom.save()
-            surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
-            return render(request, "teachers/view_classroom_info.html", {'form': form, 'classroom': classroom, 'surveys': surveys})
-    classroom = Classroom.objects.get(pk=classroom_id)
+    else:
+        classroom = Classroom.objects.get(pk=classroom_id)
+        form = ClassroomEditForm(initial={'class_name': classroom.name})
     surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
-    form = ClassroomEditForm(initial={'class_name': classroom.name})
     return render(request, "teachers/view_classroom_info.html", {'form': form, 'classroom': classroom, 'surveys': surveys})
 
 @login_required
