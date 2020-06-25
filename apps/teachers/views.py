@@ -258,18 +258,20 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
         question = CheckboxQuestion.objects.filter(pk=question_id, survey=survey_id)
     # Query for all questions with higher rank than the one to be deleted and decrement
     question_rank = question[0].question_rank
-    boolean_questions = BooleanQuestion.objects.filter(question_rank__gt=question_rank)
-    text_questions = TextQuestion.objects.filter(question_rank__gt=question_rank)
-    mc_questions = MultipleChoiceQuestion.objects.filter(question_rank__gt=question_rank)
-    checkbox_questions = CheckboxQuestion.objects.filter(question_rank__gt=question_rank)
+    boolean_questions = BooleanQuestion.objects.filter(question_rank__gt=question_rank, survey=survey_id)
+    text_questions = TextQuestion.objects.filter(question_rank__gt=question_rank, survey=survey_id)
+    mc_questions = MultipleChoiceQuestion.objects.filter(question_rank__gt=question_rank, survey=survey_id)
+    checkbox_questions = CheckboxQuestion.objects.filter(question_rank__gt=question_rank, survey=survey_id)
     question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
+
     for questionDecrement in question_list:
         questionDecrement.question_rank = questionDecrement.question_rank - 1;
         questionDecrement.save()
     question.delete()
-    survey = Survey.objects.get(pk=survey_id)
-    classroom_id = survey.classroom.pk
+
     if survey.name == "Base":
+        survey = Survey.objects.get(pk=survey_id)
+        classroom_id = survey.classroom.pk
         return redirect("view_recurring_questions", classroom_id=classroom_id)
     else:
         return redirect("view_questions", survey_id=survey_id)
