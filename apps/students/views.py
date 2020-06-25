@@ -95,7 +95,7 @@ def take_survey(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
     student = request.user.student_profile
 
-    base_survey = Survey.objects.filter(name="base", classroom=survey.classroom)
+    base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)
     base_questions = []
     if base_survey is not None:
         base_survey = base_survey.latest('creation_date')
