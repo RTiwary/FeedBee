@@ -5,21 +5,65 @@
         .asteriskField {
             display: none;
         }
+
+        form {
+            font-size: 20px;
+        }
     </style>
 
     {% load crispy_forms_tags %}
     <br>
-    <div class="row justify-content-center">
-        <h2>Add Multiple Choice Question</h2>
-    </div>
 
-    <div class="row justify-content-center">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href=
+                "{% if question_format == "Recurring" %}{% url 'view_recurring_questions' survey.classroom.pk %}
+                 {% else %}{% url 'view_questions' survey.pk %}
+                 {% endif %}
+                ">View {{ question_format }} Questions</a>
+            </li>
+            {% if action == "Add" %}
+            <li class="breadcrumb-item"><a href="{% url 'choose_question_type' survey.pk %}">Choose Question Type</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ action }} Multiple Choice Question</li>
+        </ol>
+    </nav>
+
+    <div class="justify-content-center">
         <form method="POST" class="form-group">
             <br>
-            <br>
             {% csrf_token %}
-            {{ form | crispy}}
-            <button type="submit" class="btn btn-primary">Create Question</button>
+            <div class="row">
+                <div class="col">
+                    {{ form.question_text | as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form.option_a | as_crispy_field }}
+                </div>
+                <div class="col">
+                    {{ form.option_b | as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form.option_c | as_crispy_field }}
+                </div>
+                <div class="col">
+                    {{ form.option_d | as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form.option_e | as_crispy_field }}
+                </div>
+                <div class="col">
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">{{ action }} Question</button>
         </form>
     </div>
 {% endblock content %}

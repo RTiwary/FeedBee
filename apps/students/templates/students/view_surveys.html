@@ -1,0 +1,50 @@
+{% extends "students/base.html" %}
+
+{% block content %}
+    <style>
+        .scrollable {
+            height: 320px;
+            overflow: scroll;
+        }
+    </style>
+
+    <div class="container">
+        <br>
+        <h2 class="display-3 row justify-content-center">{{ classroom.name }}</h2>
+    </div>
+    {% if surveys or completed %}
+        <div class="container">
+            <div class="row ">
+                <div class="col-sm-12">
+                    <div class="card scrollable" style="margin-top: 2em">
+                        <ul class="list-group list-group-flush">
+                            {% if surveys %}
+                                {% for survey in surveys %}
+                                    <li class="list-group-item">
+                                        {{ survey.name }}
+                                        <span class="pull-right">
+                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">Take Survey</a>
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if completed %}
+                                {% for survey in completed %}
+                                        <li class="list-group-item">
+                                            {{ survey.name }}
+                                            <span class="pull-right">
+                                                <button type="button" class="btn btn-secondary">Completed</button>
+                                            </span>
+                                        </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="container" style="text-align: center; margin-top: 2em">No surveys are available.</p>
+    {% endif %}
+{% endblock content %}

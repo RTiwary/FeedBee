@@ -13,9 +13,10 @@
                 <tbody>
                     {% for class in class_list %}
                         <tr>
-                            <td><a href="{% url 'view_surveys' class.id %}" >{{ class.name }}</a></td>
+                            <td><a href="{% url 'view_classroom_info' class.id %}" >{{ class.name }}</a></td>
                             <td>{{ class.students.count }}</td>
                         </tr>
+
                     {% endfor %}
                 </tbody>
             </table>

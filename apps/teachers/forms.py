@@ -1,15 +1,24 @@
 from django import forms
 from django.forms import ModelForm
-from apps.teachers.models import BooleanQuestion, TextQuestion, MultipleChoiceQuestion, CheckboxQuestion
+from apps.teachers.models import *
 
 class ClassroomCreationForm(forms.Form):
     class_name = forms.CharField(label='Class Name', max_length=100)
+
+class ClassroomEditForm(forms.Form):
+    class_name = forms.CharField(label='Class Name', max_length=100)
+
+class SurveyCreationForm(forms.Form):
+    survey_name = forms.CharField(label='Survey Name', max_length=100)
+
+class SurveyEditForm(forms.Form):
+    survey_name = forms.CharField(label='Survey Name', max_length=100)
 
 QUESTION_TYPE_CHOICES=[('boolean','True or False'), ('text','Short Answer'), ('mc','Multiple Choice'),
                        ('checkbox','Checkbox')]
 
 class QuestionTypeForm(forms.Form):
-    question_type_choice = forms.ChoiceField(label = "What Type of Question Would You Like to Create?",
+    question_type_choice = forms.ChoiceField(label="What Type of Question Would You Like to Create?",
                                              choices=QUESTION_TYPE_CHOICES, widget=forms.RadioSelect)
 
 class BooleanQuestionForm(ModelForm):

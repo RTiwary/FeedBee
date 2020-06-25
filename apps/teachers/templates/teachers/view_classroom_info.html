@@ -1,0 +1,175 @@
+{% extends "teachers/base.html" %}
+
+{% block content %}
+    <style>
+        .scrollable {
+            height: 320px;
+            overflow: scroll;
+        }
+
+        .asteriskField {
+            display: none;
+        }
+
+        * {box-sizing: border-box}
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: #474e5d;
+            padding-top: 50px;
+            opacity: 0.6;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            z-index: 2;
+            position: fixed;
+            display: none; /* Hidden by default */
+            background-color: #fefefe;
+            top: 50%;
+            left: 50%;
+            margin: 0 auto;
+            margin-left: -200px;
+            margin-top: -200px;
+            padding: 20px;
+            width: auto;
+            height: auto;
+        }
+    </style>
+    <script>
+        // Get the modal
+        var modal = document.getElementById('id01');
+        var modal_content = document.getElementById('id02');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                modal_content.style.display = "none";
+            }
+        }
+
+        // Get the modal
+        var modal_edit = document.getElementById('id03');
+        var modal_content_edit = document.getElementById('id04');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal_edit.style.display = "none";
+                modal_content_edit.style.display = "none";
+            }
+        }
+    </script>
+
+    <br>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+
+            </div>
+            <div class="col-sm">
+                <h1 class="display-3 row justify-content-center" style="white-space: nowrap;">{{ classroom.name }}</h1>
+            </div>
+            <div class="col-sm">
+                <br>
+                <button onclick="document.getElementById('id01').style.display='block';
+                document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right;">
+                    <i class="fa fa-trash-alt"></i> Delete</button>
+                <button onclick="document.getElementById('id03').style.display='block';
+                document.getElementById('id04').style.display='block';" class="btn btn-primary" style="position: relative; float: right;"><i class="far fa-edit"></i> Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <! -- Delete Classroom Modal -->
+    <div id="id01" class="modal"></div>
+    <div id="id02" class="modal-content">
+        <div class="container" style="text-align: center">
+                <h1>Delete Classroom</h1>
+                <p>Are you sure you want to delete this classroom?</p>
+                <button onclick="document.getElementById('id01').style.display='none'; document.getElementById('id02').style.display='none';" type="button" class="btn btn-primary">Cancel</button>
+                <a href="{% url 'delete_class' classroom.pk %}" type="button" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+
+    <! -- Edit Classroom Name Modal -->
+    <div id="id03" class="modal"></div>
+    <div id="id04" class="modal-content">
+        <div class="container" style="text-align: center">
+            <h1>Edit Classroom Name</h1>
+            {% load crispy_forms_tags %}
+            <form method="POST" class="form-group">
+                {% csrf_token %}
+                {{ form | crispy}}
+                <button onclick="document.getElementById('id03').style.display='none'; document.getElementById('id04').style.display='none';" type="button" class="btn btn-primary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Confirm Edit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card ">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Quick Info</h5>
+                    <ul class="list-group list-group-flush">
+                        <div class="row">
+                            <div class="col-10">
+                                <li class="list-group-item">Classroom Code:</li>
+                                <li class="list-group-item">Student Count:</li>
+                                <li class="list-group-item">Surveys Created:</li>
+                            </div>
+                            <div class="col-2">
+                                <strong><li class="list-group-item">{{ classroom.pk }}</li></strong>
+                                <strong><li class="list-group-item">{{ classroom.students.count }}</li></strong>
+                                <strong><li class="list-group-item">{{ classroom.surveys.count }}</li></strong>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Recurring Questions</h5>
+                    <p class="card-text">These are the questions that display growth over time! They are
+                        automatically repeated on every survey you create – so there's no need to keep
+                        adding them. You can view detailed <strong>cumulative data</strong> about student
+                        responses to these questions on your dashboard.</p>
+                    <a href="{% url 'view_recurring_questions' classroom.pk %}" class="btn btn-primary">View Recurring Questions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-sm-12">
+            <div class="card scrollable" style="margin-top: 2em">
+                <div class="card-header" style="text-align: center;">
+                    <h5 style="display: inline; align-items: center;">My Surveys</h5>
+                    <a href="{% url 'add_survey' classroom.pk %}" class="btn btn-primary" style="display: inline-block; position: relative; float: left;">
+                        <span class="fa fa-plus"></span> Survey
+                    </a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for survey in surveys %}
+                        <li class="list-group-item"><a href="{% url 'view_questions' survey.pk %}">{{ survey.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
