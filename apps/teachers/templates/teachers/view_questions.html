@@ -130,6 +130,17 @@
 
         <br>
 
+        <! -- Delete Question Modal -->
+        <div id="id05" class="modal"></div>
+        <div id="id06" class="modal-content">
+            <div class="container" style="text-align: center">
+                <h1>Delete Question</h1>
+                <p>Are you sure you want to delete this question?</p>
+                <button onclick="document.getElementById('id05').style.display='none'; document.getElementById('id06').style.display='none';" type="button" class="btn btn-primary">Cancel</button>
+                <a id="delete_link" href="" type="button" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 <div class="row">
@@ -174,18 +185,9 @@
                         </div>
                         <div class="col-2">
                             <button onclick="document.getElementById('id05').style.display='block';
-                            document.getElementById('id06').style.display='block';" type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></button>
-
-                            <! -- Delete Question Modal -->
-                            <div id="id05" class="modal"></div>
-                            <div id="id06" class="modal-content">
-                                <div class="container" style="text-align: center">
-                                    <h1>Delete Question</h1>
-                                    <p>Are you sure you want to delete this question?</p>
-                                    <button onclick="document.getElementById('id05').style.display='none'; document.getElementById('id06').style.display='none';" type="button" class="btn btn-primary">Cancel</button>
-                                    <a href="{% url 'delete_question' survey_id=survey.pk question_id=question.pk type_id=question.question_type %}" type="button" class="btn btn-danger">Delete</a>
-                                </div>
-                            </div>
+                            document.getElementById('id06').style.display='block';
+                            document.getElementById('delete_link').href='{% url 'delete_question' survey_id=survey.pk question_id=question.pk type_id=question.question_type %}';"
+                                    type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></button>
                         </div>
                     </div>
                 </div>
