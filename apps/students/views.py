@@ -36,7 +36,7 @@ def join_class(request):
 @user_passes_test(is_student)
 def student_dashboard(request):
     surveys = Survey.objects.filter(classroom__students__user=request.user)\
-        .exclude(completed_students__user=request.user).exclude(name="base")
+        .exclude(completed_students__user=request.user).exclude(name="Base")
 
     return render(request, "students/dashboard.html", {
         'surveys': surveys,
@@ -125,7 +125,7 @@ def take_survey(request, survey_id):
                     answer = BooleanAnswer()
                     answer.question = q
                     answer.student = student
-                    answer.answer = request.POST.get(str(q.id) + "_Bool")
+                    answer.answer = bool(request.POST.get(str(q.id) + "_Bool"))
                     answer.save()
 
                 elif q.question_type == "Text":

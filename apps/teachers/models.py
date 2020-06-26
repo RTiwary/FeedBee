@@ -18,7 +18,7 @@ class Survey(models.Model):
 
 
 class BooleanQuestion(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="boolean_questions")
+    survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE, related_name="boolean_questions")
     question_text = models.CharField(max_length=500, null=True)
 
     question_type = models.CharField(max_length=50, null=True)
@@ -27,7 +27,7 @@ class BooleanQuestion(models.Model):
 
 
 class TextQuestion(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="text_questions")
+    survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE, related_name="text_questions")
     question_text = models.CharField(max_length=500, null=True)
 
     question_type = models.CharField(max_length=50, null=True)
@@ -36,7 +36,7 @@ class TextQuestion(models.Model):
 
 
 class MultipleChoiceQuestion(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="mc_questions")
+    survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE, related_name="mc_questions")
     question_text = models.CharField(max_length=500, null=True)
 
     option_a = models.CharField(max_length=200, null=True, blank=False)
@@ -51,7 +51,7 @@ class MultipleChoiceQuestion(models.Model):
 
 
 class CheckboxQuestion(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="checkbox_questions")
+    survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE, related_name="checkbox_questions")
     question_text = models.CharField(max_length=500, null=True)
 
     option_a = models.CharField(max_length=200, null=True, blank=False)

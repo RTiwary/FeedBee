@@ -49,13 +49,13 @@ def choose_question_type(request, survey_id):
         form = QuestionTypeForm(request.POST)
         if form.is_valid():
             question_type_choice = form.cleaned_data["question_type_choice"]
-            if question_type_choice == "boolean":
+            if question_type_choice == "Boolean":
                 return redirect("add_boolean_question", survey_id=survey_id)
-            elif question_type_choice == "text":
+            elif question_type_choice == "Text":
                 return redirect("add_text_question", survey_id=survey_id)
-            elif question_type_choice == "mc":
+            elif question_type_choice == "MultipleChoice":
                 return redirect("add_mc_question", survey_id=survey_id)
-            elif question_type_choice == "checkbox":
+            elif question_type_choice == "Checkbox":
                 return redirect("add_checkbox_question", survey_id=survey_id)
 
     else:
@@ -88,7 +88,6 @@ def add_boolean_question(request, survey_id, question_id=-1): # question_id is a
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
                                 survey.mc_questions.count() + survey.checkbox_questions.count()
                 boolean_question.question_rank = objects_count + 1
-                boolean_question.question_type = "boolean"
                 boolean_question.save()
 
             boolean_question.save()
@@ -136,7 +135,6 @@ def add_text_question(request, survey_id, question_id=-1):
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
                                 survey.mc_questions.count() + survey.checkbox_questions.count()
                 text_question.question_rank = objects_count + 1
-                text_question.question_type = "text"
 
             text_question.save()
             classroom_id = survey.classroom.pk
@@ -180,7 +178,6 @@ def add_mc_question(request, survey_id, question_id=-1):
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
                                 survey.mc_questions.count() + survey.checkbox_questions.count()
                 mc_question.question_rank = objects_count + 1
-                mc_question.question_type = "mc"
 
             mc_question.save()
             classroom_id = survey.classroom.pk
@@ -224,7 +221,6 @@ def add_checkbox_question(request, survey_id, question_id=-1):
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
                                 survey.mc_questions.count() + survey.checkbox_questions.count()
                 checkbox_question.question_rank = objects_count + 1
-                checkbox_question.question_type = "checkbox"
 
             checkbox_question.save()
             classroom_id = survey.classroom.pk
