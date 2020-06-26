@@ -125,7 +125,7 @@ def take_survey(request, survey_id):
                     answer = BooleanAnswer()
                     answer.question = q
                     answer.student = student
-                    answer.answer = request.POST.get(str(q.id) + "_Bool")
+                    answer.answer = bool(request.POST.get(str(q.id) + "_Bool"))
                     answer.save()
 
                 elif q.question_type == "Text":
