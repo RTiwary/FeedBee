@@ -14,6 +14,7 @@ urlpatterns = [
     path('add_checkbox_question/<int:survey_id>/', views.add_checkbox_question, name="add_checkbox_question"),
     path('add_checkbox_question/<int:survey_id>/<int:question_id>/', views.add_checkbox_question, name="add_checkbox_question"),
     path('choose_question_type/<int:survey_id>', views.choose_question_type, name="choose_question_type"),
+    path('delete_question/<int:survey_id>/<int:question_id>/<type_id>', views.delete_question, name="delete_question"),
     path('<int:classroom_id>/view_recurring_questions/', views.view_recurring_questions, name="view_recurring_questions"),
     path('view_classroom_info/<int:classroom_id>', views.view_classroom_info, name="view_classroom_info"),
     path('view_classes/', views.view_classes, name="view_classes"),
