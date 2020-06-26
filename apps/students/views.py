@@ -36,7 +36,7 @@ def join_class(request):
 @user_passes_test(is_student)
 def student_dashboard(request):
     surveys = Survey.objects.filter(classroom__students__user=request.user)\
-        .exclude(completed_students__user=request.user).exclude(name="base")
+        .exclude(completed_students__user=request.user).exclude(name="Base")
 
     return render(request, "students/dashboard.html", {
         'surveys': surveys,
@@ -95,7 +95,7 @@ def take_survey(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
     student = request.user.student_profile
 
-    base_survey = Survey.objects.filter(name="base", classroom=survey.classroom)
+    base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)
     base_questions = []
     if base_survey is not None:
         base_survey = base_survey.latest('creation_date')

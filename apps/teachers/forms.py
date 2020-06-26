@@ -14,8 +14,8 @@ class SurveyCreationForm(forms.Form):
 class SurveyEditForm(forms.Form):
     survey_name = forms.CharField(label='Survey Name', max_length=100)
 
-QUESTION_TYPE_CHOICES=[('boolean','True or False'), ('text','Short Answer'), ('mc','Multiple Choice'),
-                       ('checkbox','Checkbox')]
+QUESTION_TYPE_CHOICES=[('Boolean','True or False'), ('Text','Short Answer'), ('MultipleChoice','Multiple Choice'),
+                       ('Checkbox','Checkbox')]
 
 class QuestionTypeForm(forms.Form):
     question_type_choice = forms.ChoiceField(label="What Type of Question Would You Like to Create?",

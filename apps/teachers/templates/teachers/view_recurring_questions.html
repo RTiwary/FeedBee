@@ -103,25 +103,25 @@
                     <div class="row">
                         <div class="col-lg">
                             <p style="width: 700px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                <a href="{% if question.question_type == "boolean" %}
+                                <a href="{% if question.question_type == "Boolean" %}
                             {% url 'add_boolean_question' survey_id=base_survey_id question_id=question.pk %}
-                            {% elif question.question_type == "text" %}
+                            {% elif question.question_type == "Text" %}
                             {% url 'add_text_question' survey_id=base_survey_id question_id=question.pk %}
-                            {% elif question.question_type == "mc" %}
+                            {% elif question.question_type == "MultipleChoice" %}
                             {% url 'add_mc_question' survey_id=base_survey_id question_id=question.pk %}
-                            {% elif question.question_type == "checkbox" %}
+                            {% elif question.question_type == "Checkbox" %}
                             {% url 'add_checkbox_question' survey_id=base_survey_id question_id=question.pk %}
                             {% endif %}">{{ question.question_text }}</a>
                             </p>
                         </div>
                         <div class="col-2">
-                            {% if question.question_type == "boolean" %}
+                            {% if question.question_type == "Boolean" %}
                                 True/False
-                            {% elif question.question_type == "text" %}
+                            {% elif question.question_type == "Text" %}
                                 Short Answer
-                            {% elif question.question_type == "mc" %}
+                            {% elif question.question_type == "MultipleChoice" %}
                                 Multiple Choice
-                            {% elif question.question_type == "checkbox" %}
+                            {% elif question.question_type == "Checkbox" %}
                                 Checkbox
                             {% endif %}
                         </div>
