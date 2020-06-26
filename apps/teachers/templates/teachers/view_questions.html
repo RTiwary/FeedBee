@@ -17,7 +17,7 @@
         .modal {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            z-index: 2; /* Sit on top */
             left: 0;
             top: 0;
             width: 100%; /* Full width */
@@ -30,7 +30,7 @@
 
         /* Modal Content/Box */
         .modal-content {
-            z-index: 2;
+            z-index: 3;
             position: fixed;
             display: none; /* Hidden by default */
             background-color: #fefefe;
@@ -66,6 +66,18 @@
             if (event.target == modal) {
                 modal_edit.style.display = "none";
                 modal_content_edit.style.display = "none";
+            }
+        }
+
+        // Get the modal
+        var modal_question_delete = document.getElementById('id05');
+        var modal_content_question_delete = document.getElementById('id06');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal_question_delete.style.display = "none";
+                modal_content_question_delete.style.display = "none";
             }
         }
     </script>
@@ -118,14 +130,28 @@
 
         <br>
 
+        <! -- Delete Question Modal -->
+        <div id="id05" class="modal"></div>
+        <div id="id06" class="modal-content">
+            <div class="container" style="text-align: center">
+                <h1>Delete Question</h1>
+                <p>Are you sure you want to delete this question?</p>
+                <button onclick="document.getElementById('id05').style.display='none'; document.getElementById('id06').style.display='none';" type="button" class="btn btn-primary">Cancel</button>
+                <a id="delete_link" href="" type="button" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-10">
+                    <div class="col-8">
                         <strong>Questions</strong>
                     </div>
                     <div class="col-2">
-                        <strong>Responses</strong>
+                        <strong>Question Type</strong>
+                    </div>
+                    <div class="col-2">
+                        <strong>Actions</strong>
                     </div>
                 </div>
             </div>
@@ -133,8 +159,9 @@
                 {% for question in questions %}
                 <div class="list-group-item">
                     <div class="row">
-                        <div class="col-10">
-                            <a href="{% if question.question_type == "Boolean" %}
+                        <div class="col-lg">
+                            <p style="width: 700px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <a href="{% if question.question_type == "Boolean" %}
                             {% url 'add_boolean_question' survey_id=survey.pk question_id=question.pk %}
                             {% elif question.question_type == "Text" %}
                             {% url 'add_text_question' survey_id=survey.pk question_id=question.pk %}
@@ -143,11 +170,30 @@
                             {% elif question.question_type == "Checkbox" %}
                             {% url 'add_checkbox_question' survey_id=survey.pk question_id=question.pk %}
                             {% endif %}">{{ question.question_text }}</a>
+                            </p>
+                        </div>
+                        <div class="col-2">
+                            {% if question.question_type == "Boolean" %}
+                                True/False
+                            {% elif question.question_type == "Text" %}
+                                Short Answer
+                            {% elif question.question_type == "MultipleChoice" %}
+                                Multiple Choice
+                            {% elif question.question_type == "Checkbox" %}
+                                Checkbox
+                            {% endif %}
+                        </div>
+                        <div class="col-2">
+                            <button onclick="document.getElementById('id05').style.display='block';
+                            document.getElementById('id06').style.display='block';
+                            document.getElementById('delete_link').href='{% url 'delete_question' survey_id=survey.pk question_id=question.pk type_id=question.question_type %}';"
+                                    type="button" class="btn btn-danger"><i class="fa fa-trash-alt"></i></button>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
+
             <div class="card-footer">
                 <a href="{% url 'choose_question_type' survey.pk %}" class="btn btn-primary btn-sm">Add question</a>
             </div>
