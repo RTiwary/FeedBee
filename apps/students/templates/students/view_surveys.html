@@ -3,7 +3,7 @@
 {% block content %}
     <style>
         .scrollable {
-            height: 320px;
+            max-height: 320px;
             overflow: scroll;
         }
     </style>
@@ -16,15 +16,29 @@
         <div class="container">
             <div class="row ">
                 <div class="col-sm-12">
-                    <div class="card scrollable" style="margin-top: 2em">
-                        <ul class="list-group list-group-flush">
+                    <div class="card" style="margin-top: 2em">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-lg">
+                                    <strong>Survey</strong>
+                                </div>
+                                <div class="col-2">
+                                    <strong>Status</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush scrollable">
                             {% if surveys %}
                                 {% for survey in surveys %}
                                     <li class="list-group-item">
-                                        {{ survey.name }}
-                                        <span class="pull-right">
-                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">Take Survey</a>
-                                        </span>
+                                        <div class="row">
+                                            <div class="col-lg">
+                                                {{ survey.name }}
+                                            </div>
+                                            <div class="col-2">
+                                                <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">Take Survey</a>
+                                            </div>
+                                        </div>
                                     </li>
                                 {% endfor %}
                             {% endif %}
@@ -32,10 +46,14 @@
                             {% if completed %}
                                 {% for survey in completed %}
                                         <li class="list-group-item">
-                                            {{ survey.name }}
-                                            <span class="pull-right">
-                                                <button type="button" class="btn btn-secondary">Completed</button>
-                                            </span>
+                                            <div class="row">
+                                                <div class="col-lg">
+                                                    {{ survey.name }}
+                                                </div>
+                                                <div class="col-2">
+                                                    <button type="button" class="btn btn-secondary">Completed</button>
+                                                </div>
+                                            </div>
                                         </li>
                                 {% endfor %}
                             {% endif %}
