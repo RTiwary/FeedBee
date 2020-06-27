@@ -1,6 +1,13 @@
 {% extends "teachers/base.html" %}
 
 {% block content %}
+    <style>
+        .scrollable {
+            height: 320px;
+            overflow: scroll;
+        }
+    </style>
+
     <div class="container">
         <br>
         <h2 class="display-3 row justify-content-center">{{ survey.name }} Results</h2>
@@ -10,7 +17,7 @@
         {% for question, answer_list in q_and_a.items %}
             <div class="row ">
                 <div class="col-sm-12">
-                    <div class="card scrollable" style="margin-top: 2em">
+                    <div class="card" style="margin-top: 2em">
                         <div class="card-header">
                             {{ question.question_text }}
                             {% if question.question_type == "Boolean" %}
@@ -23,7 +30,7 @@
                                 (Checkbox)
                             {% endif %}
                         </div>
-                        <ul class="list-group list-group-flush">
+                        <ul class="list-group list-group-flush scrollable">
                             {% for answer in answer_list %}
                                 <li class="list-group-item">
                                     {% if question.question_type == "MultipleChoice" %}
