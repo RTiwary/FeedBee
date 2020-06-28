@@ -1,8 +1,15 @@
 {% extends "students/base.html" %}
 
 {% block content %}
+    <style>
+        .scrollable {
+            max-height: 320px;
+            overflow: scroll;
+        }
+    </style>
+
     {% if class_list %}
-        <div class=" container">
+        <div class=" container" style="margin-top: 2em">
             <div class="row ">
                 <div class="col-sm-12">
                     <div class="card" style="margin-top: 2em">
@@ -14,7 +21,7 @@
                                 <div class="col-lg">
                                     <strong>Class</strong>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-4">
                                     <strong>Teacher</strong>
                                 </div>
                             </div>
