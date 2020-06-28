@@ -50,13 +50,12 @@
     <div class="content">
         <div class="row">
             <div class="col-sm">
-
+                <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-primary"><i class="fas fa-home"></i> Classroom Home</a>
             </div>
             <div class="col-sm">
                 <h1 class="row justify-content-center" style="white-space: nowrap;">View Questions For {{ survey.name }}</h1>
             </div>
             <div class="col-sm">
-                <br>
                 <button onclick="document.getElementById('id01').style.display='block';
                 document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right;">
                     <i class="fa fa-trash-alt"></i> Delete</button>

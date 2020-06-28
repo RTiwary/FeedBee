@@ -48,13 +48,17 @@
     <br>
 
     <div class="content">
-        <br>
-        <div class="row justify-content-center">
-            <h2>View Recurring Questions</h2>
-            <span class="fa fa-info-circle" data-toggle="tooltip" title="These questions are automatically repeated on every survey and
+        <div class="row">
+            <div class="col-4">
+                <a href="{% url 'view_classroom_info' classroom_id %}" type="button" class="btn btn-primary"><i class="fas fa-home"></i> Classroom Home</a>
+            </div>
+            <div class="col-8">
+                <h2 style="display: inline">View Recurring Questions</h2>
+                <span class="fa fa-info-circle" data-toggle="tooltip" title="These questions are automatically repeated on every survey and
                   you will be able to view detailed data about these questions! Please refer to the tutorial video for an in-depth
                   explanation." aria-hidden="true">
-            </span>
+                </span>
+            </div>
         </div>
 
         <! -- Delete Question Modal -->
