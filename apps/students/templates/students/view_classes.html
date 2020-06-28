@@ -2,23 +2,39 @@
 
 {% block content %}
     {% if class_list %}
-        <div class=" container text-center table-responsive text-nowrap" style="margin-top: 5em; text-align: center">
-            <table class="table table-light table-bordered table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                      <th style="width: 25px">Class</th>
-                      <th style="width: 25px">Teacher</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for class, teacher in class_list %}
-                        <tr>
-                            <td><a href="{% url 'view_surveys' class.id %}">{{ class.name }}</a></td>
-                            <td>{{ teacher.first_name }} {{ teacher.last_name }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class=" container">
+            <div class="row ">
+                <div class="col-sm-12">
+                    <div class="card" style="margin-top: 2em">
+                        <div class="card-header">
+                            <div class="row" style="justify-content: center; text-align: center; align-items: center">
+                                <h4>My Classes</h4>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg">
+                                    <strong>Class</strong>
+                                </div>
+                                <div class="col-2">
+                                    <strong>Teacher</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush scrollable">
+                            {% for class, teacher in class_list %}
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-lg">
+                                            <a href="{% url 'view_surveys' class.id %}">{{ class.name }}</a>
+                                        </div>
+                                        <div class="col-2">
+                                            {{ teacher.first_name }} {{ teacher.last_name }}
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+            </div>
         </div>
     {% else %}
         <br>No classrooms are available.
