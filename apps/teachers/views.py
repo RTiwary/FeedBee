@@ -3,6 +3,7 @@ from django.contrib.auth import logout
 from django.urls import reverse
 from .forms import *
 from apps.teachers.models import *
+from apps.students.models import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from itertools import chain
 import operator
@@ -349,6 +350,36 @@ def delete_survey(request, survey_id):
     classroom = Classroom.objects.get(pk=survey.classroom.pk)
     survey.delete()
     return redirect("view_classroom_info", classroom_id=classroom.pk)
+
+@login_required
+@user_passes_test(is_teacher)
+def view_results(request, survey_id):
+    survey = Survey.objects.get(pk=survey_id)
+
+    boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
+    text_questions = TextQuestion.objects.filter(survey=survey_id)
+    mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
+    checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
+    question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
+    question_list = sorted(question_list, key=operator.attrgetter('question_rank'))
+
+    answers = []
+    for question in question_list:
+        if question.question_type == "Boolean":
+            answer = BooleanAnswer.objects.filter(question=question).values_list('answer', flat=True)
+        elif question.question_type == "Text":
+            answer = TextAnswer.objects.filter(question=question).values_list('answer', flat=True)
+        elif question.question_type == "MultipleChoice":
+            answer = MultipleChoiceAnswer.objects.filter(question=question).values_list('answer', flat=True)
+        elif question.question_type == "Checkbox":
+            answer = CheckboxAnswer.objects.filter(question=question).values_list('answer', flat=True)
+
+        answers.append(answer)
+
+    q_and_a = dict(zip(question_list, answers))
+
+    return render(request, "teachers/view_results.html", {"survey": survey,
+                                                          'q_and_a': q_and_a})
 
 @login_required
 @user_passes_test(is_teacher)

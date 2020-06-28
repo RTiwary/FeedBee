@@ -132,16 +132,23 @@
 
     <div class="row ">
         <div class="col-sm-12">
-            <div class="card scrollable" style="margin-top: 2em">
+            <div class="card" style="margin-top: 2em">
                 <div class="card-header" style="text-align: center;">
                     <h5 style="display: inline; align-items: center;">My Surveys</h5>
                     <a href="{% url 'add_survey' classroom.pk %}" class="btn btn-primary" style="display: inline-block; position: relative; float: left;">
                         <span class="fa fa-plus"></span> Survey
                     </a>
                 </div>
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush scrollable">
                     {% for survey in surveys %}
-                        <li class="list-group-item"><a href="{% url 'view_questions' survey.pk %}">{{ survey.name }}</a></li>
+                        <li class="list-group-item">
+                            <a href="{% url 'view_questions' survey.pk %}">
+                                {{ survey.name }}
+                            </a>
+                            <span class="pull-right">
+                                <a href="{% url 'view_results' survey.pk %}" class="btn btn-primary">View Results</a>
+                             </span>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
