@@ -44,56 +44,18 @@
             height: auto;
         }
     </style>
-    <script>
-        // Get the modal
-        var modal = document.getElementById('id01');
-        var modal_content = document.getElementById('id02');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-                modal_content.style.display = "none";
-            }
-        }
-
-        // Get the modal
-        var modal_edit = document.getElementById('id03');
-        var modal_content_edit = document.getElementById('id04');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal_edit.style.display = "none";
-                modal_content_edit.style.display = "none";
-            }
-        }
-
-        // Get the modal
-        var modal_question_delete = document.getElementById('id05');
-        var modal_content_question_delete = document.getElementById('id06');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal_question_delete.style.display = "none";
-                modal_content_question_delete.style.display = "none";
-            }
-        }
-    </script>
 
     <br>
 
     <div class="content">
         <div class="row">
             <div class="col-sm">
-
+                <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-primary"><i class="fas fa-home"></i> Classroom Home</a>
             </div>
             <div class="col-sm">
                 <h1 class="row justify-content-center" style="white-space: nowrap;">View Questions For {{ survey.name }}</h1>
             </div>
             <div class="col-sm">
-                <br>
                 <button onclick="document.getElementById('id01').style.display='block';
                 document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right;">
                     <i class="fa fa-trash-alt"></i> Delete</button>
