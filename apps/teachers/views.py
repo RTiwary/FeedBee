@@ -335,7 +335,8 @@ def view_recurring_questions(request, classroom_id):
                                          recurring_checkbox_questions))
     recurring_question_list = sorted(recurring_question_list, key=operator.attrgetter('question_rank'))
     return render(request, "teachers/view_recurring_questions.html", {"questions": recurring_question_list,
-                                                                      "base_survey_id": baseSurvey.pk})
+                                                                      "base_survey_id": baseSurvey.pk,
+                                                                      "classroom_id": classroom_id})
 
 
 @login_required
@@ -351,7 +352,7 @@ def add_survey(request, classroom_id):
     else:
         form = SurveyCreationForm()
 
-    return render(request, "teachers/add_survey.html", {'form': form})
+    return render(request, "teachers/add_survey.html", {'form': form, "classroom_id": classroom_id})
 
 
 @login_required
