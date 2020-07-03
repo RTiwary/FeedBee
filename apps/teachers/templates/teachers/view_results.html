@@ -8,9 +8,17 @@
         }
     </style>
 
+    <br>
+
     <div class="container">
-        <br>
-        <h2 class="display-3 row justify-content-center">{{ survey.name }} Results</h2>
+        <div class="row">
+            <div class="col-4">
+                <br>
+                <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-primary"><i class="fas fa-home"></i> Classroom Home</a>
+            </div>
+            <div class="col-8">
+                <h2 class="display-3">{{ survey.name }} Results</h2>
+            </div>
     </div>
 
     <div class="container">
@@ -21,13 +29,16 @@
                         <div class="card-header">
                             {{ question.question_text }}
                             {% if question.question_type == "Boolean" %}
-                                (True/False)
+                                <span class="badge badge-success">True/False</span>
                             {% endif %}
                             {% if question.question_type == "MultipleChoice" %}
-                                (Multiple Choice)
+                                <span class="badge badge-primary">Multiple Choice</span>
                             {% endif %}
                             {% if question.question_type == "Checkbox" %}
-                                (Checkbox)
+                                <span class="badge badge-info">Checkbox</span>
+                            {% endif %}
+                            {% if question.question_type == "Text" %}
+                                <span class="badge badge-warning">Short Answer</span>
                             {% endif %}
                         </div>
                         <ul class="list-group list-group-flush scrollable">
@@ -68,6 +79,9 @@
                                                 {{ question.option_e }} <span style="padding: 5px;"></span>
                                             {% endif %}
                                         {% endfor %}
+                                        {% if answer == "" %}
+                                            None <span style="padding: 5px;"></span>
+                                        {% endif %}
                                     {% endif %}
                                     {% if question.question_type == "Boolean" or question.question_type == "Text" %}
                                         {{ answer }}

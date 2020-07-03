@@ -8,11 +8,13 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from itertools import chain
 import operator
 
+
 # Create your views here.
 
 # tests if user is teacher
 def is_teacher(user):
     return user.is_teacher
+
 
 @login_required
 @user_passes_test(is_teacher)
@@ -30,12 +32,14 @@ def add_class(request):
 
     return render(request, "teachers/add_class.html", {'form': form})
 
+
 @login_required
 @user_passes_test(is_teacher)
 def delete_class(request, classroom_id):
     classroom = Classroom.objects.get(pk=classroom_id)
     classroom.delete()
     return redirect("view_classes")
+
 
 @login_required
 @user_passes_test(is_teacher)
@@ -65,9 +69,10 @@ def choose_question_type(request, survey_id):
     return render(request, "teachers/choose_question_type.html", {'form': form, 'survey': survey,
                                                                   'question_format': question_format})
 
+
 @login_required
 @user_passes_test(is_teacher)
-def add_boolean_question(request, survey_id, question_id=-1): # question_id is an optional parameter
+def add_boolean_question(request, survey_id, question_id=-1):  # question_id is an optional parameter
     survey = Survey.objects.get(pk=survey_id)
 
     # for the breadcrumb to know whether to display view recurring questions or view questions
@@ -152,8 +157,9 @@ def add_text_question(request, survey_id, question_id=-1):
         else:
             form = TextQuestionForm()
             action = "Add"
-    return render(request, "teachers/add_text_question.html", {'form': form,  'survey': survey, 'action': action,
+    return render(request, "teachers/add_text_question.html", {'form': form, 'survey': survey, 'action': action,
                                                                'question_format': question_format})
+
 
 @login_required
 @user_passes_test(is_teacher)
@@ -197,6 +203,7 @@ def add_mc_question(request, survey_id, question_id=-1):
             action = "Add"
     return render(request, "teachers/add_mc_question.html", {'form': form, 'survey': survey, 'action': action,
                                                              'question_format': question_format})
+
 
 @login_required
 @user_passes_test(is_teacher)
@@ -242,6 +249,7 @@ def add_checkbox_question(request, survey_id, question_id=-1):
     return render(request, "teachers/add_checkbox_question.html", {'form': form, 'survey': survey, 'action': action,
                                                                    'question_format': question_format})
 
+
 @login_required
 @user_passes_test(is_teacher)
 def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
@@ -279,12 +287,14 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
 def teacher_dashboard(request):
     return render(request, "teachers/dashboard.html")
 
+
 @login_required
 @user_passes_test(is_teacher)
 def view_classes(request):
     teacher = request.user.teacher_profile
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
     return render(request, "teachers/view_classes.html", {'class_list': class_list})
+
 
 @login_required
 @user_passes_test(is_teacher)
@@ -343,6 +353,7 @@ def add_survey(request, classroom_id):
 
     return render(request, "teachers/add_survey.html", {'form': form})
 
+
 @login_required
 @user_passes_test(is_teacher)
 def delete_survey(request, survey_id):
@@ -350,6 +361,7 @@ def delete_survey(request, survey_id):
     classroom = Classroom.objects.get(pk=survey.classroom.pk)
     survey.delete()
     return redirect("view_classroom_info", classroom_id=classroom.pk)
+
 
 @login_required
 @user_passes_test(is_teacher)
@@ -383,6 +395,79 @@ def view_results(request, survey_id):
 
 @login_required
 @user_passes_test(is_teacher)
+def view_results_alt(request, survey_id):
+    survey = Survey.objects.get(pk=survey_id)
+    classroom = survey.classroom
+
+    boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
+    text_questions = TextQuestion.objects.filter(survey=survey_id)
+    mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
+    checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
+    question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
+    question_list = sorted(question_list, key=operator.attrgetter('question_rank'))
+
+    answers_table = []
+    for student in classroom.students.all():
+        answers = []
+        for question in question_list:
+            if question.question_type == "Boolean":
+                answers.append(BooleanAnswer.objects.filter(question=question, student=student)\
+                               .values_list('answer', flat=True)[0])
+            if question.question_type == "Text":
+                answers.append(TextAnswer.objects.filter(question=question, student=student)\
+                               .values_list('answer', flat=True)[0])
+            if question.question_type == "MultipleChoice":
+                a = MultipleChoiceAnswer.objects.filter(question=question, student=student)\
+                    .values_list('answer', flat=True)[0]
+                if a == "A":
+                    answers.append(question.option_a)
+                elif a == "B":
+                    answers.append(question.option_b)
+                elif a == "C":
+                    answers.append(question.option_c)
+                elif a == "D":
+                    answers.append(question.option_d)
+                elif a == "E":
+                    answers.append(question.option_e)
+            if question.question_type == "Checkbox":
+                a = CheckboxAnswer.objects.filter(question=question, student=student)\
+                    .values_list('answer', flat=True)[0]
+                chosen = ""
+                if a == "":
+                    chosen = "None"
+                if "A" in a:
+                    chosen = question.option_a
+                if "B" in a:
+                    if chosen == "":
+                        chosen = question.option_b
+                    else:
+                        chosen = chosen + ", " + question.option_b
+                if "C" in a:
+                    if chosen == "":
+                        chosen = question.option_c
+                    else:
+                        chosen = chosen + ", " + question.option_c
+                if "D" in a:
+                    if chosen == "":
+                        chosen = question.option_d
+                    else:
+                        chosen = chosen + ", " + question.option_d
+                if "E" in a:
+                    if chosen == "":
+                        chosen = question.option_e
+                    else:
+                        chosen = chosen + ", " + question.option_e
+                answers.append(chosen)
+
+        answers_table.append(answers)
+
+    return render(request, "teachers/view_results_alt.html", {"survey": survey,
+                                                              "questions": question_list,
+                                                              "answers": answers_table})
+
+
+@login_required
+@user_passes_test(is_teacher)
 def view_classroom_info(request, classroom_id):
     if request.method == 'POST':
         classroom = Classroom.objects.get(pk=classroom_id)
@@ -395,12 +480,15 @@ def view_classroom_info(request, classroom_id):
         classroom = Classroom.objects.get(pk=classroom_id)
         form = ClassroomEditForm(initial={'class_name': classroom.name})
     surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
-    return render(request, "teachers/view_classroom_info.html", {'form': form, 'classroom': classroom, 'surveys': surveys})
+    return render(request, "teachers/view_classroom_info.html",
+                  {'form': form, 'classroom': classroom, 'surveys': surveys})
+
 
 @login_required
 @user_passes_test(is_teacher)
 def suggest_feature(request):
     return render(request, "teachers/suggest_feature.html")
+
 
 @login_required
 @user_passes_test(is_teacher)
