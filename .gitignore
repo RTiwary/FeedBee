@@ -87,3 +87,9 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 /.idea/
+
+# Migrations Folders
+**/migrations/*
+
+#Settings.py
+school/settings.py

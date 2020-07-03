@@ -141,6 +141,7 @@
             </div>
         </div>
 
+        <! -- Questions Table -->
         <div class="card">
             <div class="card-header">
                 <div class="row">
@@ -174,15 +175,15 @@
                         </div>
                         <div class="col-2">
                             {% if question.question_type == "Boolean" %}
-                                True/False
+                                <span class="badge badge-success">True/False</span>
                             {% elif question.question_type == "Text" %}
-                                Short Answer
+                                <span class="badge badge-warning">Short Answer</span>
                             {% elif question.question_type == "MultipleChoice" %}
-                                Multiple Choice
+                                <span class="badge badge-primary">Multiple Choice</span>
                             {% elif question.question_type == "Checkbox" %}
-                                Checkbox
+                                <span class="badge badge-info">Checkbox</span>
                             {% endif %}
-                        </div>
+                         </div>
                         <div class="col-2">
                             <button onclick="document.getElementById('id05').style.display='block';
                             document.getElementById('id06').style.display='block';

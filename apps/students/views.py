@@ -97,7 +97,7 @@ def take_survey(request, survey_id):
 
     base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)
     base_questions = []
-    if base_survey is not None:
+    if len(base_survey) > 0:
         base_survey = base_survey.latest('creation_date')
         base_bool_questions = BooleanQuestion.objects.filter(survey=base_survey)
         base_mc_questions = MultipleChoiceQuestion.objects.filter(survey=base_survey)
@@ -125,7 +125,10 @@ def take_survey(request, survey_id):
                     answer = BooleanAnswer()
                     answer.question = q
                     answer.student = student
-                    answer.answer = bool(request.POST.get(str(q.id) + "_Bool"))
+                    if request.POST.get(str(q.id) + "_Bool") == "true":
+                        answer.answer = True
+                    else:
+                        answer.answer = False
                     answer.save()
 
                 elif q.question_type == "Text":
