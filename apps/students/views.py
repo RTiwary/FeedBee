@@ -99,10 +99,10 @@ def take_survey(request, survey_id):
     base_questions = []
     if len(base_survey) > 0:
         base_survey = base_survey.latest('creation_date')
-        base_bool_questions = BooleanQuestion.objects.filter(survey=base_survey)
-        base_mc_questions = MultipleChoiceQuestion.objects.filter(survey=base_survey)
-        base_txt_questions = TextQuestion.objects.filter(survey=base_survey)
-        base_cb_questions = CheckboxQuestion.objects.filter(survey=base_survey)
+        base_bool_questions = BooleanQuestion.objects.filter(survey=base_survey, display=True)
+        base_mc_questions = MultipleChoiceQuestion.objects.filter(survey=base_survey, display=True)
+        base_txt_questions = TextQuestion.objects.filter(survey=base_survey, display=True)
+        base_cb_questions = CheckboxQuestion.objects.filter(survey=base_survey, display=True)
         base_questions = \
             list(chain(base_bool_questions, base_mc_questions, base_txt_questions, base_cb_questions))
         base_questions = sorted(base_questions, key=operator.attrgetter('question_rank'))
