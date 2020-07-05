@@ -17,7 +17,7 @@ def is_student(user):
 
 @login_required
 @user_passes_test(is_student)
-def join_class(request):
+def join_class(request, classroom_id=None):
     if request.method == 'POST':
         form = JoinClassForm(request.POST)
         if form.is_valid():
@@ -26,10 +26,15 @@ def join_class(request):
             classroom = Classroom.objects.get(pk=code)
             classroom.students.add(student)
             return redirect("student_dashboard")
+    elif classroom_id is not None and int(classroom_id) >= 0:
+        form = JoinClassForm(initial={"class_code": classroom_id})
+        try:
+            classroom_name = Classroom.objects.get(pk=int(classroom_id)).name
+        except Exception:
+            classroom_name = " "
+        return render(request, "students/join_class.html", {'form': form, 'classroom_name': classroom_name})
 
-    else:
-        form = JoinClassForm()
-
+    form = JoinClassForm()
     return render(request, "students/join_class.html", {'form': form})
 
 @login_required
