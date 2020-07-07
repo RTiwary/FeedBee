@@ -44,31 +44,6 @@
             height: auto;
         }
     </style>
-    <script>
-        // Get the modal
-        var modal = document.getElementById('id01');
-        var modal_content = document.getElementById('id02');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-                modal_content.style.display = "none";
-            }
-        }
-
-        // Get the modal
-        var modal_edit = document.getElementById('id03');
-        var modal_content_edit = document.getElementById('id04');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal_edit.style.display = "none";
-                modal_content_edit.style.display = "none";
-            }
-        }
-    </script>
 
     <br>
 
@@ -157,19 +132,27 @@
 
     <div class="row ">
         <div class="col-sm-12">
-            <div class="card scrollable" style="margin-top: 2em">
+            <div class="card" style="margin-top: 2em">
                 <div class="card-header" style="text-align: center;">
                     <h5 style="display: inline; align-items: center;">My Surveys</h5>
                     <a href="{% url 'add_survey' classroom.pk %}" class="btn btn-primary" style="display: inline-block; position: relative; float: left;">
                         <span class="fa fa-plus"></span> Survey
                     </a>
                 </div>
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush scrollable">
                     {% for survey in surveys %}
-                        <li class="list-group-item"><a href="{% url 'view_questions' survey.pk %}">{{ survey.name }}</a></li>
+                        <li class="list-group-item">
+                            <a href="{% url 'view_questions' survey.pk %}">
+                                {{ survey.name }}
+                            </a>
+                            <span class="pull-right">
+                                <a href="{% url 'view_results' survey.pk %}" class="btn btn-primary">View Results</a>
+                             </span>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
     </div>
+    <br>
 {% endblock content %}

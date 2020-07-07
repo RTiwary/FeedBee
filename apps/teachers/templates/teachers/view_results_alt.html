@@ -1,0 +1,39 @@
+
+{% extends "teachers/base.html" %}
+
+{% block content %}
+    <style>
+        .scrollable {
+            max-height: 320px;
+            overflow: scroll;
+        }
+    </style>
+
+    <div class="container">
+    <br>
+    <h2 class="display-3 row justify-content-center">{{ survey.name }} Results</h2>
+    </div>
+
+    <table class="table table-light table-bordered table-hover scrollable">
+        <thead class="thead-dark">
+            <tr>
+                {% for q in questions %}
+                <th>
+                    {{ q.question_text }}
+                </th>
+                {% endfor %}
+            </tr>
+        </thead>
+
+        {% for student in answers %}
+            <tr>
+            {% for answer in student %}
+                <th>
+                    {{ answer }}
+                </th>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}

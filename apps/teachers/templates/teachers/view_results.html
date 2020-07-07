@@ -1,0 +1,99 @@
+{% extends "teachers/base.html" %}
+
+{% block content %}
+    <style>
+        .scrollable {
+            max-height: 320px;
+            overflow: scroll;
+        }
+    </style>
+
+    <br>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <br>
+                <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-primary"><i class="fas fa-home"></i> Classroom Home</a>
+            </div>
+            <div class="col-8">
+                <h2 class="display-3">{{ survey.name }} Results</h2>
+            </div>
+    </div>
+
+    <div class="container">
+        {% for question, answer_list in q_and_a.items %}
+            <div class="row ">
+                <div class="col-sm-12">
+                    <div class="card" style="margin-top: 2em">
+                        <div class="card-header">
+                            {{ question.question_text }}
+                            {% if question.question_type == "Boolean" %}
+                                <span class="badge badge-success">True/False</span>
+                            {% endif %}
+                            {% if question.question_type == "MultipleChoice" %}
+                                <span class="badge badge-primary">Multiple Choice</span>
+                            {% endif %}
+                            {% if question.question_type == "Checkbox" %}
+                                <span class="badge badge-info">Checkbox</span>
+                            {% endif %}
+                            {% if question.question_type == "Text" %}
+                                <span class="badge badge-warning">Short Answer</span>
+                            {% endif %}
+                        </div>
+                        <ul class="list-group list-group-flush scrollable">
+                            {% for answer in answer_list %}
+                                <li class="list-group-item">
+                                    {% if question.question_type == "MultipleChoice" %}
+                                        {% if answer == 'A' %}
+                                            {{ question.option_a }}
+                                        {% endif %}
+                                        {% if answer == 'B' %}
+                                            {{ question.option_b }}
+                                        {% endif %}
+                                        {% if answer == 'C' %}
+                                            {{ question.option_c }}
+                                        {% endif %}
+                                        {% if answer == 'D' %}
+                                            {{ question.option_d }}
+                                        {% endif %}
+                                        {% if answer == 'E' %}
+                                            {{ question.option_e }}
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if question.question_type == "Checkbox" %}
+                                        {% for i in answer %}
+                                            {% if i == 'A' %}
+                                                {{ question.option_a }} <span style="padding: 5px;"></span>
+                                            {% endif %}
+                                            {% if i == 'B' %}
+                                                {{ question.option_b }} <span style="padding: 5px;"></span>
+                                            {% endif %}
+                                            {% if i == 'C' %}
+                                                {{ question.option_c }} <span style="padding: 5px;"></span>
+                                            {% endif %}
+                                            {% if i == 'D' %}
+                                                {{ question.option_d }} <span style="padding: 5px;"></span>
+                                            {% endif %}
+                                            {% if i == 'E' %}
+                                                {{ question.option_e }} <span style="padding: 5px;"></span>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if answer == "" %}
+                                            None <span style="padding: 5px;"></span>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if question.question_type == "Boolean" or question.question_type == "Text" %}
+                                        {{ answer }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock content %}

@@ -1,10 +1,10 @@
 {% extends "teachers/base.html" %}
 
 {% block content %}
+    <br>
     {% load crispy_forms_tags %}
     <div class="row justify-content-center">
         <form method="POST" class="form-group col-sm-10">
-            <br>
             <br>
             {% csrf_token %}
             {{ form | crispy}}
