@@ -80,6 +80,9 @@
                                                 {{ question.option_e }} <span style="padding: 5px;"></span>
                                             {% endif %}
                                         {% endfor %}
+                                        {% if answer == "" %}
+                                            None <span style="padding: 5px;"></span>
+                                        {% endif %}
                                     {% endif %}
                                     {% if question.question_type == "Boolean" or question.question_type == "Text" %}
                                         {{ answer }}

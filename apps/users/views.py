@@ -19,7 +19,7 @@ def register_student(request):
             user.save()
             Student.objects.create(user=user)
             login(request, user)
-            return redirect(reverse("student_dashboard"))
+            return redirect(reverse("join_class"))
     else:
         form = RegistrationForm()
     return render(request, "users/register.html", {"form": form})
@@ -33,7 +33,7 @@ def register_teacher(request):
             user.save()
             Teacher.objects.create(user=user)
             login(request, user)
-            return redirect(reverse("teacher_dashboard"))
+            return redirect(reverse("add_class"))
     else:
         form = RegistrationForm()
     return render(request, "users/register.html", {"form": form})

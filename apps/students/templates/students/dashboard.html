@@ -1,8 +1,9 @@
 {% extends "students/base.html" %}
 
 {% block content %}
-    <h2>Pending Surveys</h2>
-    <div class="card row justify-content-center" style="margin-top: 5em">
+    <br>
+    <h2 class="row justify-content-center">Pending Surveys</h2>
+    <div class="card row justify-content-center" style="margin-top: 3em">
         <table class="table mb-0">
             <thead>
                 <tr>
@@ -13,7 +14,7 @@
             <tbody>
                 {% if empty %}
                     <tr>
-                        <td class="bg-light text-center font-italic" colspan="4">You have completed all current surveys :)</td>
+                        <td class="bg-light text-center" colspan="4">😎 You have completed all current surveys! 😎</td>
                     </tr>
                 {% endif %}
                 {% for s in surveys %}

@@ -2,62 +2,144 @@
 {% block title %} Take Survey {% endblock %}
 
 {% block content %}
-    <div class="row">
-    <h1>{{ survey.name }}</h1>
+    <div class="row justify-content-center">
+    <h1 style="margin-top: 10px">{{ survey.name }}</h1>
     </div>
 
-    <div class="row">
+    <div class="row justify-content-center">
+    <div class="col-xs-8 col-sm-8">
     <form method="post">
         {% csrf_token %}
         {% for q in questions %}
             {% if q.question_type == "Boolean" %}
-                <h2>{{ q.question_text }}</h2>
-                    <input type="radio", value="{{ q.id }}_T", name="{{ q.id }}_Bool" required>{{ "True" }}<br>
-                    <input type="radio", value="{{ q.id }}_F", name="{{ q.id }}_Bool" required>{{ "False" }}<br>
+                <div class="card" style="margin-top: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ q.question_text }}</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="{{ q.id }}_Bool" value="true" id="{{ q.id }}_T_Bool" required>
+                            <label class="form-check-label" for="{{ q.id }}_T_Bool">
+                                True
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="{{ q.id }}_Bool" value="false" id="{{ q.id }}_F_Bool" required>
+                            <label class="form-check-label" for="{{ q.id }}_F_Bool">
+                                False
+                            </label>
+                        </div>
+                    </div>
+               </div>
             {% endif %}
             {% if q.question_type == "Text" %}
-                <h2>{{ q.question_text }}</h2>
-                <input type="text", name="{{ q.id }}" required><br>
+                <div class="card" style="margin-top: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ q.question_text }}</h5>
+                        <div class="form-group">
+                            <textarea class="form-control" name="{{ q.id }}" rows="2" required></textarea>
+                        </div>
+                    </div>
+               </div>
             {% endif %}
             {% if q.question_type == "MultipleChoice" %}
-                <h2>{{ q.question_text }}</h2>
-                {% if q.option_a != null %}
-                    <input type="radio", value="A", name="{{ q.id }}_MC" required>{{ q.option_a }}<br>
-                {% endif %}
-                {% if q.option_b != null %}
-                    <input type="radio", value="B", name="{{ q.id }}_MC" required>{{ q.option_b }}<br>
-                {% endif %}
-                {% if q.option_c != null %}
-                    <input type="radio", value="C", name="{{ q.id }}_MC" required>{{ q.option_c }}<br>
-                {% endif %}
-                {% if q.option_d != null %}
-                    <input type="radio", value="D", name="{{ q.id }}_MC" required>{{ q.option_d }}<br>
-                {% endif %}
-                {% if q.option_e != null %}
-                    <input type="radio", value="E", name="{{ q.id }}_MC" required>{{ q.option_e }}<br>
-                {% endif %}
+                <div class="card" style="margin-top: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ q.question_text }}</h5>
+                        {% if q.option_a != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="{{ q.id }}_MC" value="A" id="{{ q.id }}_A_MC" required>
+                                <label class="form-check-label" for="{{ q.id }}_A_MC">
+                                    {{ q.option_a }}
+                                </label>
+                            </div>
+                        {% endif %}
+                        {% if q.option_b != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="{{ q.id }}_MC" value="B" id="{{ q.id }}_B_MC" required>
+                                <label class="form-check-label" for="{{ q.id }}_B_MC">
+                                    {{ q.option_b }}
+                                </label>
+                            </div>
+                        {% endif %}
+                        {% if q.option_c != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="{{ q.id }}_MC" value="C" id="{{ q.id }}_C_MC" required>
+                                <label class="form-check-label" for="{{ q.id }}_C_MC">
+                                    {{ q.option_c }}
+                                </label>
+                            </div>
+                        {% endif %}
+                        {% if q.option_d != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="{{ q.id }}_MC" value="D" id="{{ q.id }}_D_MC" required>
+                                <label class="form-check-label" for="{{ q.id }}_D_MC">
+                                    {{ q.option_d }}
+                                </label>
+                            </div>
+                        {% endif %}
+                        {% if q.option_e != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="{{ q.id }}_MC" value="E" id="{{ q.id }}_E_MC" required>
+                                <label class="form-check-label" for="{{ q.id }}_E_MC">
+                                    {{ q.option_e }}
+                                </label>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             {% endif %}
             {% if q.question_type == "Checkbox" %}
-                <h2>{{ q.question_text }}</h2>
-                    {% if q.option_a != null %}
-                        <input type="checkbox", value="chosen", name="{{ q.id }}_A_CB">{{ q.option_a }}<br>
-                    {% endif %}
-                    {% if q.option_b != null %}
-                        <input type="checkbox", value="chosen", name="{{ q.id }}_B_CB">{{ q.option_b }}<br>
-                    {% endif %}
-                    {% if q.option_c != null %}
-                        <input type="checkbox", value="chosen", name="{{ q.id }}_C_CB">{{ q.option_c }}<br>
-                    {% endif %}
-                    {% if q.option_d != null %}
-                        <input type="checkbox", value="chosen", name="{{ q.id }}_D_CB">{{ q.option_d }}<br>
-                    {% endif %}
-                    {% if q.option_e != null %}
-                        <input type="checkbox", value="chosen", name="{{ q.id }}_E_CB">{{ q.option_e }}<br>
-                    {% endif %}
+                <div class="card" style="margin-top: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ q.question_text }}</h5>
+                        {% if q.option_a != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="{{ q.id }}_A_CB" id="{{ q.id }}_A_CB">
+                                <label class="form-check-label" for="{{ q.id }}_A_CB">
+                                    {{ q.option_a }}
+                                </label>
+                            </div>
+                        {% endif %}
+                        {% if q.option_b != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="{{ q.id }}_B_CB" id="{{ q.id }}_B_CB">
+                                <label class="form-check-label" for="{{ q.id }}_B_CB">
+                                    {{ q.option_b }}
+                                </label>
+                            </div>
+                        {% endif %}
+                        {% if q.option_c != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="{{ q.id }}_C_CB" id="{{ q.id }}_C_CB">
+                                <label class="form-check-label" for="{{ q.id }}_C_CB">
+                                    {{ q.option_c }}
+                                </label>
+                            </div>
+                        {% endif %}
+                        {% if q.option_d != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="{{ q.id }}_D_CB" id="{{ q.id }}_D_CB">
+                                <label class="form-check-label" for="{{ q.id }}_D_CB">
+                                    {{ q.option_d }}
+                                </label>
+                            </div>
+                        {% endif %}
+                        {% if q.option_e != null %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="{{ q.id }}_E_CB" id="{{ q.id }}_E_CB">
+                                <label class="form-check-label" for="{{ q.id }}_E_CB">
+                                    {{ q.option_e }}
+                                </label>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             {% endif %}
         {% endfor %}
         <br>
-        <button type="submit", name="submit", value="submit">Submit</button>
+        <button type="submit" name="submit", value="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
+    </div>
+    <br>
 {% endblock %}
