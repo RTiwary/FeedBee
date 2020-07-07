@@ -272,9 +272,14 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
     for questionDecrement in question_list:
         questionDecrement.question_rank = questionDecrement.question_rank - 1;
         questionDecrement.save()
-    question.delete()
 
     survey = Survey.objects.get(pk=survey_id)
+
+    if survey.name == "Base":
+        question.update(display=False)
+    else:
+        question.delete()
+
     if survey.name == "Base":
         classroom_id = survey.classroom.pk
         return redirect("view_recurring_questions", classroom_id=classroom_id)
@@ -327,10 +332,10 @@ def view_recurring_questions(request, classroom_id):
         baseSurvey = Survey.objects.create(name="Base", classroom=survey_classroom)
     else:
         baseSurvey = base_survey_queryset[0]
-    recurring_boolean_questions = BooleanQuestion.objects.filter(survey=baseSurvey)
-    recurring_text_questions = TextQuestion.objects.filter(survey=baseSurvey)
-    recurring_mc_questions = MultipleChoiceQuestion.objects.filter(survey=baseSurvey)
-    recurring_checkbox_questions = CheckboxQuestion.objects.filter(survey=baseSurvey)
+    recurring_boolean_questions = BooleanQuestion.objects.filter(survey=baseSurvey, display=True)
+    recurring_text_questions = TextQuestion.objects.filter(survey=baseSurvey, display=True)
+    recurring_mc_questions = MultipleChoiceQuestion.objects.filter(survey=baseSurvey, display=True)
+    recurring_checkbox_questions = CheckboxQuestion.objects.filter(survey=baseSurvey, display=True)
     recurring_question_list = list(chain(recurring_boolean_questions, recurring_text_questions, recurring_mc_questions,
                                          recurring_checkbox_questions))
     recurring_question_list = sorted(recurring_question_list, key=operator.attrgetter('question_rank'))

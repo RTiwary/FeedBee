@@ -24,6 +24,8 @@ class BooleanQuestion(models.Model):
     question_rank = models.IntegerField(null=True, blank=False)
     question_type = "Boolean"
 
+    display = models.BooleanField(default=True)
+
 
 class TextQuestion(models.Model):
     survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE, related_name="text_questions")
@@ -31,6 +33,8 @@ class TextQuestion(models.Model):
 
     question_rank = models.IntegerField(null=True, blank=False)
     question_type = "Text"
+
+    display = models.BooleanField(default=True)
 
 
 class MultipleChoiceQuestion(models.Model):
@@ -46,6 +50,8 @@ class MultipleChoiceQuestion(models.Model):
     question_rank = models.IntegerField(null=True, blank=False)
     question_type = "MultipleChoice"
 
+    display = models.BooleanField(default=True)
+
 
 class CheckboxQuestion(models.Model):
     survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE, related_name="checkbox_questions")
@@ -59,3 +65,6 @@ class CheckboxQuestion(models.Model):
 
     question_rank = models.IntegerField(null=True, blank=False)
     question_type = "Checkbox"
+
+    display = models.BooleanField(default=True)
+
