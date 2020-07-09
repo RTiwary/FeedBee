@@ -48,6 +48,8 @@ def student_dashboard(request):
         'empty': len(surveys) == 0
     })
 
+
+'''allows student to view all of their classes + each class's teacher name'''
 @login_required
 @user_passes_test(is_student)
 def view_classes(request):
@@ -66,9 +68,12 @@ def view_classes(request):
         teacher_name = User.objects.filter(pk=ids[0][0]).values('first_name', 'last_name')
         teachers.append(teacher_name.get())
 
+    # class list is a list of all classes and the names of their respective teachers
     class_list = zip(classes, teachers)
     return render(request, "students/view_classes.html", {'class_list': class_list})
 
+
+'''allows students to view all of their surveys by returning lists for both completed and not completed surveys'''
 @login_required
 @user_passes_test(is_student)
 def view_surveys(request, classroom_id):
