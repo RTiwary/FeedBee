@@ -289,12 +289,6 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
 
 @login_required
 @user_passes_test(is_teacher)
-def teacher_dashboard(request):
-    return render(request, "teachers/dashboard.html")
-
-
-@login_required
-@user_passes_test(is_teacher)
 def view_classes(request):
     teacher = request.user.teacher_profile
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
