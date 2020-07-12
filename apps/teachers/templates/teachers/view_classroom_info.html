@@ -104,12 +104,10 @@
                             <div class="col-10">
                                 <li class="list-group-item">Classroom Code:</li>
                                 <li class="list-group-item">Student Count:</li>
-                                <li class="list-group-item">Surveys Created:</li>
                             </div>
                             <div class="col-2">
                                 <strong><li class="list-group-item">{{ classroom.pk }}</li></strong>
                                 <strong><li class="list-group-item">{{ classroom.students.count }}</li></strong>
-                                <strong><li class="list-group-item">{{ classroom.surveys.count }}</li></strong>
                             </div>
                         </div>
                     </ul>
@@ -154,4 +152,5 @@
             </div>
         </div>
     </div>
+    <br>
 {% endblock content %}
