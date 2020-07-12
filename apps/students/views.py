@@ -105,9 +105,10 @@ def take_survey(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
     student = request.user.student_profile
 
-    base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)[0]
+    base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)
     base_questions = []
     if len(base_survey) > 0:
+        base_survey = base_survey[0]
         base_bool_questions = BooleanQuestion.objects.filter(survey=base_survey, display=True)
         base_mc_questions = MultipleChoiceQuestion.objects.filter(survey=base_survey, display=True)
         base_txt_questions = TextQuestion.objects.filter(survey=base_survey, display=True)
