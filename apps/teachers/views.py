@@ -32,10 +32,14 @@ def add_class(request):
 
     return render(request, "teachers/add_class.html", {'form': form})
 
-
+'''
+Deletes a classroom in the database using the 
+classroom_id and redirects to the view_classes screen
+'''
 @login_required
 @user_passes_test(is_teacher)
 def delete_class(request, classroom_id):
+    # Query for classroom using classroom_id and delete that classroom
     classroom = Classroom.objects.get(pk=classroom_id)
     classroom.delete()
     return redirect("view_classes")

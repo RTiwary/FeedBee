@@ -7,10 +7,13 @@
             overflow: scroll;
         }
     </style>
+
+    <!-- Script for loading icons -->
     <script src="https://kit.fontawesome.com/4674fc2949.js" crossorigin="anonymous"></script>
 
     <br>
 
+    <!-- Displays button to go to classroom home (dashboard) and the survey name -->
     <div class="container">
         <div class="row">
             <div class="col-4">
@@ -20,14 +23,17 @@
             <div class="col-8">
                 <h2 class="display-3">{{ survey.name }} Results</h2>
             </div>
+        </div>
     </div>
 
+    <!-- Displays the question for a survey and all responses for each question -->
     <div class="container">
         {% for question, answer_list in q_and_a.items %}
             <div class="row ">
                 <div class="col-sm-12">
                     <div class="card" style="margin-top: 2em">
                         <div class="card-header">
+                            <!-- Display question text and the corresponding badge -->
                             {{ question.question_text }}
                             {% if question.question_type == "Boolean" %}
                                 <span class="badge badge-success">True/False</span>
@@ -43,6 +49,7 @@
                             {% endif %}
                         </div>
                         <ul class="list-group list-group-flush scrollable">
+                            <!-- Show all answers for a question for all questions in a survey -->
                             {% for answer in answer_list %}
                                 <li class="list-group-item">
                                     {% if question.question_type == "MultipleChoice" %}
@@ -95,6 +102,4 @@
             </div>
         {% endfor %}
     </div>
-
-
 {% endblock content %}
