@@ -17,7 +17,7 @@ def is_student(user):
 
 @login_required
 @user_passes_test(is_student)
-def join_class(request):
+def join_class(request, classroom_id=None):
     if request.method == 'POST':
         form = JoinClassForm(request.POST)
         if form.is_valid():
@@ -26,10 +26,15 @@ def join_class(request):
             classroom = Classroom.objects.get(pk=code)
             classroom.students.add(student)
             return redirect("student_dashboard")
+    elif classroom_id is not None and int(classroom_id) >= 0:
+        form = JoinClassForm(initial={"class_code": classroom_id})
+        try:
+            classroom_name = Classroom.objects.get(pk=int(classroom_id)).name
+        except Exception:
+            classroom_name = " "
+        return render(request, "students/join_class.html", {'form': form, 'classroom_name': classroom_name})
 
-    else:
-        form = JoinClassForm()
-
+    form = JoinClassForm()
     return render(request, "students/join_class.html", {'form': form})
 
 @login_required
@@ -95,14 +100,13 @@ def take_survey(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
     student = request.user.student_profile
 
-    base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)
+    base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)[0]
     base_questions = []
     if len(base_survey) > 0:
-        base_survey = base_survey[0]
-        base_bool_questions = BooleanQuestion.objects.filter(survey=base_survey)
-        base_mc_questions = MultipleChoiceQuestion.objects.filter(survey=base_survey)
-        base_txt_questions = TextQuestion.objects.filter(survey=base_survey)
-        base_cb_questions = CheckboxQuestion.objects.filter(survey=base_survey)
+        base_bool_questions = BooleanQuestion.objects.filter(survey=base_survey, display=True)
+        base_mc_questions = MultipleChoiceQuestion.objects.filter(survey=base_survey, display=True)
+        base_txt_questions = TextQuestion.objects.filter(survey=base_survey, display=True)
+        base_cb_questions = CheckboxQuestion.objects.filter(survey=base_survey, display=True)
         base_questions = \
             list(chain(base_bool_questions, base_mc_questions, base_txt_questions, base_cb_questions))
         base_questions = sorted(base_questions, key=operator.attrgetter('question_rank'))

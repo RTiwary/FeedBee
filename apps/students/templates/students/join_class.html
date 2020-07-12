@@ -40,17 +40,19 @@
         }
     </style>
     <script>
-        // Get the modal
-        var modal = document.getElementById('id01');
-        var modal_content = document.getElementById('id02');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-                modal_content.style.display = "none";
-            }
-        }
+        {% if classroom_name and classroom_name == " " %}
+            // Class doesn't exist notification
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('id03').style.display='block';
+                document.getElementById('id04').style.display='block';
+            }, false);
+        {% elif classroom_name and classroom_name != " " %}
+            // Class name notification
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('id01').style.display='block';
+                document.getElementById('id02').style.display='block';
+            }, false);
+        {% endif %}
     </script>
 
     {% load crispy_forms_tags %}
@@ -61,19 +63,36 @@
         <div id="id01" class="modal"></div>
         <div id="id02" class="modal-content">
             <div class="container" style="text-align: center">
-                <h1>Join Class</h1>
+                <h1>Join {{ classroom_name }}</h1>
                 <p>Are you sure you want to join this classroom?</p>
-                <button type="button" onclick="document.getElementById('id01').style.display='none'; document.getElementById('id02').style.display='none';" type="button" class="btn btn-default">Cancel</button>
-                <button type="submit" class="btn btn-primary">Join</button>
+                <a href="{% url 'join_class' %}" role="button" class="btn btn-secondary">Cancel</a>
+                <button id="join_class_button_submit" type="submit" class="btn btn-primary">Join</button>
+            </div>
+        </div>
+
+        <div id="id03" class="modal"></div>
+        <div id="id04" class="modal-content">
+            <div class="container" style="text-align: center">
+                <h1>Error Encountered</h1>
+                <p>Sorry! It appears this class doesn't exist.</p>
+                <a href="{% url 'join_class' %}" role="button" class="btn btn-primary">OK</a>
             </div>
         </div>
 
         {% csrf_token %}
-        {{ form | crispy }}
-        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="document.getElementById('id01').style.display='block';
-                document.getElementById('id02').style.display='block';">
+
+        {{ form.class_code | as_crispy_field }}
+
+        <a id="join_class_button" href="#" onclick="
+        val = document.getElementById('id_class_code').value;
+        if (val != '') {
+            document.getElementById('join_class_button').href = val;
+            document.getElementById('join_class_button').click();
+        } else {
+            document.getElementById('join_class_button_submit').click();
+        }" role="button" class="btn btn-primary">
             Join Class
-        </button>
+        </a>
     </form>
 
 

@@ -10,12 +10,9 @@ class Classroom(models.Model):
 class Survey(models.Model):
     name = models.CharField(max_length=100, null=True)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name="surveys")
-    unit = models.CharField(max_length=75, null=True)
-    school_year = models.CharField(max_length=9, null=True)
-    term = models.CharField(max_length=1, null=True)
     completed_students = models.ManyToManyField(Student, related_name="surveys")
-    creation_date = models.DateTimeField(auto_now_add=True, null=True)
-
+    end_date = models.DateField(null=True)
+    frequency = models.CharField(max_length=7, null=True, blank=False)
 
 class BooleanQuestion(models.Model):
     survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE, related_name="boolean_questions")
@@ -24,6 +21,8 @@ class BooleanQuestion(models.Model):
     question_rank = models.IntegerField(null=True, blank=False)
     question_type = "Boolean"
 
+    display = models.BooleanField(default=True)
+
 
 class TextQuestion(models.Model):
     survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE, related_name="text_questions")
@@ -31,6 +30,8 @@ class TextQuestion(models.Model):
 
     question_rank = models.IntegerField(null=True, blank=False)
     question_type = "Text"
+
+    display = models.BooleanField(default=True)
 
 
 class MultipleChoiceQuestion(models.Model):
@@ -46,6 +47,8 @@ class MultipleChoiceQuestion(models.Model):
     question_rank = models.IntegerField(null=True, blank=False)
     question_type = "MultipleChoice"
 
+    display = models.BooleanField(default=True)
+
 
 class CheckboxQuestion(models.Model):
     survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE, related_name="checkbox_questions")
@@ -59,3 +62,6 @@ class CheckboxQuestion(models.Model):
 
     question_rank = models.IntegerField(null=True, blank=False)
     question_type = "Checkbox"
+
+    display = models.BooleanField(default=True)
+

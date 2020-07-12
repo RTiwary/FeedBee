@@ -9,6 +9,37 @@
         form {
             font-size: 20px;
         }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: #474e5d;
+            padding-top: 50px;
+            opacity: 0.6;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            z-index: 3;
+            position: fixed;
+            display: none; /* Hidden by default */
+            background-color: #fefefe;
+            top: 50%;
+            left: 50%;
+            margin: 0 auto;
+            margin-left: -200px;
+            margin-top: -200px;
+            padding: 20px;
+            width: auto;
+            height: auto;
+        }
     </style>
 
     {% load crispy_forms_tags %}
@@ -39,7 +70,27 @@
                     {{ form.question_text | as_crispy_field }}
                 </div>
             </div>
-            <button type="submit" style="margin-top: 10px" class="btn btn-primary">{{ action }} Question</button>
+
+            {% if action == "Update" and question_format == "Recurring" %}
+
+                <! -- Update Question Modal -->
+                <div id="id01" class="modal"></div>
+                <div id="id02" class="modal-content">
+                    <div class="container" style="text-align: center">
+                        <h1>Edit Recurring Question</h1>
+                        <p>Are you sure you want to edit this question?</p>
+                        <button onclick="document.getElementById('id01').style.display='none'; document.getElementById('id02').style.display='none';" type="button" class="btn btn-default">Cancel</button>
+                        <button type="submit" class="btn btn-success">Confirm Edit</button>
+                    </div>
+                </div>
+
+                <button type="button" style="margin-top: 10px" class="btn btn-primary" data-toggle="modal" onclick="document.getElementById('id01').style.display='block';
+                document.getElementById('id02').style.display='block';">
+                    {{ action }} Question
+                </button>
+            {% else %}
+                <button type="submit" style="margin-top: 10px" class="btn btn-primary">{{ action }} Question</button>
+            {% endif %}
         </form>
     </div>
 {% endblock content %}
