@@ -361,7 +361,13 @@ def add_survey(request, classroom_id):
         form = SurveyCreationForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data["survey_name"]
-            new_survey = Survey.objects.create(name=name, classroom_id=classroom_id)
+            end_date = form.cleaned_data["end_date"]
+            frequency_list = form.cleaned_data["frequency"]
+            frequency = ""
+            for day in frequency_list:
+                frequency += day
+            new_survey = Survey.objects.create(name=name, end_date=end_date, frequency=frequency,
+                                               classroom_id=classroom_id)
             return redirect("view_questions", survey_id=new_survey.id)
 
     else:

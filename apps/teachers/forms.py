@@ -8,11 +8,30 @@ class ClassroomCreationForm(forms.Form):
 class ClassroomEditForm(forms.Form):
     class_name = forms.CharField(label='Class Name', max_length=100)
 
+
+INTERVAL_CHOICES = (('1', 'Monday'),
+                    ('2', 'Tuesday'),
+                    ('3', 'Wednesday'),
+                    ('4', 'Thursday'),
+                    ('5', 'Friday'),
+                    ('6', 'Saturday'),
+                    ('7', 'Sunday')
+                    )
 class SurveyCreationForm(forms.Form):
     survey_name = forms.CharField(label='Survey Name', max_length=100)
+    end_date = forms.DateField(label="Survey/Unit End Date",
+                               widget=forms.TextInput(attrs={'type': 'date',
+                                                             'placeholder': 'YYYY-MM-DD', 'required': 'required'}))
+    frequency = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+        choices=INTERVAL_CHOICES,
+    )
+
 
 class SurveyEditForm(forms.Form):
     survey_name = forms.CharField(label='Survey Name', max_length=100)
+
 
 QUESTION_TYPE_CHOICES=[('Boolean','True or False'), ('Text','Short Answer'), ('MultipleChoice','Multiple Choice'),
                        ('Checkbox','Checkbox')]
