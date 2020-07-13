@@ -31,7 +31,9 @@ class SurveyCreationForm(forms.Form):
 
 class SurveyEditForm(forms.Form):
     survey_name = forms.CharField(label='Survey Name', max_length=100)
-
+    end_date = forms.DateField(label="Survey/Unit End Date",
+                               widget=forms.TextInput(attrs={'type': 'date',
+                                                             'placeholder': 'YYYY-MM-DD', 'required': 'required'}))
 
 QUESTION_TYPE_CHOICES=[('Boolean','True or False'), ('Text','Short Answer'), ('MultipleChoice','Multiple Choice'),
                        ('Checkbox','Checkbox')]

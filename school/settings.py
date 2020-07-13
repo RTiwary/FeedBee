@@ -88,10 +88,10 @@ WSGI_APPLICATION = 'school.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'test_school',
-        'USER': 'raeed',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'NAME': 'new_school',
+        'USER': 'postgres',
+        'PASSWORD': 'Pistons1',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
