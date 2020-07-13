@@ -14,17 +14,42 @@ Form for editing the name of a classroom
 class ClassroomEditForm(forms.Form):
     class_name = forms.CharField(label='Class Name', max_length=100)
 
+
+'''
+Array mapping the day of the week in integer form to its word form
+'''
+INTERVAL_CHOICES = (('1', 'Monday'),
+                    ('2', 'Tuesday'),
+                    ('3', 'Wednesday'),
+                    ('4', 'Thursday'),
+                    ('5', 'Friday'),
+                    ('6', 'Saturday'),
+                    ('7', 'Sunday')
+                    )
+
 '''
 Form for creating a new survey in a classroom
 '''
 class SurveyCreationForm(forms.Form):
     survey_name = forms.CharField(label='Survey Name', max_length=100)
+    end_date = forms.DateField(label="Survey/Unit End Date",
+                               widget=forms.TextInput(attrs={'type': 'date',
+                                                             'placeholder': 'YYYY-MM-DD', 'required': 'required'}))
+    frequency = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+        choices=INTERVAL_CHOICES,
+    )
+
 
 '''
-Form for editing the name of a survey in a classroom
+Form for editing the name and end date of a survey in a classroom
 '''
 class SurveyEditForm(forms.Form):
     survey_name = forms.CharField(label='Survey Name', max_length=100)
+    end_date = forms.DateField(label="Survey/Unit End Date",
+                               widget=forms.TextInput(attrs={'type': 'date',
+                                                             'placeholder': 'YYYY-MM-DD', 'required': 'required'}))
 
 '''
 An array storing the mapping between a question type's 
