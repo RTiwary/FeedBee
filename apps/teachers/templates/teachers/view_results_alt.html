@@ -1,4 +1,3 @@
-
 {% extends "teachers/base.html" %}
 
 {% block content %}
@@ -9,11 +8,13 @@
         }
     </style>
 
+    <!-- Displays name of survey -->
     <div class="container">
-    <br>
-    <h2 class="display-3 row justify-content-center">{{ survey.name }} Results</h2>
+        <br>
+        <h2 class="display-3 row justify-content-center">{{ survey.name }} Results</h2>
     </div>
 
+    <!-- Displays question text and student responses for all questions in a survey -->
     <table class="table table-light table-bordered table-hover scrollable">
         <thead class="thead-dark">
             <tr>
@@ -35,5 +36,4 @@
             </tr>
         {% endfor %}
     </table>
-
 {% endblock content %}

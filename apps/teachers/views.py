@@ -32,10 +32,14 @@ def add_class(request):
 
     return render(request, "teachers/add_class.html", {'form': form})
 
-
+'''
+Deletes a classroom in the database using the 
+classroom_id and redirects to the view_classes screen
+'''
 @login_required
 @user_passes_test(is_teacher)
 def delete_class(request, classroom_id):
+    # Query for classroom using classroom_id and delete that classroom
     classroom = Classroom.objects.get(pk=classroom_id)
     classroom.delete()
     return redirect("view_classes")
@@ -276,7 +280,7 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
     question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
 
     for questionDecrement in question_list:
-        questionDecrement.question_rank = questionDecrement.question_rank - 1;
+        questionDecrement.question_rank = questionDecrement.question_rank - 1
         questionDecrement.save()
 
     survey = Survey.objects.get(pk=survey_id)
@@ -284,20 +288,11 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
     # if recurring question, update the display field to 'False', otherwise just delete
     if survey.name == "Base":
         question.update(display=False)
-    else:
-        question.delete()
-
-    if survey.name == "Base":
         classroom_id = survey.classroom.pk
         return redirect("view_recurring_questions", classroom_id=classroom_id)
     else:
+        question.delete()
         return redirect("view_questions", survey_id=survey_id)
-
-
-@login_required
-@user_passes_test(is_teacher)
-def teacher_dashboard(request):
-    return render(request, "teachers/dashboard.html")
 
 
 @login_required
@@ -313,21 +308,32 @@ def view_classes(request):
 def view_questions(request, survey_id):
     if request.method == 'POST':
         survey = Survey.objects.get(pk=survey_id)
-        form = SurveyEditForm(request.POST, initial={'survey_name': survey.name})
+        form = SurveyEditForm(request.POST, initial={'survey_name': survey.name, 'end_date': survey.end_date})
         if form.is_valid():
             new_name = form.cleaned_data["survey_name"]
+            new_end_date = form.cleaned_data["end_date"]
             survey.name = new_name
+            survey.end_date = new_end_date
             survey.save()
     else:
         survey = Survey.objects.get(pk=survey_id)
-        form = SurveyEditForm(initial={'survey_name': survey.name})
+        form = SurveyEditForm(initial={'survey_name': survey.name, 'end_date': survey.end_date})
+
+    frequency_mapping = {"1":"Monday", "2":"Tuesday", "3":"Wednesday", "4":"Thursday", "5":"Friday", "6":"Saturday",
+                         "7":"Sunday"}
+    frequency_list = []
+    for number in survey.frequency:
+        frequency_list.append(frequency_mapping[number])
+
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
     text_questions = TextQuestion.objects.filter(survey=survey_id)
     mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
     checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
     question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
     question_list = sorted(question_list, key=operator.attrgetter('question_rank'))
-    return render(request, "teachers/view_questions.html", {'form': form, "questions": question_list, "survey": survey})
+
+    return render(request, "teachers/view_questions.html", {'form': form, "frequency_list": frequency_list,
+                                                            "questions": question_list, "survey": survey})
 
 
 @login_required
