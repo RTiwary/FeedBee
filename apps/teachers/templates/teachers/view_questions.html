@@ -76,11 +76,11 @@
             </div>
         </div>
 
-        <! -- Edit Survey Name Modal -->
+        <! -- Edit Survey Name/End Date Modal -->
         <div id="id03" class="modal"></div>
         <div id="id04" class="modal-content">
             <div class="container" style="text-align: center">
-                <h1>Edit Survey Name</h1>
+                <h1>Edit Survey</h1>
                 {% load crispy_forms_tags %}
                 <form method="POST" class="form-group">
                     {% csrf_token %}
@@ -103,6 +103,12 @@
                 <a id="delete_link" href="" type="button" class="btn btn-danger">Delete</a>
             </div>
         </div>
+
+        <p class="d-inline lead">This survey is sent out every </p>
+        {% for day in frequency_list %}
+            <span class="d-inline ml-1 badge badge-pill badge-primary">{{ day }}</span>
+        {% endfor %}
+        <p class="lead">Ending on {{ survey.end_date }}</p>
 
         <! -- Questions Table -->
         <div class="card">
