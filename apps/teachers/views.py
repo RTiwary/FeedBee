@@ -254,6 +254,11 @@ def add_checkbox_question(request, survey_id, question_id=-1):
                                                                    'question_format': question_format})
 
 
+'''
+allows teacher to "delete" a question (both recurring and unit questions), removes unit questions from database but
+doesn't actually delete the recurring questions (hides the question using the display field),
+decrements the rank for all questions with higher rank than the one to be deleted 
+'''
 @login_required
 @user_passes_test(is_teacher)
 def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
@@ -280,6 +285,7 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
 
     survey = Survey.objects.get(pk=survey_id)
 
+    # if recurring question, update the display field to 'False', otherwise just delete
     if survey.name == "Base":
         question.update(display=False)
         classroom_id = survey.classroom.pk
@@ -351,6 +357,9 @@ def view_recurring_questions(request, classroom_id):
                                                                       "classroom_id": classroom_id})
 
 
+'''
+allows teacher to add a new survey using the form, adds new survey into database, redirects them to view_questions page
+'''
 @login_required
 @user_passes_test(is_teacher)
 def add_survey(request, classroom_id):
@@ -373,6 +382,7 @@ def add_survey(request, classroom_id):
     return render(request, "teachers/add_survey.html", {'form': form, "classroom_id": classroom_id})
 
 
+'''allows teacher to delete a survey, removes the survey from the database and redirects them to view_classroom_info'''
 @login_required
 @user_passes_test(is_teacher)
 def delete_survey(request, survey_id):
@@ -382,11 +392,16 @@ def delete_survey(request, survey_id):
     return redirect("view_classroom_info", classroom_id=classroom.pk)
 
 
+'''
+gets the info for teacher to view the results/answers of a survey, returns a dictionary with each question as a key
+and a list of answers as a value
+'''
 @login_required
 @user_passes_test(is_teacher)
 def view_results(request, survey_id):
     survey = Survey.objects.get(pk=survey_id)
 
+    # Queries for all of the questions in the survey and sort them based on rank
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
     text_questions = TextQuestion.objects.filter(survey=survey_id)
     mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
@@ -394,6 +409,7 @@ def view_results(request, survey_id):
     question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
     question_list = sorted(question_list, key=operator.attrgetter('question_rank'))
 
+    # For each survey question, query the answers to each question as a list of values
     answers = []
     for question in question_list:
         if question.question_type == "Boolean":
@@ -407,6 +423,7 @@ def view_results(request, survey_id):
 
         answers.append(answer)
 
+    # returns a dictionary with each question as the key and a corresponding list of answers as the values
     q_and_a = dict(zip(question_list, answers))
 
     return render(request, "teachers/view_results.html", {"survey": survey,

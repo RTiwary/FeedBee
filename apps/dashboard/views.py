@@ -173,6 +173,7 @@ def findInterval(survey, timestamp):
     if len(frequency_string) == 1:
         difference = answer_date.isoweekday() - int(frequency_string)
     else:
+        # Find most recent earlier interval date before the answer_date
         for i in range(0, len(frequency_string)):
             if answer_date.isoweekday() < int(frequency_string[i]):
                 if i != 0:

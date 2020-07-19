@@ -3,11 +3,12 @@
 {% block content %}
     <style>
         .scrollable {
-            max-height: 320px;
+            max-height: 360px;
             overflow: scroll;
         }
     </style>
 
+    <!-- Join Class Button -->
     <div class="container">
         <br>
         <h2 class="display-3 row justify-content-center">My Classes</h2>
@@ -16,6 +17,7 @@
         </a>
     </div>
 
+    <!-- If the student is in any classes, display the class name + teacher name of that class-->
     {% if class_list %}
         <div class=" container"">
             <div class="row ">
@@ -31,6 +33,10 @@
                                 </div>
                             </div>
                         </div>
+                        <!--
+                        Loops through the 2-column list returned by view_classes so that students can see all their classes
+                        and their respective teacher names
+                        -->
                         <ul class="list-group list-group-flush scrollable">
                             {% for class, teacher in class_list %}
                                 <li class="list-group-item">

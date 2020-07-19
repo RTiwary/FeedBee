@@ -8,10 +8,13 @@
         }
     </style>
 
+    <!-- Displays the classroom name -->
     <div class="container">
         <br>
         <h2 class="display-3 row justify-content-center">{{ classroom.name }}</h2>
     </div>
+
+    <!-- Displays all of the student's surveys (completed and not completed), not completed is in the list 'surveys' -->
     {% if surveys or completed %}
         <div class="container">
             <div class="row ">
@@ -22,18 +25,26 @@
                                 <div class="col-lg">
                                     <strong>Survey</strong>
                                 </div>
+                                <div class="col-lg">
+                                    <strong>Due</strong>
+                                </div>
                                 <div class="col-2">
                                     <strong>Status</strong>
                                 </div>
                             </div>
                         </div>
                         <ul class="list-group list-group-flush scrollable">
+                            <!-- Displays all of the not completed surveys with blue Take Survey button next to them
+                            at the top of the list group -->
                             {% if surveys %}
-                                {% for survey in surveys %}
+                                {% for survey, due in surveys %}
                                     <li class="list-group-item">
                                         <div class="row">
                                             <div class="col-lg">
                                                 {{ survey.name }}
+                                            </div>
+                                            <div class="col-lg">
+                                                {{ due }}
                                             </div>
                                             <div class="col-2">
                                                 <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">Take Survey</a>
@@ -43,6 +54,7 @@
                                 {% endfor %}
                             {% endif %}
 
+                            <!-- Displays all of the completed surveys with greyed out Completed buttons next to them -->
                             {% if completed %}
                                 {% for survey in completed %}
                                         <li class="list-group-item">
