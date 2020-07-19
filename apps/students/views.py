@@ -1,3 +1,5 @@
+import calendar
+import datetime
 import operator
 
 from django.contrib.auth import logout
@@ -11,9 +13,12 @@ from apps.students.models import CheckboxAnswer, TextAnswer, BooleanAnswer, Mult
 from apps.teachers.models import CheckboxQuestion, TextQuestion, BooleanQuestion, MultipleChoiceQuestion, Survey, \
     Classroom
 from django.contrib.auth.decorators import login_required, user_passes_test
+
+
 # test for if user is student
 def is_student(user):
     return user.is_student
+
 
 @login_required
 @user_passes_test(is_student)
@@ -37,14 +42,18 @@ def join_class(request, classroom_id=None):
     form = JoinClassForm()
     return render(request, "students/join_class.html", {'form': form})
 
+
 @login_required
 @user_passes_test(is_student)
 def student_dashboard(request):
-    surveys = Survey.objects.filter(classroom__students__user=request.user)\
-        .exclude(completed_students__user=request.user).exclude(name="Base")
+    all_surveys = Survey.objects.filter(classroom__students__user=request.user) \
+        .exclude(name="Base").exclude(end_date__lte=datetime.datetime.today())
+
+    surveys, filler = get_pending_surveys(request.user, all_surveys)
+    days_due = get_due_days(surveys)
 
     return render(request, "students/dashboard.html", {
-        'surveys': surveys,
+        'surveys': zip(surveys, days_due),
         'empty': len(surveys) == 0
     })
 
@@ -78,19 +87,22 @@ def view_classes(request):
 @user_passes_test(is_student)
 def view_surveys(request, classroom_id):
     classroom = Classroom.objects.get(pk=classroom_id)
-    surveys = Survey.objects.filter(classroom_id=classroom_id)\
-        .exclude(completed_students__user=request.user).exclude(name="Base")
-    completed = Survey.objects.filter(classroom_id=classroom_id,
-                                      completed_students__user=request.user)\
-        .exclude(name="Base")
+    all_surveys = Survey.objects.filter(classroom=classroom) \
+        .exclude(name="Base").exclude(end_date__lte=datetime.datetime.today())
+
+    surveys, completed = get_pending_surveys(request.user, all_surveys)
+    days_due = get_due_days(surveys)
+
     return render(request, "students/view_surveys.html", {'classroom': classroom,
-                                                          'surveys': surveys,
+                                                          'surveys': zip(surveys, days_due),
                                                           'completed': completed})
+
 
 @login_required
 @user_passes_test(is_student)
 def suggest_feature(request):
     return render(request, "students/suggest_feature.html")
+
 
 @login_required
 @user_passes_test(is_student)
@@ -129,7 +141,6 @@ def take_survey(request, survey_id):
 
     if request.method == 'POST':
         if request.POST.get("submit"):
-            survey.completed_students.add(student)
             for q in questions:
                 if q.question_type == "Boolean":
                     answer = BooleanAnswer()
@@ -180,3 +191,78 @@ def take_survey(request, survey_id):
         'questions': questions,
         'total_questions': len(questions)
     })
+
+
+### HELPER FUNCTIONS ###
+def get_pending_surveys(student, all_surveys):
+    date = datetime.date.today()
+    day = datetime.date.isoweekday(date)
+    surveys = []
+    completed = []
+    for s in all_surveys:
+        interval_start = datetime.date
+        freq = sorted(list(s.frequency))
+        freq.reverse()
+        for d in freq:
+            if int(d) < day:
+                interval_start = date - datetime.timedelta(days=day - int(d))
+        else:
+            interval_start = date - datetime.timedelta(days=7 - (int(d) - day))
+
+        questions = [BooleanQuestion.objects.filter(survey=s),
+                     MultipleChoiceQuestion.objects.filter(survey=s),
+                     CheckboxQuestion.objects.filter(survey=s),
+                     TextQuestion.objects.filter(survey=s)]
+
+        for q in questions:
+            if len(q) > 0:
+                question = q[0]
+                if question.question_type == "Boolean":
+                    response = BooleanAnswer.objects.filter(question=question,
+                                                            student__user=student)
+                elif question.question_type == "Text":
+                    response = TextAnswer.objects.filter(question=question,
+                                                         student__user=student)
+                elif question.question_type == "MultipleChoice":
+                    response = MultipleChoiceAnswer.objects.filter(question=question,
+                                                                   student__user=student)
+                elif question.question_type == "Checkbox":
+                    response = CheckboxAnswer.objects.filter(question=question,
+                                                             student__user=student)
+
+                if len(response) > 0:
+                    if response.latest('timestamp').timestamp.date() < interval_start:
+                        surveys.append(s)
+                    else:
+                        completed.append(s)
+                else:
+                    surveys.append(s)
+
+                break
+
+    return surveys, completed
+
+
+def get_due_days(surveys):
+    date = datetime.date.today()
+    day = datetime.date.isoweekday(date)
+    days_due = []
+    for s in surveys:
+        freq = sorted(list(s.frequency))
+        due_day = int
+        due_date = datetime.date
+        for d in freq:
+            if int(d) > day:
+                due_day = int(d) - 2 if int(d) - 2 >= 0 else 6
+                due_date = date - datetime.timedelta(days=7 - (int(d) - day))
+                break
+        else:
+            due_day = int(freq[0]) - 2 if int(freq[0]) - 2 >= 0 else 6
+            due_date = date - datetime.timedelta(days=day - int(d))
+
+        if due_date > s.end_date:
+            due_day = datetime.date.isoweekday(s.end_date)
+
+        days_due.append(calendar.day_name[due_day])
+
+    return days_due

@@ -9,6 +9,7 @@
                 <tr>
                     <th>Class</th>
                     <th>Survey</th>
+                    <th>Due</th>
                 </tr>
             </thead>
             <tbody>
@@ -17,10 +18,11 @@
                         <td class="bg-light text-center" colspan="4">😎 You have completed all current surveys! 😎</td>
                     </tr>
                 {% endif %}
-                {% for s in surveys %}
+                {% for s, d in surveys %}
                     <tr>
                         <td class="align-middle">{{ s.classroom.name }}</td>
                         <td class="align-middle">{{ s.name }}</td>
+                        <td class="align-middle">{{ d }}</td>
                         <td class="text-right">
                             <a href="{% url 'take_survey' s.pk %}" class="btn btn-primary">Take Survey</a>
                         </td>

@@ -25,6 +25,9 @@
                                 <div class="col-lg">
                                     <strong>Survey</strong>
                                 </div>
+                                <div class="col-lg">
+                                    <strong>Due</strong>
+                                </div>
                                 <div class="col-2">
                                     <strong>Status</strong>
                                 </div>
@@ -34,11 +37,14 @@
                             <!-- Displays all of the not completed surveys with blue Take Survey button next to them
                             at the top of the list group -->
                             {% if surveys %}
-                                {% for survey in surveys %}
+                                {% for survey, due in surveys %}
                                     <li class="list-group-item">
                                         <div class="row">
                                             <div class="col-lg">
                                                 {{ survey.name }}
+                                            </div>
+                                            <div class="col-lg">
+                                                {{ due }}
                                             </div>
                                             <div class="col-2">
                                                 <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">Take Survey</a>
