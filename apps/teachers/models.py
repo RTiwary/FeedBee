@@ -10,7 +10,6 @@ class Classroom(models.Model):
 class Survey(models.Model):
     name = models.CharField(max_length=100, null=True)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name="surveys")
-    completed_students = models.ManyToManyField(Student, related_name="surveys")
     end_date = models.DateField(null=True)
     frequency = models.CharField(max_length=7, null=True, blank=False)
 
