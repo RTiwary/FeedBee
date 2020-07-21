@@ -1,10 +1,9 @@
-{% extends 'dashboard/base.html' %}
+{% extends "dashboard/base.html" %}
 
 {% block content %}
     <div class="container" style="text-align: center; margin-top: 2em;">
         <h1>Dashboard</h1>
     </div>
-
     <div class="container" style="margin-top: 2em; display: flex">
         <div class="dropdown show">
             <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -13,13 +12,13 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for class in class_list %}
-                    {% if class.id == classroom.id %}
+                    {% if class.name == classroom.name %}
                         <a class="dropdown-item disabled" href="{% url 'dash_select' class.id %}">{{ class.name }}</a>
                     {% else %}
                         <a class="dropdown-item" href="{% url 'dash_select' class.id %}">{{ class.name }}</a>
                     {% endif %}
                 {% empty %}
-                    <a class="dropdown-item" href="{% url 'teacher:add_class' %}"><span class="fa fa-line-add"></span> Class</a>
+                    <a class="dropdown-item" href="teacher/add_class"><span class="fa fa-line-add"></span> Class</a>
                 {% endfor %}
             </div>
         </div>
@@ -27,16 +26,12 @@
         <!-- Select Survey dropdown -->
         <div class="dropdown show" style="margin-left: 1em;">
             <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ curr_survey.name }}
+                Select Survey
             </a>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for survey in survey_list %}
-                    {% if survey.id == curr_survey.id %}
-                        <a class="dropdown-item disabled" href="{% url 'teacher_dashboard' classroom.id survey.id %}">{{ survey.name }}</a>
-                    {% else %}
-                        <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">{{ survey.name }}</a>
-                    {% endif %}
+                    <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">{{ survey.name }}</a>
                 {% empty %}
                     <a class="dropdown-item" href="{% url 'teacher:add_survey' classroom.id %}"><span class="fa fa-plus"></span> Survey</a>
                 {% endfor %}

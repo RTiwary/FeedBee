@@ -1,6 +1,8 @@
 from django.urls import path, register_converter
 from apps.teachers import views
 
+app_name = 'teacher'
+
 urlpatterns = [
     path('add_class/', views.add_class, name="add_class"),
     path('<int:classroom_id>/delete_class/', views.delete_class, name="delete_class"),

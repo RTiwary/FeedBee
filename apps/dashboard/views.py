@@ -3,11 +3,39 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from apps.teachers.views import *
 from datetime import datetime, timedelta
 
+
+@login_required
+@user_passes_test(is_teacher)
+def dash(request):
+    teacher = request.user.teacher_profile
+    class_list = Classroom.objects.filter(teacher_id=teacher.id)
+
+    # return list of the teacher's classrooms
+    return render(request, "dashboard/dash_select_class.html", {'class_list': class_list})
+
+
+'''allows teacher to select the survey they want given they already select the classroom'''
+@login_required
+@user_passes_test(is_teacher)
+def dash_select(request, classroom_id):
+    teacher = request.user.teacher_profile
+    class_list = Classroom.objects.filter(teacher_id=teacher.id)
+    classroom = Classroom.objects.get(pk=classroom_id)
+    survey_list = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+    # returns list of the surveys in the selected classroom
+    return render(request, "dashboard/dash_select_survey.html", {
+        'classroom': classroom, 'class_list': class_list, 'survey_list': survey_list
+    })
+
+
 @login_required
 @user_passes_test(is_teacher)
 def teacher_dashboard(request, classroom_id, survey_id):
     classroom = Classroom.objects.get(pk=classroom_id)
     survey = Survey.objects.get(pk=survey_id)
+    teacher = request.user.teacher_profile
+    class_list = Classroom.objects.filter(teacher_id=teacher.id)
+    survey_list = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
 
     # Don't include Base survey
     if survey.name != "Base":
@@ -75,7 +103,10 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Add checkbox_date and checkbox_data to data package
             graph_list.append([title, checkbox_date, checkbox_data])
 
-    return render(request, "teachers/dashboard.html", {"graph_data": graph_list})
+    return render(request, "dashboard/teacher_dashboard.html", {
+        "graph_data": graph_list, 'classroom': classroom, 'curr_survey': survey, 'class_list': class_list,
+        'survey_list': survey_list
+    })
 
 # Sample data format from ChartJS for line graph
 #
