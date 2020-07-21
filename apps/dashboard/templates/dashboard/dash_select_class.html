@@ -14,7 +14,7 @@
                 {% for class in class_list %}
                     <a class="dropdown-item" href="{% url 'dash_select' class.id %}">{{ class.name }}</a>
                 {% empty %}
-                    <a class="dropdown-item" href="{% url 'teacher:add_class' %}"><span class="fa fa-plus"></span> Class</a>
+                    <a class="dropdown-item" href="/teacher/add_class"><span class="fa fa-plus"></span> Class</a>
                 {% endfor %}
             </div>
         </div>

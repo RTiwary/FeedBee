@@ -18,7 +18,7 @@
                         <a class="dropdown-item" href="{% url 'dash_select' class.id %}">{{ class.name }}</a>
                     {% endif %}
                 {% empty %}
-                    <a class="dropdown-item" href="teacher/add_class"><span class="fa fa-line-add"></span> Class</a>
+                    <a class="dropdown-item" href="/teacher/add_class"><span class="fa fa-line-add"></span> Class</a>
                 {% endfor %}
             </div>
         </div>
@@ -33,7 +33,7 @@
                 {% for survey in survey_list %}
                     <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">{{ survey.name }}</a>
                 {% empty %}
-                    <a class="dropdown-item" href="{% url 'teacher:add_survey' classroom.id %}"><span class="fa fa-plus"></span> Survey</a>
+                    <a class="dropdown-item" href="{% url 'add_survey' classroom.id %}"><span class="fa fa-plus"></span> Survey</a>
                 {% endfor %}
             </div>
         </div>
