@@ -64,11 +64,12 @@ def teacher_dashboard(request, classroom_id, survey_id):
         for checkbox_question in checkbox_questions:
             # Get only the answers related to each checkbox question
             checkbox_answers = CheckboxAnswer.objects.filter(question=checkbox_question)
+            question_id = checkbox_question.id
 
             # Only fetch data if there are responses to a question
             if len(checkbox_answers) > 0:
                 title = checkbox_question.question_text
-                checkbox_date, checkbox_data = display_unit_checkbox_graph(survey, checkbox_answers)
+                checkbox_date, checkbox_data = display_unit_checkbox_graph(survey, checkbox_answers, question_id)
 
                 # Add checkbox_date and checkbox_data to data package
                 graph_list.append([title, checkbox_date, checkbox_data])
@@ -158,7 +159,7 @@ def display_unit_text_graph(survey, text_answers):
 def display_unit_mc_graph(survey, mc_answers):
     return [], []
 
-def display_unit_checkbox_graph(frequency, checkbox_answers):
+def display_unit_checkbox_graph(frequency, checkbox_answers, question_id):
     # One each for all answer choices
     # date: [[number checked, number responses], [number checked, number responses], ....5 of these]
     interval_data = {}
@@ -186,8 +187,25 @@ def display_unit_checkbox_graph(frequency, checkbox_answers):
 
     for question in interval_data.values():
         choices_percentage = []
+        index = 0
         for choice in question:
-            choices_percentage.append(round((float(choice[0]) / choice[1]) * 100.0))
+            choice_element = []
+            choice_title = CheckboxQuestion.objects.filter(pk=question_id).first()
+
+            if index == 0:
+                choice_element.append(choice_title.option_a)
+            elif index == 1:
+                choice_element.append(choice_title.option_b)
+            elif index == 2:
+                choice_element.append(choice_title.option_c)
+            elif index == 3:
+                choice_element.append(choice_title.option_d)
+            elif index == 4:
+                choice_element.append(choice_title.option_e)
+
+            choice_element.append(round((float(choice[0]) / choice[1]) * 100.0))
+            choices_percentage.append(choice_element)
+            index += 1
         interval_percentage.append(choices_percentage)
 
     return interval_dates, interval_percentage
