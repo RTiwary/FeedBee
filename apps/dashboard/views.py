@@ -8,12 +8,11 @@ from datetime import datetime, timedelta
 def teacher_dashboard(request, classroom_id, survey_id):
     classroom = Classroom.objects.get(pk=classroom_id)
     survey = Survey.objects.get(pk=survey_id)
+    # Structure: graph_list = [ [ title, date_labels, data ] ]
+    graph_list = []
 
     # Don't include Base survey
     if survey.name != "Base":
-        # Structure: graph_list = [ [ title, date_labels, data ] ]
-        graph_list = []
-
         # Get all boolean questions related to survey
         boolean_questions = BooleanQuestion.objects.filter(survey_id=survey_id)
 
@@ -26,9 +25,8 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 title = boolean_question.question_text
                 boolean_date, boolean_data = display_unit_boolean_graph(survey, boolean_answers)
 
-            # Add boolean_date and boolean_data to data package
-            graph_list.append([title, boolean_date, boolean_data])
-
+                # Add boolean_date and boolean_data to data package
+                graph_list.append([title, boolean_date, boolean_data])
 
         # Get all text questions related to survey
         text_questions = TextQuestion.objects.filter(survey_id=survey)
@@ -42,8 +40,8 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 title = text_question.question_text
                 text_date, text_data = display_unit_text_graph(survey, text_answers)
 
-            # Add text_date and text_data to data package
-            graph_list.append([title, text_date, text_data])
+                # Add text_date and text_data to data package
+                graph_list.append([title, text_date, text_data])
 
         # Get all mc questions related to survey
         mc_questions = MultipleChoiceQuestion.objects.filter(survey_id=survey)
@@ -57,10 +55,10 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 title = mc_question.question_text
                 mc_date, mc_data = display_unit_mc_graph(survey, mc_answers)
 
-            # Add mc_date and mc_data to data package
-            graph_list.append([title, mc_date, mc_data])
+                # Add mc_date and mc_data to data package
+                graph_list.append([title, mc_date, mc_data])
 
-
+        # Get all checkbox questions related to survey
         checkbox_questions = CheckboxQuestion.objects.filter(survey_id=survey)
 
         for checkbox_question in checkbox_questions:
@@ -72,8 +70,8 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 title = checkbox_question.question_text
                 checkbox_date, checkbox_data = display_unit_checkbox_graph(survey, checkbox_answers)
 
-            # Add checkbox_date and checkbox_data to data package
-            graph_list.append([title, checkbox_date, checkbox_data])
+                # Add checkbox_date and checkbox_data to data package
+                graph_list.append([title, checkbox_date, checkbox_data])
 
     return render(request, "teachers/dashboard.html", {"graph_data": graph_list})
 
@@ -160,8 +158,39 @@ def display_unit_text_graph(survey, text_answers):
 def display_unit_mc_graph(survey, mc_answers):
     return [], []
 
-def display_unit_checkbox_graph(survey, checkbox_answers):
-    return [], []
+def display_unit_checkbox_graph(frequency, checkbox_answers):
+    # One each for all answer choices
+    # date: [[number checked, number responses], [number checked, number responses], ....5 of these]
+    interval_data = {}
+
+    for checkbox_answer in checkbox_answers:
+        # Get interval date given the survey and timestamp
+        interval = findInterval(frequency, checkbox_answer.timestamp)
+
+        # Check if interval doesn't exist in dictionary
+        if interval not in interval_data:
+            interval_data[interval] = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+
+        # Increment responses for all choices
+        for i in range(5):
+            interval_data[interval][i][1] += 1
+
+        # Increment if True
+        for checked in checkbox_answer.answer:
+            interval_data[interval][ord(checked) - ord('A')][0] += 1
+
+    interval_dates = list(interval_data.keys())
+
+    # Calculate percentages for each individual choice
+    interval_percentage = []
+
+    for question in interval_data.values():
+        choices_percentage = []
+        for choice in question:
+            choices_percentage.append(round((float(choice[0]) / choice[1]) * 100.0))
+        interval_percentage.append(choices_percentage)
+
+    return interval_dates, interval_percentage
 
 # Returns the interval (a date) that an answer belongs to given the timestamp and the survey
 def findInterval(survey, timestamp):
