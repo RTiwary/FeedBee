@@ -54,8 +54,8 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 title = boolean_question.question_text
                 boolean_date, boolean_data = display_unit_boolean_graph(survey, boolean_answers)
 
-            # Add boolean_date and boolean_data to data package
-            graph_list.append([title, boolean_date, boolean_data])
+                # Add boolean_date and boolean_data to data package
+                graph_list.append([title, boolean_date, boolean_data])
 
 
         # Get all text questions related to survey
@@ -70,8 +70,8 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 title = text_question.question_text
                 text_date, text_data = display_unit_text_graph(survey, text_answers)
 
-            # Add text_date and text_data to data package
-            graph_list.append([title, text_date, text_data])
+                # Add text_date and text_data to data package
+                graph_list.append([title, text_date, text_data])
 
         # Get all mc questions related to survey
         mc_questions = MultipleChoiceQuestion.objects.filter(survey_id=survey)
@@ -85,8 +85,8 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 title = mc_question.question_text
                 mc_date, mc_data = display_unit_mc_graph(survey, mc_answers)
 
-            # Add mc_date and mc_data to data package
-            graph_list.append([title, mc_date, mc_data])
+                # Add mc_date and mc_data to data package
+                graph_list.append([title, mc_date, mc_data])
 
 
         checkbox_questions = CheckboxQuestion.objects.filter(survey_id=survey)
@@ -100,8 +100,8 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 title = checkbox_question.question_text
                 checkbox_date, checkbox_data = display_unit_checkbox_graph(survey, checkbox_answers)
 
-            # Add checkbox_date and checkbox_data to data package
-            graph_list.append([title, checkbox_date, checkbox_data])
+                # Add checkbox_date and checkbox_data to data package
+                graph_list.append([title, checkbox_date, checkbox_data])
 
     return render(request, "dashboard/teacher_dashboard.html", {
         "graph_data": graph_list, 'classroom': classroom, 'curr_survey': survey, 'class_list': class_list,

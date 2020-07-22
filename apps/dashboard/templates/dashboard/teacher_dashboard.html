@@ -43,4 +43,72 @@
             </div>
         </div>
     </div>
+
+    <div class="container">
+        {% for data in graph_data %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="card" style="margin-top: 2em;">
+                        <div class="card-body">
+                            <canvas id="myChart{{ forloop.counter0 }}"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {{ graph_data|json_script:"graph_data" }}
+
+        <script>
+           const graph_data = JSON.parse(document.getElementById('graph_data').textContent);
+
+           for (var i = 0; i < Object.keys(graph_data).length; i++) {
+                var ctx = document.getElementById("myChart" + i);
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: graph_data[i][1],
+                        datasets: [{
+                            data: graph_data[i][2],
+                            borderColor: '#007bff',
+                            borderWidth: 4,
+                            pointBackgroundColor: '#007bff',
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        spanGaps: true,
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: graph_data[i][0]
+                        },
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Date'
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: '% True'
+                                },
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+
+        </script>
+
+    </div>
 {% endblock %}
