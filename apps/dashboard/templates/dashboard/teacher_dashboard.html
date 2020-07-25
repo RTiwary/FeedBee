@@ -46,15 +46,19 @@
 
     <div class="container">
         {% for data in graph_data %}
-            <div class="row">
-                <div class="col-12">
-                    <div class="card" style="margin-top: 2em;">
+            {% if forloop.counter0|divisibleby:2 %}
+                <div class="row">
+            {% endif %}
+                <div class="col-lg-6 col-sm-12"  style="margin-top: 2em;">
+                    <div class="card">
                         <div class="card-body">
-                            <canvas id="myChart{{ forloop.counter0 }}"></canvas>
+                            <canvas id="myChart{{ forloop.counter0 }}" style="height: 15em; width: 20em;"></canvas>
                         </div>
                     </div>
                 </div>
-            </div>
+            {% if forloop.counter|divisibleby:2 %}
+                </div>
+            {% endif %}
         {% endfor %}
         {{ graph_data|json_script:"graph_data" }}
 
@@ -66,9 +70,9 @@
                 var myChart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: graph_data[i][1],
+                        labels: graph_data[i][2],
                         datasets: [{
-                            data: graph_data[i][2],
+                            data: graph_data[i][3],
                             borderColor: '#007bff',
                             borderWidth: 4,
                             pointBackgroundColor: '#007bff',
@@ -83,7 +87,12 @@
                         },
                         title: {
                             display: true,
-                            text: graph_data[i][0]
+                            text: graph_data[i][1]
+                        },
+                        elements: {
+                            line: {
+                                tension: 0
+                            }
                         },
                         scales: {
                             xAxes: [{

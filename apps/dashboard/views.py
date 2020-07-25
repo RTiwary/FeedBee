@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
 from apps.teachers.views import *
 from datetime import datetime, timedelta
+from collections import OrderedDict
 
 
 @login_required
@@ -36,18 +37,17 @@ def teacher_dashboard(request, classroom_id, survey_id):
     teacher = request.user.teacher_profile
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
     survey_list = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+    # Structure: graph_list = [ [ graph_type, title, date_labels, data ] ]
+    graph_list = []
 
     # Don't include Base survey
     if survey.name != "Base":
-        # Structure: graph_list = [ [ title, date_labels, data ] ]
-        graph_list = []
-
         # Get all boolean questions related to survey
         boolean_questions = BooleanQuestion.objects.filter(survey_id=survey_id)
 
         for boolean_question in boolean_questions:
             # Get only the answers related to each boolean question
-            boolean_answers = BooleanAnswer.objects.filter(question=boolean_question)
+            boolean_answers = BooleanAnswer.objects.filter(question=boolean_question).order_by('timestamp')
 
             # Only fetch data if there are responses to a question
             if len(boolean_answers) > 0:
@@ -55,15 +55,15 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 boolean_date, boolean_data = display_unit_boolean_graph(survey, boolean_answers)
 
                 # Add boolean_date and boolean_data to data package
-                graph_list.append([title, boolean_date, boolean_data])
 
+                graph_list.append(['boolean', title, boolean_date, boolean_data])
 
         # Get all text questions related to survey
         text_questions = TextQuestion.objects.filter(survey_id=survey)
 
         for text_question in text_questions:
             # Get only the answers related to each text question
-            text_answers = TextAnswer.objects.filter(question=text_question)
+            text_answers = TextAnswer.objects.filter(question=text_question).order_by('timestamp')
 
             # Only fetch data if there are responses to a question
             if len(text_answers) > 0:
@@ -71,14 +71,14 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 text_date, text_data = display_unit_text_graph(survey, text_answers)
 
                 # Add text_date and text_data to data package
-                graph_list.append([title, text_date, text_data])
+                graph_list.append(['text', title, text_date, text_data])
 
         # Get all mc questions related to survey
         mc_questions = MultipleChoiceQuestion.objects.filter(survey_id=survey)
 
         for mc_question in mc_questions:
             # Get only the answers related to each mc question
-            mc_answers = MultipleChoiceAnswer.objects.filter(question=mc_question)
+            mc_answers = MultipleChoiceAnswer.objects.filter(question=mc_question).order_by('timestamp')
 
             # Only fetch data if there are responses to a question
             if len(mc_answers) > 0:
@@ -86,22 +86,23 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 mc_date, mc_data = display_unit_mc_graph(survey, mc_answers)
 
                 # Add mc_date and mc_data to data package
-                graph_list.append([title, mc_date, mc_data])
+                graph_list.append(['mc', title, mc_date, mc_data])
 
-
+        # Get all checkbox questions related to survey
         checkbox_questions = CheckboxQuestion.objects.filter(survey_id=survey)
 
         for checkbox_question in checkbox_questions:
             # Get only the answers related to each checkbox question
-            checkbox_answers = CheckboxAnswer.objects.filter(question=checkbox_question)
+            checkbox_answers = CheckboxAnswer.objects.filter(question=checkbox_question).order_by('timestamp')
+            question_id = checkbox_question.id
 
             # Only fetch data if there are responses to a question
             if len(checkbox_answers) > 0:
                 title = checkbox_question.question_text
-                checkbox_date, checkbox_data = display_unit_checkbox_graph(survey, checkbox_answers)
+                checkbox_date, checkbox_data = display_unit_checkbox_graph(survey, checkbox_answers, question_id)
 
                 # Add checkbox_date and checkbox_data to data package
-                graph_list.append([title, checkbox_date, checkbox_data])
+                graph_list.append(['checkbox', title, checkbox_date, checkbox_data])
 
     return render(request, "dashboard/teacher_dashboard.html", {
         "graph_data": graph_list, 'classroom': classroom, 'curr_survey': survey, 'class_list': class_list,
@@ -123,7 +124,6 @@ def teacher_dashboard(request, classroom_id, survey_id):
 # 			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 # 			datasets: [{
 # 				label: 'Dataset 1',
-# 				backgroundColor: window.chartColors.red,
 # 				data: [
 # 					randomScalingFactor(),
 # 					randomScalingFactor(),
@@ -165,7 +165,7 @@ def teacher_dashboard(request, classroom_id, survey_id):
 # Returns data needed to display boolean graph
 def display_unit_boolean_graph(survey, boolean_answers):
     # date: [number true, number responses]
-    interval_data = {}
+    interval_data = OrderedDict()
 
     for boolean_answer in boolean_answers:
         # Get interval date given the survey and timestamp
@@ -191,8 +191,46 @@ def display_unit_text_graph(survey, text_answers):
 def display_unit_mc_graph(survey, mc_answers):
     return [], []
 
-def display_unit_checkbox_graph(survey, checkbox_answers):
-    return [], []
+def display_unit_checkbox_graph(frequency, checkbox_answers, question_id):
+    # date: [[number checked, number responses], [number checked, number responses], ....5 of these for each choice]
+    interval_data = OrderedDict()
+
+    for checkbox_answer in checkbox_answers:
+        # Get interval date given the survey and timestamp
+        interval = findInterval(frequency, checkbox_answer.timestamp)
+
+        # Check if interval doesn't exist in dictionary
+        if interval not in interval_data:
+            interval_data[interval] = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+
+        # Increment responses for all choices
+        for i in range(5):
+            interval_data[interval][i][1] += 1
+
+        # Increment if True
+        for checked in checkbox_answer.answer:
+            interval_data[interval][ord(checked) - ord('A')][0] += 1
+
+    interval_dates = list(interval_data.keys())
+
+    # Calculate percentages for each individual choice
+    interval_percentage = []
+
+    # Add dictionaries for each choice
+    choice_title = CheckboxQuestion.objects.filter(pk=question_id).first()
+    interval_percentage.append({'label': choice_title.option_a, 'data': []})
+    interval_percentage.append({'label': choice_title.option_b, 'data': []})
+    interval_percentage.append({'label': choice_title.option_c, 'data': []})
+    interval_percentage.append({'label': choice_title.option_d, 'data': []})
+    interval_percentage.append({'label': choice_title.option_e, 'data': []})
+
+    for date in interval_data.values():
+        index = 0
+        for choice in date:
+            interval_percentage[index]['data'].append(round((float(choice[0]) / choice[1]) * 100.0))
+            index += 1
+
+    return interval_dates, interval_percentage
 
 # Returns the interval (a date) that an answer belongs to given the timestamp and the survey
 def findInterval(survey, timestamp):
