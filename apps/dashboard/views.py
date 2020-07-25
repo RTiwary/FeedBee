@@ -37,6 +37,7 @@ def teacher_dashboard(request, classroom_id, survey_id):
     teacher = request.user.teacher_profile
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
     survey_list = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+
     # Structure: graph_list = [ [ graph_type, title, date_labels, data ] ]
     graph_list = []
 
@@ -55,7 +56,6 @@ def teacher_dashboard(request, classroom_id, survey_id):
                 boolean_date, boolean_data = display_unit_boolean_graph(survey, boolean_answers)
 
                 # Add boolean_date and boolean_data to data package
-
                 graph_list.append(['boolean', title, boolean_date, boolean_data])
 
         # Get all text questions related to survey
