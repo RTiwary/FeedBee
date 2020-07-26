@@ -25,7 +25,7 @@ def dash_select(request, classroom_id):
     teacher = request.user.teacher_profile
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
     classroom = Classroom.objects.get(pk=classroom_id)
-    survey_list = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+    survey_list = Survey.objects.filter(classroom_id=classroom_id)
     # returns list of the surveys in the selected classroom
     return render(request, "dashboard/dash_select_survey.html", {
         'classroom': classroom, 'class_list': class_list, 'survey_list': survey_list
@@ -39,72 +39,77 @@ def teacher_dashboard(request, classroom_id, survey_id):
     survey = Survey.objects.get(pk=survey_id)
     teacher = request.user.teacher_profile
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
-    survey_list = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+    survey_list = Survey.objects.filter(classroom_id=classroom_id)
 
     # Structure: graph_list = [ [ graph_type, title, date_labels, data ] ]
     graph_list = []
 
-    # Don't include Base survey
-    if survey.name != "Base":
-        # Get all boolean questions related to survey
-        boolean_questions = BooleanQuestion.objects.filter(survey_id=survey_id)
+    # If Base, use weekly intervals
+    frequency = str
+    if survey.name == "Base":
+        frequency = '1'
+    else:
+        frequency = survey.frequency
 
-        for boolean_question in boolean_questions:
-            # Get only the answers related to each boolean question
-            boolean_answers = BooleanAnswer.objects.filter(question=boolean_question).order_by('timestamp')
+    # Get all boolean questions related to survey
+    boolean_questions = BooleanQuestion.objects.filter(survey_id=survey_id)
 
-            # Only fetch data if there are responses to a question
-            if len(boolean_answers) > 0:
-                title = boolean_question.question_text
-                boolean_date, boolean_data = display_unit_boolean_graph(survey.frequency, boolean_answers)
+    for boolean_question in boolean_questions:
+        # Get only the answers related to each boolean question
+        boolean_answers = BooleanAnswer.objects.filter(question=boolean_question).order_by('timestamp')
 
-                # Add boolean_date and boolean_data to data package
-                graph_list.append(['boolean', title, boolean_date, boolean_data])
+        # Only fetch data if there are responses to a question
+        if len(boolean_answers) > 0:
+            title = boolean_question.question_text
+            boolean_date, boolean_data = display_unit_boolean_graph(frequency, boolean_answers)
 
-        # Get all text questions related to survey
-        text_questions = TextQuestion.objects.filter(survey_id=survey)
+            # Add boolean_date and boolean_data to data package
+            graph_list.append(['boolean', title, boolean_date, boolean_data])
 
-        for text_question in text_questions:
-            # Get only the answers related to each text question
-            text_answers = TextAnswer.objects.filter(question=text_question).order_by('timestamp')
+    # Get all text questions related to survey
+    text_questions = TextQuestion.objects.filter(survey_id=survey)
 
-            # Only fetch data if there are responses to a question
-            if len(text_answers) > 0:
-                title = text_question.question_text
-                text_date, text_data = display_unit_text_graph(survey.frequency, text_answers)
+    for text_question in text_questions:
+        # Get only the answers related to each text question
+        text_answers = TextAnswer.objects.filter(question=text_question).order_by('timestamp')
 
-                # Add text_date and text_data to data package
-                graph_list.append(['text', title, text_date, text_data])
+        # Only fetch data if there are responses to a question
+        if len(text_answers) > 0:
+            title = text_question.question_text
+            text_date, text_data = display_unit_text_graph(frequency, text_answers)
 
-        # Get all mc questions related to survey
-        mc_questions = MultipleChoiceQuestion.objects.filter(survey_id=survey)
+            # Add text_date and text_data to data package
+            graph_list.append(['text', title, text_date, text_data])
 
-        for mc_question in mc_questions:
-            # Get only the answers related to each mc question
-            mc_answers = MultipleChoiceAnswer.objects.filter(question=mc_question).order_by('timestamp')
+    # Get all mc questions related to survey
+    mc_questions = MultipleChoiceQuestion.objects.filter(survey_id=survey)
 
-            # Only fetch data if there are responses to a question
-            if len(mc_answers) > 0:
-                title = mc_question.question_text
-                mc_date, mc_data = display_unit_mc_graph(survey.frequency, mc_answers)
+    for mc_question in mc_questions:
+        # Get only the answers related to each mc question
+        mc_answers = MultipleChoiceAnswer.objects.filter(question=mc_question).order_by('timestamp')
 
-                # Add mc_date and mc_data to data package
-                graph_list.append(['mc', title, mc_date, mc_data])
+        # Only fetch data if there are responses to a question
+        if len(mc_answers) > 0:
+            title = mc_question.question_text
+            mc_date, mc_data = display_unit_mc_graph(frequency, mc_answers)
 
-        # Get all checkbox questions related to survey
-        checkbox_questions = CheckboxQuestion.objects.filter(survey_id=survey)
+            # Add mc_date and mc_data to data package
+            graph_list.append(['mc', title, mc_date, mc_data])
 
-        for checkbox_question in checkbox_questions:
-            # Get only the answers related to each checkbox question
-            checkbox_answers = CheckboxAnswer.objects.filter(question=checkbox_question).order_by('timestamp')
+    # Get all checkbox questions related to survey
+    checkbox_questions = CheckboxQuestion.objects.filter(survey_id=survey)
 
-            # Only fetch data if there are responses to a question
-            if len(checkbox_answers) > 0:
-                title = checkbox_question.question_text
-                checkbox_date, checkbox_data = display_unit_checkbox_graph(survey.frequency, checkbox_answers)
+    for checkbox_question in checkbox_questions:
+        # Get only the answers related to each checkbox question
+        checkbox_answers = CheckboxAnswer.objects.filter(question=checkbox_question).order_by('timestamp')
 
-                # Add checkbox_date and checkbox_data to data package
-                graph_list.append(['checkbox', title, checkbox_date, checkbox_data])
+        # Only fetch data if there are responses to a question
+        if len(checkbox_answers) > 0:
+            title = checkbox_question.question_text
+            checkbox_date, checkbox_data = display_unit_checkbox_graph(frequency, checkbox_answers)
+
+            # Add checkbox_date and checkbox_data to data package
+            graph_list.append(['checkbox', title, checkbox_date, checkbox_data])
 
     return render(request, "dashboard/teacher_dashboard.html", {
         "graph_data": graph_list, 'classroom': classroom, 'curr_survey': survey, 'class_list': class_list,
