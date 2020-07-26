@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
 from apps.teachers.views import *
 from datetime import datetime, timedelta
+from collections import OrderedDict
 
 @login_required
 @user_passes_test(is_teacher)
@@ -11,7 +12,10 @@ def teacher_dashboard(request, classroom_id, survey_id):
 
     # Don't include Base survey
     if survey.name != "Base":
-        # Structure: graph_list = [ [ title, date_labels, data ] ]
+        # Structure: graph_list = [ [type, graph items ] ]
+        # Graph items for True/False: title, date_labels, data
+        # Graph items for Text: The bootstrap accordion uses an ordereddict with this format:
+        # { date1: [response1, response2], date2: [response3, response4] }
         graph_list = []
 
         # Get all boolean questions related to survey
@@ -24,10 +28,10 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Only fetch data if there are responses to a question
             if len(boolean_answers) > 0:
                 title = boolean_question.question_text
-                boolean_date, boolean_data = display_unit_boolean_graph(survey, boolean_answers)
+                boolean_dates, boolean_data = display_unit_boolean_graph(survey, boolean_answers)
 
-            # Add boolean_date and boolean_data to data package
-            graph_list.append([title, boolean_date, boolean_data])
+                # Add boolean_dates and boolean_data to data package
+                graph_list.append(["boolean", title, boolean_dates, boolean_data])
 
 
         # Get all text questions related to survey
@@ -35,15 +39,16 @@ def teacher_dashboard(request, classroom_id, survey_id):
 
         for text_question in text_questions:
             # Get only the answers related to each text question
-            text_answers = TextAnswer.objects.filter(question=text_question)
+            text_answers = TextAnswer.objects.filter(question=text_question).order_by('timestamp')
 
             # Only fetch data if there are responses to a question
             if len(text_answers) > 0:
                 title = text_question.question_text
-                text_date, text_data = display_unit_text_graph(survey, text_answers)
+                responses_list = display_unit_text_graph(survey.frequency, text_answers)
 
-            # Add text_date and text_data to data package
-            graph_list.append([title, text_date, text_data])
+                # Add text_dates and text_data to data package
+                graph_list.append(["text", responses_list])
+
 
         # Get all mc questions related to survey
         mc_questions = MultipleChoiceQuestion.objects.filter(survey_id=survey)
@@ -55,10 +60,10 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Only fetch data if there are responses to a question
             if len(mc_answers) > 0:
                 title = mc_question.question_text
-                mc_date, mc_data = display_unit_mc_graph(survey, mc_answers)
+                mc_dates, mc_data = display_unit_mc_graph(survey.frequency, mc_answers)
 
-            # Add mc_date and mc_data to data package
-            graph_list.append([title, mc_date, mc_data])
+                # Add mc_dates and mc_data to data package
+                graph_list.append([title, mc_dates, mc_data])
 
 
         checkbox_questions = CheckboxQuestion.objects.filter(survey_id=survey)
@@ -70,10 +75,10 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Only fetch data if there are responses to a question
             if len(checkbox_answers) > 0:
                 title = checkbox_question.question_text
-                checkbox_date, checkbox_data = display_unit_checkbox_graph(survey, checkbox_answers)
+                checkbox_dates, checkbox_data = display_unit_checkbox_graph(survey.frequency, checkbox_answers)
 
-            # Add checkbox_date and checkbox_data to data package
-            graph_list.append([title, checkbox_date, checkbox_data])
+                # Add checkbox_dates and checkbox_data to data package
+                graph_list.append([title, checkbox_dates, checkbox_data])
 
     return render(request, "teachers/dashboard.html", {"graph_data": graph_list})
 
@@ -132,13 +137,13 @@ def teacher_dashboard(request, classroom_id, survey_id):
 
 
 # Returns data needed to display boolean graph
-def display_unit_boolean_graph(survey, boolean_answers):
+def display_unit_boolean_graph(frequency_string, boolean_answers):
     # date: [number true, number responses]
     interval_data = {}
 
     for boolean_answer in boolean_answers:
         # Get interval date given the survey and timestamp
-        interval = findInterval(survey, boolean_answer.timestamp)
+        interval = findInterval(frequency_string, boolean_answer.timestamp)
 
         # Check if interval exists already in dictionary
         if interval in interval_data:
@@ -154,18 +159,27 @@ def display_unit_boolean_graph(survey, boolean_answers):
     interval_percentage = list(round((float(pair[0]) / pair[1]) * 100.0) for pair in interval_data.values())
     return interval_dates, interval_percentage
 
-def display_unit_text_graph(survey, text_answers):
+def display_unit_text_graph(frequency_string, text_answers):
+    responses_list = OrderedDict()
+    for text_answer in text_answers:
+        interval = findInterval(frequency_string, text_answer.timestamp)
+
+        # check if interval already exists in responses_list
+        if interval in responses_list:
+            responses_list[interval].append(text_answer.answer)
+        else:
+            responses_list[interval] = [text_answer.answer]
+
+    return responses_list
+
+def display_unit_mc_graph(frequency_string, mc_answers):
     return [], []
 
-def display_unit_mc_graph(survey, mc_answers):
-    return [], []
-
-def display_unit_checkbox_graph(survey, checkbox_answers):
+def display_unit_checkbox_graph(frequency_string, checkbox_answers):
     return [], []
 
 # Returns the interval (a date) that an answer belongs to given the timestamp and the survey
-def findInterval(survey, timestamp):
-    frequency_string = survey.frequency
+def findInterval(frequency_string, timestamp):
     answer_date = timestamp.date()
     interval_day = answer_date
     difference = -7
