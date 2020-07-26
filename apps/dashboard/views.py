@@ -259,9 +259,15 @@ def display_unit_checkbox_graph(frequency, checkbox_answers):
     choice_title = CheckboxQuestion.objects.filter(pk=checkbox_answers[0].question.pk).first()
     interval_percentage.append({'label': choice_title.option_a, 'data': []})
     interval_percentage.append({'label': choice_title.option_b, 'data': []})
-    interval_percentage.append({'label': choice_title.option_c, 'data': []})
-    interval_percentage.append({'label': choice_title.option_d, 'data': []})
-    interval_percentage.append({'label': choice_title.option_e, 'data': []})
+
+    if choice_title.option_c is not None:
+        interval_percentage.append({'label': choice_title.option_c, 'data': []})
+
+    if choice_title.option_d is not None:
+        interval_percentage.append({'label': choice_title.option_d, 'data': []})
+
+    if choice_title.option_e is not None:
+        interval_percentage.append({'label': choice_title.option_e, 'data': []})
 
     for date in interval_data.values():
         index = 0
