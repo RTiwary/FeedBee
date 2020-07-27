@@ -3,6 +3,12 @@
 {% block content %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 
+    <style>
+        .scrollable {
+            overflow: scroll;
+        }
+    </style>
+
     <div class="container" style="text-align: center; margin-top: 2em;">
         <h1>Dashboard</h1>
     </div>
@@ -51,17 +57,51 @@
             {% if forloop.counter0|divisibleby:2 %}
                 <div class="row">
             {% endif %}
-                <div class="col-lg-6 col-sm-12"  style="margin-top: 2em;">
-                    <div class="card">
+            <div class="col-lg-6 col-sm-12"  style="margin-top: 2em;">
+                <div class="card scrollable">
+                    {% if data.0 == "text" %}
+                        <div class="card-header text-center">
+                          {{ data.1 }}
+                        </div>
+                        <div class="card-body">
+                            <div class="accordion" id="dateList{{ forloop.counter0 }}">
+                                {% for date, responses in data.2.items%}
+                                    <div class="card">
+                                        <div class="card-header" id="heading{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}"
+                                                    aria-expanded="true" aria-controls="collapse{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                                                {{ date }}
+                                                </button>
+                                            </h2>
+                                        </div>
+
+                                        <div id="collapse{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" class="collapse"
+                                             aria-labelledby="heading{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" data-parent="#dateList{{ forloop.parentloop.counter0 }}">
+                                            <div class="card-body">
+                                                {% for response in responses %}
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">{{ response }}</li>
+                                                    </ul>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
                         <div class="card-body">
                             <canvas id="myChart{{ forloop.counter0 }}" style="height: 15em; width: 20em;"></canvas>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
+            </div>
             {% if forloop.counter|divisibleby:2 %}
                 </div>
             {% endif %}
         {% endfor %}
+
         {{ graph_data|json_script:"graph_data" }}
 
         <script>
@@ -120,6 +160,5 @@
             }
 
         </script>
-
     </div>
 {% endblock %}

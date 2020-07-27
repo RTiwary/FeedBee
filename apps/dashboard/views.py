@@ -1,11 +1,9 @@
-from collections import OrderedDict
 from copy import deepcopy
-
+from apps.teachers.views import *
+from collections import OrderedDict
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
-from apps.teachers.views import *
-from datetime import datetime, timedelta
-from collections import OrderedDict
+from datetime import timedelta
 
 
 @login_required
@@ -26,6 +24,7 @@ def dash_select(request, classroom_id):
     class_list = Classroom.objects.filter(teacher_id=teacher.id)
     classroom = Classroom.objects.get(pk=classroom_id)
     survey_list = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+
     # returns list of the surveys in the selected classroom
     return render(request, "dashboard/dash_select_survey.html", {
         'classroom': classroom, 'class_list': class_list, 'survey_list': survey_list
@@ -42,6 +41,9 @@ def teacher_dashboard(request, classroom_id, survey_id):
     survey_list = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
 
     # Structure: graph_list = [ [ graph_type, title, date_labels, data ] ]
+    # Graph items for True/False: title, date_labels, data
+    # Graph items for Text: [type, title, responselist (ordereddict) ]
+    # ex: { date1: [response1, response2], date2: [response3, response4] }
     graph_list = []
 
     # Don't include Base survey
@@ -56,10 +58,10 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Only fetch data if there are responses to a question
             if len(boolean_answers) > 0:
                 title = boolean_question.question_text
-                boolean_date, boolean_data = display_unit_boolean_graph(survey.frequency, boolean_answers)
+                boolean_dates, boolean_data = display_unit_boolean_graph(survey.frequency, boolean_answers)
 
-                # Add boolean_date and boolean_data to data package
-                graph_list.append(['boolean', title, boolean_date, boolean_data])
+                # Add boolean_dates and boolean_data to data package
+                graph_list.append(["boolean", title, boolean_dates, boolean_data])
 
         # Get all text questions related to survey
         text_questions = TextQuestion.objects.filter(survey_id=survey)
@@ -71,10 +73,11 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Only fetch data if there are responses to a question
             if len(text_answers) > 0:
                 title = text_question.question_text
-                text_date, text_data = display_unit_text_graph(survey.frequency, text_answers)
+                responses_list = display_unit_text_graph(survey.frequency, text_answers)
 
-                # Add text_date and text_data to data package
-                graph_list.append(['text', title, text_date, text_data])
+                # Add text_dates and text_data to data package
+                graph_list.append(["text", title, responses_list])
+
 
         # Get all mc questions related to survey
         mc_questions = MultipleChoiceQuestion.objects.filter(survey_id=survey)
@@ -86,10 +89,11 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Only fetch data if there are responses to a question
             if len(mc_answers) > 0:
                 title = mc_question.question_text
-                mc_date, mc_data = display_unit_mc_graph(survey.frequency, mc_answers)
+                mc_dates, mc_data = display_unit_mc_graph(survey.frequency, mc_answers)
 
-                # Add mc_date and mc_data to data package
-                graph_list.append(['mc', title, mc_date, mc_data])
+                # Add mc_dates and mc_data to data package
+                graph_list.append(["mc", title, mc_dates, mc_data])
+
 
         # Get all checkbox questions related to survey
         checkbox_questions = CheckboxQuestion.objects.filter(survey_id=survey)
@@ -101,67 +105,16 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Only fetch data if there are responses to a question
             if len(checkbox_answers) > 0:
                 title = checkbox_question.question_text
-                checkbox_date, checkbox_data = display_unit_checkbox_graph(survey.frequency, checkbox_answers)
+                checkbox_dates, checkbox_data = display_unit_checkbox_graph(survey.frequency, checkbox_answers)
 
-                # Add checkbox_date and checkbox_data to data package
-                graph_list.append(['checkbox', title, checkbox_date, checkbox_data])
+                # Add checkbox_dates and checkbox_data to data package
+                graph_list.append(["checkbox", title, checkbox_dates, checkbox_data])
 
+    print(graph_list)
     return render(request, "dashboard/teacher_dashboard.html", {
         "graph_data": graph_list, 'classroom': classroom, 'curr_survey': survey, 'class_list': class_list,
         'survey_list': survey_list
     })
-
-# Sample data format from ChartJS for line graph
-#
-# new Chart(document.getElementById("chartjs-0"),
-#           {"type":"line","data":{"labels":["January","February","March","April","May","June","July"],
-#                                  "datasets":[{"label":"My First Dataset",
-#                                               "data":[65,59,80,81,56,55,40],"fill":false,
-#                                               "borderColor":"rgb(75, 192, 192)",
-#                                               "lineTension":0.1}]},"options":{}});
-
-# Sample data format from ChartJS for stacked bar graph
-#
-# 		var barChartData = {
-# 			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-# 			datasets: [{
-# 				label: 'Dataset 1',
-# 				data: [
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor()
-# 				]
-# 			}, {
-# 				label: 'Dataset 2',
-# 				backgroundColor: window.chartColors.blue,
-# 				data: [
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor()
-# 				]
-# 			}, {
-# 				label: 'Dataset 3',
-# 				backgroundColor: window.chartColors.green,
-# 				data: [
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor()
-# 				]
-# 			}]
-#
-# 		};
 
 
 # Returns data needed to display boolean graph
@@ -189,7 +142,17 @@ def display_unit_boolean_graph(frequency, boolean_answers):
 
 
 def display_unit_text_graph(frequency, text_answers):
-    return [], []
+    responses_list = OrderedDict()
+    for text_answer in text_answers:
+        interval = findInterval(frequency, text_answer.timestamp)
+
+        # check if interval already exists in responses_list
+        if interval in responses_list:
+            responses_list[interval].append(text_answer.answer)
+        else:
+            responses_list[interval] = [text_answer.answer]
+
+    return responses_list
 
 
 def display_unit_mc_graph(frequency, mc_answers):
@@ -197,7 +160,7 @@ def display_unit_mc_graph(frequency, mc_answers):
     #   interval_date: { A: num_chosen, B: num_chosen, C: num_chosen, D: num_chosen, E: num_chosen }
     # }
     data = OrderedDict()
-    options = {}
+    options = OrderedDict()
     if mc_answers[0].question.option_c is None:
         options = {'A': 0, 'B': 0}
     elif mc_answers[0].question.option_d is None:
