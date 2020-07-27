@@ -48,7 +48,7 @@ def login_request(request):
             if user is not None:
                 login(request, user)
                 if user.is_teacher:
-                    return redirect(reverse("teacher_dashboard", kwargs={'classroom_id': 2, 'survey_id': 5}))
+                    return redirect(reverse("dash"))
                 else:
                     return redirect('student_dashboard')
 
