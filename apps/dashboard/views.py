@@ -184,7 +184,7 @@ def display_unit_mc_graph(frequency, mc_answers):
     for option in options:
         option_data = {'label': option, 'data': []}
         for interval in data:
-            option_data['data'].append(data[interval][option]/sum(data[interval].values()))
+            option_data['data'].append(round((data[interval][option]/sum(data[interval].values())) * 100))
 
         dataset.append(option_data)
 
@@ -216,6 +216,7 @@ def display_unit_checkbox_graph(frequency, checkbox_answers):
 
     # Calculate percentages for each individual choice
     interval_percentage = []
+
 
     # Add dictionaries for each choice
     choice_title = CheckboxQuestion.objects.filter(pk=checkbox_answers[0].question.pk).first()
