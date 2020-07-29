@@ -1,5 +1,23 @@
 {% extends "teachers/base.html" %}
 
 {% block content %}
-    <h2>Suggest Feature</h2>
+    <style>
+        .asteriskField {
+            display: none;
+        }
+    </style>
+    <div class="container" style="text-align: center; margin-top: 2em;">
+        <h2>Contact Us</h2>
+    </div>
+
+    {% load crispy_forms_tags %}
+    <div class="row justify-content-center">
+        <form method="POST" class="form-group col-sm-10">
+            <br>
+            <br>
+            {% csrf_token %}
+            {{ form | crispy}}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 {% endblock content %}

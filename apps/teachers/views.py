@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.urls import reverse
 from .forms import *
+from django.core.mail import send_mail
 from apps.teachers.models import *
 from apps.students.models import *
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -520,10 +521,24 @@ def view_classroom_info(request, classroom_id):
                   {'form': form, 'classroom': classroom, 'surveys': surveys})
 
 
-@login_required
-@user_passes_test(is_teacher)
+# @login_required
+# @user_passes_test(is_teacher)
 def suggest_feature(request):
-    return render(request, "teachers/suggest_feature.html")
+    if request.method == 'POST':
+        form = SuggestFeatureForm(request.POST)
+        if form.is_valid():
+            # Send suggestion to inbox
+            send_mail(
+                'FeedBee: {}'.format(form.cleaned_data['comment_type_choice']),
+                form.cleaned_data['comment'],
+                None,
+                ['edwhuang@umich.edu'],
+                fail_silently=False,
+            )
+            #return redirect(reverse("dash"))
+
+    form = SuggestFeatureForm()
+    return render(request, "teachers/suggest_feature.html", {'form': form})
 
 
 @login_required
