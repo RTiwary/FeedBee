@@ -3,6 +3,12 @@
 {% block content %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 
+    <style>
+        .scrollable {
+            overflow: scroll;
+        }
+    </style>
+
     <div class="container" style="text-align: center; margin-top: 2em;">
         <h1>Dashboard</h1>
     </div>
@@ -51,75 +57,272 @@
             {% if forloop.counter0|divisibleby:2 %}
                 <div class="row">
             {% endif %}
-                <div class="col-lg-6 col-sm-12"  style="margin-top: 2em;">
-                    <div class="card">
+            <div class="col-lg-6 col-sm-12"  style="margin-top: 2em;">
+                <div class="card scrollable">
+                    {% if data.0 == "text" %}
+                        <div class="card-header text-center">
+                          {{ data.1 }}
+                        </div>
+                        <div class="card-body">
+                            <div class="accordion" id="dateList{{ forloop.counter0 }}">
+                                {% for date, responses in data.2.items%}
+                                    <div class="card">
+                                        <div class="card-header" id="heading{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}"
+                                                    aria-expanded="true" aria-controls="collapse{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                                                {{ date }}
+                                                </button>
+                                            </h2>
+                                        </div>
+
+                                        <div id="collapse{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" class="collapse"
+                                             aria-labelledby="heading{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" data-parent="#dateList{{ forloop.parentloop.counter0 }}">
+                                            <div class="card-body">
+                                                {% for response in responses %}
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">{{ response }}</li>
+                                                    </ul>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
                         <div class="card-body">
                             <canvas id="myChart{{ forloop.counter0 }}" style="height: 15em; width: 20em;"></canvas>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
+            </div>
             {% if forloop.counter|divisibleby:2 %}
                 </div>
             {% endif %}
         {% endfor %}
+
         {{ graph_data|json_script:"graph_data" }}
 
         <script>
-           const graph_data = JSON.parse(document.getElementById('graph_data').textContent);
+            const graph_data = JSON.parse(document.getElementById('graph_data').textContent);
 
            for (var i = 0; i < Object.keys(graph_data).length; i++) {
                 var ctx = document.getElementById("myChart" + i);
-                var myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: graph_data[i][2],
-                        datasets: [{
-                            data: graph_data[i][3],
-                            borderColor: '#007bff',
-                            borderWidth: 4,
-                            pointBackgroundColor: '#007bff',
-                            fill: false
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        spanGaps: true,
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: graph_data[i][1]
-                        },
-                        elements: {
-                            line: {
-                                tension: 0
-                            }
-                        },
-                        scales: {
-                            xAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Date'
-                                }
-                            }],
-                            yAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: '% True'
-                                },
-                                ticks: {
-                                    beginAtZero: true
-                                }
+                if (graph_data[i][0] === 'boolean') {
+                    var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: graph_data[i][2],
+                            datasets: [{
+                                data: graph_data[i][3],
+                                borderColor: '#007bff',
+                                borderWidth: 4,
+                                pointBackgroundColor: '#007bff',
+                                fill: false
                             }]
+                        },
+                        options: {
+                            responsive: true,
+                            spanGaps: true,
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: graph_data[i][1]
+                            },
+                            elements: {
+                                line: {
+                                    tension: 0
+                                }
+                            },
+                            scales: {
+                                xAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Date'
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: '% True'
+                                    },
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+                else if (graph_data[i][0] === 'mc') {
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: graph_data[i][2],
+                            datasets: [{
+                                label: graph_data[i][3][0]['label'],
+                                data: graph_data[i][3][0]['data'],
+                                backgroundColor: '#F3DFC1'
+                            },
+                            {
+                                label: graph_data[i][3][1]['label'],
+                                data: graph_data[i][3][1]['data'],
+                                backgroundColor: '#E69597'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            spanGaps: true,
+                            title: {
+                                display: true,
+                                text: graph_data[i][1]
+                            },
+                            elements: {
+                                line: {
+                                    tension: 0
+                                }
+                            },
+                            scales: {
+                                xAxes: [{
+                                    stacked: true,
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Date'
+                                    }
+                                }],
+                                yAxes: [{
+                                    stacked: true,
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: '% Selected'
+                                    },
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+
+                    for (let j=2; j < Object.keys(graph_data[i][3]).length; j++){
+                        if (j === 2) {
+                            myChart.data.datasets.push({
+                                label: graph_data[i][3][j]['label'],
+                                data: graph_data[i][3][j]['data'],
+                                backgroundColor: "#D8D8F6"
+                            });
+                        }
+                        else if (j === 3) {
+                            myChart.data.datasets.push({
+                                label: graph_data[i][3][j]['label'],
+                                data: graph_data[i][3][j]['data'],
+                                backgroundColor: "#D3F6DB"
+                            });
+                        }
+                        else if (j === 4){
+                            myChart.data.datasets.push({
+                                label: graph_data[i][3][j]['label'],
+                                data: graph_data[i][3][j]['data'],
+                                backgroundColor: "#92D5E6"
+                            });
+                        }
+                     }
+                     //Use the window object to update myChart
+                     window.myChart.update();
+
+                }
+
+                else if (graph_data[i][0] === 'checkbox') {
+                    var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: graph_data[i][2],
+                            datasets: [{
+                                label: graph_data[i][3][0]['label'],
+                                data: graph_data[i][3][0]['data'],
+                                borderColor: '#F3DFC1',
+                                fill: false
+                            },
+                            {
+                                label: graph_data[i][3][1]['label'],
+                                data: graph_data[i][3][1]['data'],
+                                borderColor: '#E69597',
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            spanGaps: true,
+                            title: {
+                                display: true,
+                                text: graph_data[i][1]
+                            },
+                            elements: {
+                                line: {
+                                    tension: 0
+                                }
+                            },
+                            scales: {
+                                xAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Date'
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: '% Selected'
+                                    },
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+
+                    for (let j=2; j < Object.keys(graph_data[i][3]).length; j++){
+                        if (j === 2) {
+                            myChart.data.datasets.push({
+                                label: graph_data[i][3][j]['label'],
+                                data: graph_data[i][3][j]['data'],
+                                borderColor: "#D8D8F6",
+                                fill: false
+                            });
+                        }
+                        else if (j === 3) {
+                            myChart.data.datasets.push({
+                                label: graph_data[i][3][j]['label'],
+                                data: graph_data[i][3][j]['data'],
+                                borderColor: "#D3F6DB",
+                                fill: false
+                            });
+                        }
+                        else if (j === 4){
+                            myChart.data.datasets.push({
+                                label: graph_data[i][3][j]['label'],
+                                data: graph_data[i][3][j]['data'],
+                                borderColor: "#92D5E6",
+                                fill: false
+                            });
+                        }
+                     }
+                     //Use the window object to update myChart
+                     window.myChart.update();
+
+                }
+           }
 
         </script>
-
     </div>
 {% endblock %}

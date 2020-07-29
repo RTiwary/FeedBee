@@ -1,11 +1,9 @@
-from collections import OrderedDict
 from copy import deepcopy
-
+from apps.teachers.views import *
+from collections import OrderedDict
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
-from apps.teachers.views import *
-from datetime import datetime, timedelta
-from collections import OrderedDict
+from datetime import timedelta
 
 
 @login_required
@@ -42,6 +40,9 @@ def teacher_dashboard(request, classroom_id, survey_id):
     survey_list = Survey.objects.filter(classroom_id=classroom_id)
 
     # Structure: graph_list = [ [ graph_type, title, date_labels, data ] ]
+    # Graph items for True/False: title, date_labels, data
+    # Graph items for Text: [type, title, responselist (ordereddict) ]
+    # ex: { date1: [response1, response2], date2: [response3, response4] }
     graph_list = []
 
     # If Base, use weekly intervals
@@ -76,10 +77,10 @@ def teacher_dashboard(request, classroom_id, survey_id):
         # Only fetch data if there are responses to a question
         if len(text_answers) > 0:
             title = text_question.question_text
-            text_date, text_data = display_unit_text_graph(frequency, text_answers)
+            responses_list = display_unit_text_graph(frequency, text_answers)
 
             # Add text_date and text_data to data package
-            graph_list.append(['text', title, text_date, text_data])
+            graph_list.append(['text', title, responses_list])
 
     # Get all mc questions related to survey
     mc_questions = MultipleChoiceQuestion.objects.filter(survey_id=survey)
@@ -111,62 +112,11 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Add checkbox_date and checkbox_data to data package
             graph_list.append(['checkbox', title, checkbox_date, checkbox_data])
 
+    print(graph_list)
     return render(request, "dashboard/teacher_dashboard.html", {
         "graph_data": graph_list, 'classroom': classroom, 'curr_survey': survey, 'class_list': class_list,
         'survey_list': survey_list
     })
-
-# Sample data format from ChartJS for line graph
-#
-# new Chart(document.getElementById("chartjs-0"),
-#           {"type":"line","data":{"labels":["January","February","March","April","May","June","July"],
-#                                  "datasets":[{"label":"My First Dataset",
-#                                               "data":[65,59,80,81,56,55,40],"fill":false,
-#                                               "borderColor":"rgb(75, 192, 192)",
-#                                               "lineTension":0.1}]},"options":{}});
-
-# Sample data format from ChartJS for stacked bar graph
-#
-# 		var barChartData = {
-# 			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-# 			datasets: [{
-# 				label: 'Dataset 1',
-# 				data: [
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor()
-# 				]
-# 			}, {
-# 				label: 'Dataset 2',
-# 				backgroundColor: window.chartColors.blue,
-# 				data: [
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor()
-# 				]
-# 			}, {
-# 				label: 'Dataset 3',
-# 				backgroundColor: window.chartColors.green,
-# 				data: [
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor(),
-# 					randomScalingFactor()
-# 				]
-# 			}]
-#
-# 		};
 
 
 # Returns data needed to display boolean graph
@@ -194,7 +144,17 @@ def display_unit_boolean_graph(frequency, boolean_answers):
 
 
 def display_unit_text_graph(frequency, text_answers):
-    return [], []
+    responses_list = OrderedDict()
+    for text_answer in text_answers:
+        interval = findInterval(frequency, text_answer.timestamp)
+
+        # check if interval already exists in responses_list
+        if interval in responses_list:
+            responses_list[interval].append(text_answer.answer)
+        else:
+            responses_list[interval] = [text_answer.answer]
+
+    return responses_list
 
 
 def display_unit_mc_graph(frequency, mc_answers):
@@ -202,7 +162,7 @@ def display_unit_mc_graph(frequency, mc_answers):
     #   interval_date: { A: num_chosen, B: num_chosen, C: num_chosen, D: num_chosen, E: num_chosen }
     # }
     data = OrderedDict()
-    options = {}
+    options = OrderedDict()
     if mc_answers[0].question.option_c is None:
         options = {'A': 0, 'B': 0}
     elif mc_answers[0].question.option_d is None:
@@ -227,7 +187,7 @@ def display_unit_mc_graph(frequency, mc_answers):
     for option in options:
         option_data = {'label': option, 'data': []}
         for interval in data:
-            option_data['data'].append(round(data[interval][option]/sum(data[interval].values())))
+            option_data['data'].append(round((data[interval][option]/sum(data[interval].values())) * 100))
 
         dataset.append(option_data)
 
@@ -260,19 +220,24 @@ def display_unit_checkbox_graph(frequency, checkbox_answers):
     # Calculate percentages for each individual choice
     interval_percentage = []
 
+
     # Add dictionaries for each choice
     choice_title = CheckboxQuestion.objects.filter(pk=checkbox_answers[0].question.pk).first()
     interval_percentage.append({'label': choice_title.option_a, 'data': []})
     interval_percentage.append({'label': choice_title.option_b, 'data': []})
-    interval_percentage.append({'label': choice_title.option_c, 'data': []})
-    interval_percentage.append({'label': choice_title.option_d, 'data': []})
-    interval_percentage.append({'label': choice_title.option_e, 'data': []})
+
+    if choice_title.option_c is not None:
+        interval_percentage.append({'label': choice_title.option_c, 'data': []})
+
+    if choice_title.option_d is not None:
+        interval_percentage.append({'label': choice_title.option_d, 'data': []})
+
+    if choice_title.option_e is not None:
+        interval_percentage.append({'label': choice_title.option_e, 'data': []})
 
     for date in interval_data.values():
-        index = 0
-        for choice in date:
-            interval_percentage[index]['data'].append(round((float(choice[0]) / choice[1]) * 100.0))
-            index += 1
+        for index in range(len(interval_percentage)):
+            interval_percentage[index]['data'].append(round((float(date[index][0]) / date[index][1]) * 100.0))
 
     return interval_dates, interval_percentage
 
