@@ -227,7 +227,7 @@ def display_unit_mc_graph(frequency, mc_answers):
     for option in options:
         option_data = {'label': option, 'data': []}
         for interval in data:
-            option_data['data'].append(data[interval][option]/sum(data[interval].values()))
+            option_data['data'].append(round(data[interval][option]/sum(data[interval].values())))
 
         dataset.append(option_data)
 
