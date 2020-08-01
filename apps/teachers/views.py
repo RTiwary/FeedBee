@@ -530,15 +530,15 @@ def suggest_feature(request):
             # Send suggestion to inbox
             send_mail(
                 'FeedBee: {}'.format(form.cleaned_data['comment_type_choice']),
-                form.cleaned_data['comment'],
+                "A user wrote the following:\n\n" + form.cleaned_data['comment'],
                 None,
                 ['edwhuang@umich.edu'],
                 fail_silently=False,
             )
-            #return redirect(reverse("dash"))
+            return render(request, "teachers/suggest_feature.html", {'form': form, 'toast': "1"})
 
     form = SuggestFeatureForm()
-    return render(request, "teachers/suggest_feature.html", {'form': form})
+    return render(request, "teachers/suggest_feature.html", {'form': form, 'toast': "-1"})
 
 
 @login_required
