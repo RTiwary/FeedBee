@@ -2,13 +2,13 @@ from apps.users.models import *
 
 
 class Classroom(models.Model):
-    name = models.CharField(max_length=100, null=True)
+    name = models.CharField(max_length=20, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="classrooms", null=True)
     students = models.ManyToManyField(Student, related_name="classrooms")
 
 
 class Survey(models.Model):
-    name = models.CharField(max_length=100, null=True)
+    name = models.CharField(max_length=20, null=True)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name="surveys")
     end_date = models.DateField(null=True)
     frequency = models.CharField(max_length=7, null=True, blank=False)
