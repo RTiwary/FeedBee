@@ -8,32 +8,20 @@ from django.contrib import messages
 
 # Create your views here.
 def homepage(request):
-    return render(request, "users/home.html")
+    return render(request, "users/landing_page.html")
 
-def register_student(request):
+def register(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_student = True
-            user.save()
-            Student.objects.create(user=user)
+            user = form.save()
             login(request, user)
-            return redirect(reverse("join_class"))
-    else:
-        form = RegistrationForm()
-    return render(request, "users/register.html", {"form": form})
-
-def register_teacher(request):
-    if request.method == "POST":
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_teacher = True
-            user.save()
-            Teacher.objects.create(user=user)
-            login(request, user)
-            return redirect(reverse("add_class"))
+            if user.is_student:
+                Student.objects.create(user=user)
+                return redirect(reverse("join_class"))
+            else:
+                Teacher.objects.create(user=user)
+                return redirect(reverse("add_class"))
     else:
         form = RegistrationForm()
     return render(request, "users/register.html", {"form": form})
