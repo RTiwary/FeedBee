@@ -525,8 +525,8 @@ def view_classroom_info(request, classroom_id):
                   {'form': form, 'classroom': classroom, 'surveys': surveys})
 
 
-# @login_required
-# @user_passes_test(is_teacher)
+@login_required
+@user_passes_test(is_teacher)
 def suggest_feature(request):
     if request.method == 'POST':
         form = SuggestFeatureForm(request.POST)
@@ -539,7 +539,7 @@ def suggest_feature(request):
                 ['edwhuang@umich.edu'],
                 fail_silently=False,
             )
-            return render(request, "teachers/suggest_feature.html", {'form': form, 'toast': "1"})
+            return render(request, "teachers/suggest_feature.html", {'form': SuggestFeatureForm(), 'toast': "1"})
 
     form = SuggestFeatureForm()
     return render(request, "teachers/suggest_feature.html", {'form': form, 'toast': "-1"})
