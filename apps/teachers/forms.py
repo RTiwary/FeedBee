@@ -1,4 +1,7 @@
+import datetime
+
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from apps.teachers.models import *
 
@@ -27,12 +30,18 @@ INTERVAL_CHOICES = (('1', 'Monday'),
                     ('7', 'Sunday')
                     )
 
+
+def validate_date(date):
+    if date < datetime.date.today():
+        raise ValidationError(u'Date must be today or later')
+
+
 '''
 Form for creating a new survey in a classroom
 '''
 class SurveyCreationForm(forms.Form):
     survey_name = forms.CharField(label='Survey Name', max_length=100)
-    end_date = forms.DateField(label="Survey/Unit End Date",
+    end_date = forms.DateField(label="Survey/Unit End Date", validators=[validate_date],
                                widget=forms.TextInput(attrs={'type': 'date',
                                                              'placeholder': 'YYYY-MM-DD', 'required': 'required'}))
     frequency = forms.MultipleChoiceField(
@@ -118,3 +127,19 @@ class CheckboxQuestionForm(ModelForm):
             'option_d': 'Option D',
             'option_e': 'Option E',
         }
+
+
+'''
+An array storing the mapping between a question type's 
+database name and the name used on the user interface
+'''
+COMMENT_TYPE_CHOICES=[('Feature Suggestion','Feature Suggestion'), ('Small Bug','Report Small Bug'),
+                      ('Large Bug','Report Large Bug'), ('Other','Other')]
+
+'''
+Form for suggesting a new feature
+'''
+class SuggestFeatureForm(forms.Form):
+    comment_type_choice = forms.ChoiceField(label="Category",
+                                             choices=COMMENT_TYPE_CHOICES, widget=forms.RadioSelect)
+    comment = forms.CharField(label='Comment', max_length=500)

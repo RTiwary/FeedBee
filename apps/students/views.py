@@ -43,13 +43,17 @@ def join_class(request, classroom_id=None):
     return render(request, "students/join_class.html", {'form': form})
 
 
+# displays all pending surveys to student
 @login_required
 @user_passes_test(is_student)
 def student_dashboard(request):
+    # Query for all surveys except Base and expired surveys
     all_surveys = Survey.objects.filter(classroom__students__user=request.user) \
         .exclude(name="Base").exclude(end_date__lte=datetime.datetime.today())
 
+    # Remove surveys that have already been completed for this interval
     surveys, filler = get_pending_surveys(request.user, all_surveys)
+    # Get due date for each survey
     days_due = get_due_days(surveys)
 
     return render(request, "students/dashboard.html", {
@@ -58,7 +62,7 @@ def student_dashboard(request):
     })
 
 
-'''allows student to view all of their classes + each class's teacher name'''
+# allows student to view all of their classes + each class's teacher name
 @login_required
 @user_passes_test(is_student)
 def view_classes(request):
@@ -82,7 +86,7 @@ def view_classes(request):
     return render(request, "students/view_classes.html", {'class_list': class_list})
 
 
-'''allows students to view all of their surveys by returning lists for both completed and not completed surveys'''
+# allows students to view all of their surveys by returning lists for both completed and not completed surveys
 @login_required
 @user_passes_test(is_student)
 def view_surveys(request, classroom_id):
@@ -117,6 +121,7 @@ def take_survey(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
     student = request.user.student_profile
 
+    # Query for class base questions and place into list sorted by question_rank
     base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)
     base_questions = []
     if len(base_survey) > 0:
@@ -129,6 +134,7 @@ def take_survey(request, survey_id):
             list(chain(base_bool_questions, base_mc_questions, base_txt_questions, base_cb_questions))
         base_questions = sorted(base_questions, key=operator.attrgetter('question_rank'))
 
+    # Query for survey questions and place into list sorted by question_rank
     unit_bool_questions = BooleanQuestion.objects.filter(survey=survey)
     unit_mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey)
     unit_txt_questions = TextQuestion.objects.filter(survey=survey)
@@ -139,6 +145,7 @@ def take_survey(request, survey_id):
 
     questions = list(chain(base_questions, unit_questions))
 
+    # If survey submitted, save responses
     if request.method == 'POST':
         if request.POST.get("submit"):
             for q in questions:
@@ -193,19 +200,26 @@ def take_survey(request, survey_id):
     })
 
 
-### HELPER FUNCTIONS ###
+# HELPER FUNCTIONS
+# filters out surveys that have already been submitted for the current interval
 def get_pending_surveys(student, all_surveys):
     date = datetime.date.today()
     day = datetime.date.isoweekday(date)
-    surveys = []
+    pending = []
     completed = []
     for s in all_surveys:
+        # Find start date of current interval
         interval_start = datetime.date
+
+        # Iterate backwards through frequency and find first day that comes before today
         freq = sorted(list(s.frequency))
         freq.reverse()
         for d in freq:
             if int(d) < day:
                 interval_start = date - datetime.timedelta(days=day - int(d))
+                break
+
+        # If no day before today in frequency, choose last day iun frequency(from the week before)
         else:
             interval_start = date - datetime.timedelta(days=7 - (int(d) - day))
 
@@ -214,7 +228,9 @@ def get_pending_surveys(student, all_surveys):
                      CheckboxQuestion.objects.filter(survey=s),
                      TextQuestion.objects.filter(survey=s)]
 
+        # Check if student responded since start of current interval
         for q in questions:
+            # Query for a question from the survey
             if len(q) > 0:
                 question = q[0]
                 if question.question_type == "Boolean":
@@ -230,24 +246,28 @@ def get_pending_surveys(student, all_surveys):
                     response = CheckboxAnswer.objects.filter(question=question,
                                                              student__user=student)
 
+                # If student has never responded or has not responded in this interval,
+                # it is pending, else it is completed
                 if len(response) > 0:
                     if response.latest('timestamp').timestamp.date() < interval_start:
-                        surveys.append(s)
+                        pending.append(s)
                     else:
                         completed.append(s)
                 else:
-                    surveys.append(s)
+                    pending.append(s)
 
                 break
 
-    return surveys, completed
+    return pending, completed
 
 
+# Get due date for surveys based on frequencies
 def get_due_days(surveys):
     date = datetime.date.today()
     day = datetime.date.isoweekday(date)
     days_due = []
     for s in surveys:
+        # Find first day after today in frequency
         freq = sorted(list(s.frequency))
         due_day = int
         due_date = datetime.date
@@ -256,10 +276,13 @@ def get_due_days(surveys):
                 due_day = int(d) - 2 if int(d) - 2 >= 0 else 6
                 due_date = date - datetime.timedelta(days=7 - (int(d) - day))
                 break
+
+        # If no day after today, use the first day of next week
         else:
             due_day = int(freq[0]) - 2 if int(freq[0]) - 2 >= 0 else 6
             due_date = date - datetime.timedelta(days=day - int(d))
 
+        # If end of current interval is passed end date, due date is the end date
         if due_date > s.end_date:
             due_day = datetime.date.isoweekday(s.end_date)
 

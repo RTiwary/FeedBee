@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.urls import reverse
 from .forms import *
+from django.core.mail import send_mail
 from apps.teachers.models import *
 from apps.students.models import *
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -32,10 +33,9 @@ def add_class(request):
 
     return render(request, "teachers/add_class.html", {'form': form})
 
-'''
-Deletes a classroom in the database using the 
-classroom_id and redirects to the view_classes screen
-'''
+
+# Deletes a classroom in the database using the
+# classroom_id and redirects to the view_classes screen
 @login_required
 @user_passes_test(is_teacher)
 def delete_class(request, classroom_id):
@@ -209,6 +209,7 @@ def add_mc_question(request, survey_id, question_id=-1):
                                                              'question_format': question_format})
 
 
+# Adding a checkbox question to a survey
 @login_required
 @user_passes_test(is_teacher)
 def add_checkbox_question(request, survey_id, question_id=-1):
@@ -254,11 +255,9 @@ def add_checkbox_question(request, survey_id, question_id=-1):
                                                                    'question_format': question_format})
 
 
-'''
-allows teacher to "delete" a question (both recurring and unit questions), removes unit questions from database but
-doesn't actually delete the recurring questions (hides the question using the display field),
-decrements the rank for all questions with higher rank than the one to be deleted 
-'''
+# allows teacher to "delete" a question (both recurring and unit questions), removes unit questions from database but
+# doesn't actually delete the recurring questions (hides the question using the display field),
+# decrements the rank for all questions with higher rank than the one to be deleted
 @login_required
 @user_passes_test(is_teacher)
 def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
@@ -306,6 +305,7 @@ def view_classes(request):
 @login_required
 @user_passes_test(is_teacher)
 def view_questions(request, survey_id):
+    # If survey edited, update survey metadata(name and end date), else use stored survey metadata
     if request.method == 'POST':
         survey = Survey.objects.get(pk=survey_id)
         form = SurveyEditForm(request.POST, initial={'survey_name': survey.name, 'end_date': survey.end_date})
@@ -319,12 +319,14 @@ def view_questions(request, survey_id):
         survey = Survey.objects.get(pk=survey_id)
         form = SurveyEditForm(initial={'survey_name': survey.name, 'end_date': survey.end_date})
 
+    # Translate frequency string to days of the week
     frequency_mapping = {"1":"Monday", "2":"Tuesday", "3":"Wednesday", "4":"Thursday", "5":"Friday", "6":"Saturday",
                          "7":"Sunday"}
     frequency_list = []
     for number in survey.frequency:
         frequency_list.append(frequency_mapping[number])
 
+    # Query for all survey questions and sort by question_rank
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
     text_questions = TextQuestion.objects.filter(survey=survey_id)
     mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
@@ -357,9 +359,8 @@ def view_recurring_questions(request, classroom_id):
                                                                       "classroom_id": classroom_id})
 
 
-'''
-allows teacher to add a new survey using the form, adds new survey into database, redirects them to view_questions page
-'''
+# allows teacher to add a new survey using the form,
+# adds new survey into database, redirects them to view_questions page
 @login_required
 @user_passes_test(is_teacher)
 def add_survey(request, classroom_id):
@@ -382,7 +383,7 @@ def add_survey(request, classroom_id):
     return render(request, "teachers/add_survey.html", {'form': form, "classroom_id": classroom_id})
 
 
-'''allows teacher to delete a survey, removes the survey from the database and redirects them to view_classroom_info'''
+# allows teacher to delete a survey, removes the survey from the database and redirects them to view_classroom_info
 @login_required
 @user_passes_test(is_teacher)
 def delete_survey(request, survey_id):
@@ -392,10 +393,9 @@ def delete_survey(request, survey_id):
     return redirect("view_classroom_info", classroom_id=classroom.pk)
 
 
-'''
-gets the info for teacher to view the results/answers of a survey, returns a dictionary with each question as a key
-and a list of answers as a value
-'''
+
+# gets the info for teacher to view the results/answers of a survey, returns a dictionary with each question as a key
+# and a list of answers as a value
 @login_required
 @user_passes_test(is_teacher)
 def view_results(request, survey_id):
@@ -429,12 +429,14 @@ def view_results(request, survey_id):
     return render(request, "teachers/view_results.html", {"survey": survey,
                                                           'q_and_a': q_and_a})
 
+# View all survey responses, organized in a table where all responses in a row are made by 1 student
 @login_required
 @user_passes_test(is_teacher)
 def view_results_alt(request, survey_id):
     survey = Survey.objects.get(pk=survey_id)
     classroom = survey.classroom
 
+    # Get all survey questions and sort by question_rank
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
     text_questions = TextQuestion.objects.filter(survey=survey_id)
     mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
@@ -442,8 +444,11 @@ def view_results_alt(request, survey_id):
     question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
     question_list = sorted(question_list, key=operator.attrgetter('question_rank'))
 
+    # answers_table =
+    # [[student1 q1 answer, student1 q2 answer, ...], [student2 q1 answer, student2 q2 answer, ...], ...]
     answers_table = []
     for student in classroom.students.all():
+        # answers = list of answers for specific student
         answers = []
         for question in question_list:
             if question.question_type == "Boolean":
@@ -520,10 +525,24 @@ def view_classroom_info(request, classroom_id):
                   {'form': form, 'classroom': classroom, 'surveys': surveys})
 
 
-@login_required
-@user_passes_test(is_teacher)
+# @login_required
+# @user_passes_test(is_teacher)
 def suggest_feature(request):
-    return render(request, "teachers/suggest_feature.html")
+    if request.method == 'POST':
+        form = SuggestFeatureForm(request.POST)
+        if form.is_valid():
+            # Send suggestion to inbox
+            send_mail(
+                'FeedBee: {}'.format(form.cleaned_data['comment_type_choice']),
+                "A user wrote the following:\n\n" + form.cleaned_data['comment'],
+                None,
+                ['edwhuang@umich.edu'],
+                fail_silently=False,
+            )
+            return render(request, "teachers/suggest_feature.html", {'form': form, 'toast': "1"})
+
+    form = SuggestFeatureForm()
+    return render(request, "teachers/suggest_feature.html", {'form': form, 'toast': "-1"})
 
 
 @login_required
