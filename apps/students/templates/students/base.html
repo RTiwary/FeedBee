@@ -11,13 +11,13 @@
     <title>Homepage!</title>
     <style>
         /* change the link color */
-        .navbar-custom .navbar-nav .nav-link {
+        .nav-item, .navbar-brand {
             color: black;
         }
+
         /* change the color of active or hovered links */
-        .navbar-custom .nav-item.active .nav-link,
-        .navbar-custom .nav-item:focus .nav-link,
-        .navbar-custom .nav-item:hover .nav-link {
+        .nav-link:focus,
+        .nav-link:hover {
             color: #5E6472;
         }
     </style>
@@ -25,7 +25,7 @@
 
 <body style ="background-color: #FCF9ED">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light" style="background-color: #FFA69E">
+        <nav class="navbar navbar-expand-sm" style="background-color: #FFA69E">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#student-navbar" aria-controls="student-navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
