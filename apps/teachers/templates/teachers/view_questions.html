@@ -48,7 +48,7 @@
 
     <br>
 
-    <div class="content">
+    <div class="content" style="margin-top: 1em;">
         <div class="row">
             <div class="col-sm">
                 <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn" style="border-color: #FFA69E; background-color: #FFA69E">
@@ -108,7 +108,7 @@
 
         <p class="d-inline lead">This survey is sent out every </p>
         {% for day in frequency_list %}
-            <span class="d-inline ml-1 badge badge-pill badge-primary" style="background-color: #43A3B1; border-color: #43A3B1;">{{ day }}</span>
+            <span class="d-inline ml-1 badge badge-pill badge-primary" style="background-color: #A9EFE1; border-color: #A9EFE1; color: black">{{ day }}</span>
         {% endfor %}
         <p class="lead">Ending on {{ survey.end_date }}</p>
 
