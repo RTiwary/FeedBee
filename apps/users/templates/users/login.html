@@ -8,10 +8,29 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <title>Login</title>
+
+    <style type="text/css">
+        .btn-primary
+         {
+            background-color: #5E6472;
+            border-color: #5E6472;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:active,
+        .btn-primary:visited,
+        .btn-primary:active:focus,
+        .btn-primary:focus
+        {
+            background-color: #AED9E0;
+            border-color: #AED9E0;
+        }
+
+    </style>
 </head>
 
 {% load crispy_forms_tags %}
-<body style ="background-color: #85dde9 ">
+<body style ="background-color: #FAF3DD ">
     <br>
     <div class="row justify-content-center">
         {% if messages %}
@@ -23,12 +42,12 @@
         {% endif %}
     </div>
 
-    <div class="row justify-content-center">
+    <div class="container">
         <form method="POST" class="form-group col-sm-8">
             {% csrf_token %}
             {{form | crispy}}
-            <button type="submit" class="btn btn-success">Login</button>
-            <p>Don't have an account? Create one <a href="/register_student">here</a> if you are a student. Create one <a href="/register_teacher">here</a> if you are a teacher.</p>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <p style="padding-top: 15px">Don't have an account? Create one <a href="/register">here!</a></p>
             <a href="/password_reset">Forgot your password?</a>
         </form>
     </div>

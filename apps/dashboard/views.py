@@ -111,7 +111,6 @@ def teacher_dashboard(request, classroom_id, survey_id):
             # Add checkbox_date and checkbox_data to data package
             graph_list.append(['checkbox', title, checkbox_date, checkbox_data])
 
-    print(graph_list)
     return render(request, "dashboard/teacher_dashboard.html", {
         "graph_data": graph_list, 'classroom': classroom, 'curr_survey': survey, 'class_list': class_list,
         'survey_list': survey_list
