@@ -66,7 +66,9 @@
                 <h1>Join {{ classroom_name }}</h1>
                 <p>Are you sure you want to join this classroom?</p>
                 <a href="{% url 'join_class' %}" role="button" class="btn btn-secondary">Cancel</a>
-                <button id="join_class_button_submit" type="submit" class="btn btn-primary">Join</button>
+                <button id="join_class_button_submit" type="submit" class="btn btn-primary" style="background-color: #4EADBC; border-color: #4EADBC">
+                    Join
+                </button>
             </div>
         </div>
 
@@ -75,7 +77,9 @@
             <div class="container" style="text-align: center">
                 <h1>Error Encountered</h1>
                 <p>Sorry! It appears this class doesn't exist.</p>
-                <a href="{% url 'join_class' %}" role="button" class="btn btn-primary">OK</a>
+                <a href="{% url 'join_class' %}" role="button" class="btn btn-primary" style="border-color: #4EADBC; background-color: #4EADBC">
+                    OK
+                </a>
             </div>
         </div>
 
@@ -90,7 +94,7 @@
             document.getElementById('join_class_button').click();
         } else {
             document.getElementById('join_class_button_submit').click();
-        }" role="button" class="btn btn-primary">
+        }" role="button" class="btn btn-primary" style="background-color: #4EADBC; border-color: #4EADBC">
             Join Class
         </a>
     </form>

@@ -62,7 +62,9 @@
                 document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right;">
                     <i class="fa fa-trash-alt"></i> Delete</button>
                 <button onclick="document.getElementById('id03').style.display='block';
-                document.getElementById('id04').style.display='block';" class="btn btn-primary" style="position: relative; float: right;"><i class="far fa-edit"></i> Edit</button>
+                document.getElementById('id04').style.display='block';" class="btn btn-primary" style="position: relative; float: right; background-color: #43A3B1; border-color: #43A3B1">
+                    <i class="far fa-edit"></i> Edit
+                </button>
             </div>
         </div>
     </div>
@@ -123,7 +125,7 @@
                         automatically repeated on every survey you create – so there's no need to keep
                         adding them. You can view detailed <strong>cumulative data</strong> about student
                         responses to these questions on your dashboard.</p>
-                    <a href="{% url 'view_recurring_questions' classroom.pk %}" class="btn btn-primary">View Recurring Questions</a>
+                    <a href="{% url 'view_recurring_questions' classroom.pk %}" class="btn" style="background-color: #FFA69E; border-color: #FFA69E">View Recurring Questions</a>
                 </div>
             </div>
         </div>
@@ -132,11 +134,18 @@
     <div class="row ">
         <div class="col-sm-12">
             <div class="card" style="margin-top: 2em">
-                <div class="card-header" style="text-align: center;">
-                    <h5 style="display: inline; align-items: center;">My Surveys</h5>
-                    <a href="{% url 'add_survey' classroom.pk %}" class="btn btn-primary" style="display: inline-block; position: relative; float: left;">
-                        <span class="fa fa-plus"></span> Survey
-                    </a>
+                <div class="card-header" style="text-align: center; background-color: #43A3B1; border-color: #43A3B1; color: white">
+                    <div class="row">
+                        <div class="col-4" style="text-align: left">
+                            <a href="{% url 'add_survey' classroom.pk %}" class="btn btn-light">
+                                <span class="fa fa-plus"></span> Survey
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <h5 style="text-align: center; padding: 5px">My Surveys</h5>
+                        </div>
+                        <div class="col"></div>
+                    </div>
                 </div>
                 <ul class="list-group list-group-flush scrollable">
                     {% for survey in surveys %}
@@ -145,7 +154,9 @@
                                 {{ survey.name }}
                             </a>
                             <span class="pull-right">
-                                <a href="{% url 'view_results' survey.pk %}" class="btn btn-primary">View Results</a>
+                                <a href="{% url 'view_results' survey.pk %}" class="btn" style="border-color: #B8F2E6; background-color: #B8F2E6">
+                                    View Results
+                                </a>
                              </span>
                         </li>
                     {% endfor %}

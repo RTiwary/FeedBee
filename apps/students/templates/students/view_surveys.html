@@ -20,7 +20,7 @@
             <div class="row ">
                 <div class="col-sm-12">
                     <div class="card" style="margin-top: 2em">
-                        <div class="card-header">
+                        <div class="card-header" style="background-color: #43A3B1; border-color: #43A3B1; color: white">
                             <div class="row">
                                 <div class="col-lg">
                                     <strong>Survey</strong>
@@ -75,6 +75,37 @@
             </div>
         </div>
     {% else %}
-        <p class="container" style="text-align: center; margin-top: 2em">No surveys are available.</p>
+         <div class="container">
+            <div class="row ">
+                <div class="col-sm-12">
+                    <div class="card" style="margin-top: 2em">
+                        <div class="card-header" style="background-color: #43A3B1; border-color: #43A3B1; color: white">
+                            <div class="row">
+                                <div class="col-lg">
+                                    <strong>Survey</strong>
+                                </div>
+                                <div class="col-lg">
+                                    <strong>Due</strong>
+                                </div>
+                                <div class="col-2">
+                                    <strong>Status</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush scrollable">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col-6">
+                                        <p style="text-align: center;">No surveys are available.</p>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endif %}
 {% endblock content %}

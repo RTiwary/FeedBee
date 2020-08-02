@@ -33,7 +33,9 @@
             {% csrf_token %}
             {{ form | crispy}}
             <br>
-            <button type="submit" class="btn btn-primary">Create Question</button>
+            <button type="submit" class="btn btn-primary" style="border-color: #43A3B1; background-color: #43A3B1">
+                Create Question
+            </button>
         </form>
     </div>
 {% endblock content %}
