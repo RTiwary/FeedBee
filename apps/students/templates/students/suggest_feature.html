@@ -13,6 +13,11 @@
             $(document).ready(function(){
                 $('.toast').toast({ delay: 2000 });
                 $('.toast').toast('show');
+                $('.toast').toast('hide');
+            });
+        {% else %}
+            $(document).ready(function(){
+                $('.toast').hide();
             });
         {% endif %}
     </script>
@@ -36,11 +41,11 @@
     </div>
 
     <!-- Success Toast -->
-    <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-right align-items-right" style="position:absolute; min-width: 300px; top: 10px; right: 10px">
+    <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-right align-items-right" style="position:absolute; min-width: 300px; top: 10px; right: 10px;">
         <div class="toast" style="position: absolute; top: 0; right: 0;">
             <div class="toast-header">
                 <!-- Optional: Uncomment next line and link to an image to add an image to the toast -->
-                {#            <img src="..." class="rounded mr-2" alt="...">#}
+{#                <img src="..." class="rounded mr-2" alt="...">#}
                 <strong class="mr-auto">FeedBot</strong>
                 <small>Just now</small>
                 <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
