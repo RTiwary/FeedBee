@@ -3,7 +3,7 @@
 {% block content %}
     <style>
         .scrollable {
-            height: 320px;
+            max-height: 340px;
             overflow: scroll;
         }
 
@@ -131,9 +131,9 @@
         </div>
     </div>
 
-    <div class="row ">
+    <div class="row">
         <div class="col-sm-12">
-            <div class="card" style="margin-top: 2em">
+            <div class="card" style="margin-top: 2em; margin-bottom: 2em;">
                 <div class="card-header" style="text-align: center; background-color: #43A3B1; border-color: #43A3B1; color: white">
                     <div class="row">
                         <div class="col-4" style="text-align: left">
@@ -158,6 +158,10 @@
                                     View Results
                                 </a>
                              </span>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item" style="text-align: center">
+                            No surveys have been created.
                         </li>
                     {% endfor %}
                 </ul>

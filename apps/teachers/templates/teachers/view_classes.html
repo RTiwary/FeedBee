@@ -17,41 +17,48 @@
         </a>
     </div>
 
-    {% if class_list %}
-        <div class=" container"">
-            <div class="row ">
-                <div class="col-sm-12">
-                    <div class="card" style="margin-top: 2em">
-                        <div class="card-header" style="background-color: #4EADBC; color: white; border-color: #4EADBC">
-                            <div class="row">
-                                <div class="col-lg">
-                                    <strong>Class</strong>
-                                </div>
-                                <div class="col-2" style="text-align: center">
-                                    <strong>Students</strong>
-                                </div>
+    <div class=" container"">
+        <div class="row ">
+            <div class="col-sm-12">
+                <div class="card" style="margin-top: 2em">
+                    <div class="card-header" style="background-color: #4EADBC; color: white; border-color: #4EADBC">
+                        <div class="row">
+                            <div class="col-lg">
+                                <strong>Class</strong>
+                            </div>
+                            <div class="col-2" style="text-align: center">
+                                <strong>Students</strong>
                             </div>
                         </div>
-
-                        <ul class="list-group list-group-flush scrollable">
-                            {% for class in class_list %}
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-lg">
-                                            <a href="{% url 'view_classroom_info' class.id %}" >{{ class.name }}</a>
-                                        </div>
-                                        <div class="col-2" style="text-align: center">
-                                            {{ class.students.count }}
-                                        </div>
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
                     </div>
-            </div>
+
+                    <ul class="list-group list-group-flush scrollable">
+                        {% for class in class_list %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-lg">
+                                        <a href="{% url 'view_classroom_info' class.id %}" >{{ class.name }}</a>
+                                    </div>
+                                    <div class="col-2" style="text-align: center">
+                                        {{ class.students.count }}
+                                    </div>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col">
+                                    </div>
+                                    <div class="col-6" style="text-align: center">
+                                        No classrooms are available.
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
         </div>
-    {% else %}
-        <br><p style="text-align: center">No classrooms are available.</p>
-    {% endif %}
+    </div>
 
 {% endblock content %}

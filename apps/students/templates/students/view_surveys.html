@@ -15,97 +15,74 @@
     </div>
 
     <!-- Displays all of the student's surveys (completed and not completed), not completed is in the list 'surveys' -->
-    {% if surveys or completed %}
-        <div class="container">
-            <div class="row ">
-                <div class="col-sm-12">
-                    <div class="card" style="margin-top: 2em">
-                        <div class="card-header" style="background-color: #43A3B1; border-color: #43A3B1; color: white">
-                            <div class="row">
-                                <div class="col-lg">
-                                    <strong>Survey</strong>
-                                </div>
-                                <div class="col-lg">
-                                    <strong>Due</strong>
-                                </div>
-                                <div class="col-2">
-                                    <strong>Status</strong>
-                                </div>
+    <div class="container">
+        <div class="row ">
+            <div class="col-sm-12">
+                <div class="card" style="margin-top: 2em">
+                    <div class="card-header" style="background-color: #43A3B1; border-color: #43A3B1; color: white">
+                        <div class="row">
+                            <div class="col-lg">
+                                <strong>Survey</strong>
+                            </div>
+                            <div class="col-lg">
+                                <strong>Due</strong>
+                            </div>
+                            <div class="col-2">
+                                <strong>Status</strong>
                             </div>
                         </div>
+                    </div>
+                    {% if surveys or completed %}
                         <ul class="list-group list-group-flush scrollable">
                             <!-- Displays all of the not completed surveys with blue Take Survey button next to them
                             at the top of the list group -->
-                            {% if surveys %}
-                                {% for survey, due in surveys %}
+                            {% for survey, due in surveys %}
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-lg">
+                                            {{ survey.name }}
+                                        </div>
+                                        <div class="col-lg">
+                                            {{ due }}
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">Take Survey</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+
+                            <!-- Displays all of the completed surveys with greyed out Completed buttons next to them -->
+                            {% for survey in completed %}
                                     <li class="list-group-item">
                                         <div class="row">
                                             <div class="col-lg">
                                                 {{ survey.name }}
                                             </div>
-                                            <div class="col-lg">
-                                                {{ due }}
-                                            </div>
                                             <div class="col-2">
-                                                <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">Take Survey</a>
+                                                <button type="button" class="btn btn-secondary">Completed</button>
                                             </div>
                                         </div>
                                     </li>
-                                {% endfor %}
-                            {% endif %}
-
-                            <!-- Displays all of the completed surveys with greyed out Completed buttons next to them -->
-                            {% if completed %}
-                                {% for survey in completed %}
-                                        <li class="list-group-item">
-                                            <div class="row">
-                                                <div class="col-lg">
-                                                    {{ survey.name }}
-                                                </div>
-                                                <div class="col-2">
-                                                    <button type="button" class="btn btn-secondary">Completed</button>
-                                                </div>
-                                            </div>
-                                        </li>
-                                {% endfor %}
-                            {% endif %}
+                            {% endfor %}
                         </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% else %}
-         <div class="container">
-            <div class="row ">
-                <div class="col-sm-12">
-                    <div class="card" style="margin-top: 2em">
-                        <div class="card-header" style="background-color: #43A3B1; border-color: #43A3B1; color: white">
-                            <div class="row">
-                                <div class="col-lg">
-                                    <strong>Survey</strong>
-                                </div>
-                                <div class="col-lg">
-                                    <strong>Due</strong>
-                                </div>
-                                <div class="col-2">
-                                    <strong>Status</strong>
-                                </div>
-                            </div>
-                        </div>
+                    {% else %}
                         <ul class="list-group list-group-flush scrollable">
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col"></div>
-                                    <div class="col-6">
-                                        <p style="text-align: center;">No surveys are available.</p>
+                                    <div class="col-lg">
                                     </div>
-                                    <div class="col"></div>
+                                    <div class="col-lg">
+                                        No surveys available.
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
                                 </div>
                             </li>
                         </ul>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    {% endif %}
+    </div>
 {% endblock content %}
