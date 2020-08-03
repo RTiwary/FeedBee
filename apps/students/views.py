@@ -99,9 +99,14 @@ def view_surveys(request, classroom_id):
     surveys, completed = get_pending_surveys(request.user, all_surveys)
     days_due = get_due_days(surveys)
 
+    lists_empty = False
+    if not surveys and not completed:
+        lists_empty = True
+
     return render(request, "students/view_surveys.html", {'classroom': classroom,
                                                           'surveys': zip(surveys, days_due),
-                                                          'completed': completed})
+                                                          'completed': completed,
+                                                          'lists_empty': lists_empty})
 
 
 @login_required
