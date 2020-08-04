@@ -40,6 +40,18 @@
             width: auto;
             height: auto;
         }
+
+        .btn-blue {
+            border-color: #43A3B1;
+            background-color: #43A3B1;
+            color: white;
+        }
+
+        .btn-blue:focus, .btn-blue:hover {
+            background-color: #388894;
+            border-color: #388894;
+            color: white;
+        }
     </style>
 
     {% load crispy_forms_tags %}
@@ -105,16 +117,16 @@
                         <h1>Edit Recurring Question</h1>
                         <p>Are you sure you want to edit this question?</p>
                         <button onclick="document.getElementById('id01').style.display='none'; document.getElementById('id02').style.display='none';" type="button" class="btn btn-secondary">Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="background-color: #43A3B1; border-color: #43A3B1">Confirm Edit</button>
+                        <button type="submit" class="btn btn-blue">Confirm Edit</button>
                     </div>
                 </div>
 
-                <button type="button" style="margin-top: 10px; background-color: #43A3B1; border-color: #43A3B1" class="btn btn-primary" data-toggle="modal" onclick="document.getElementById('id01').style.display='block';
+                <button type="button" style="margin-top: 10px;" class="btn btn-blue" data-toggle="modal" onclick="document.getElementById('id01').style.display='block';
                 document.getElementById('id02').style.display='block';">
                     {{ action }} Question
                 </button>
             {% else %}
-                <button type="submit" style="margin-top: 10px; background-color: #43A3B1; border-color: #43A3B1" class="btn btn-primary">{{ action }} Question</button>
+                <button type="submit" style="margin-top: 10px;" class="btn btn-blue">{{ action }} Question</button>
             {% endif %}
         </form>
     </div>

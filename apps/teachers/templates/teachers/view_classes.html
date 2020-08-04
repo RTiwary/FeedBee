@@ -6,13 +6,24 @@
             max-height: 360px;
             overflow: scroll;
         }
+
+        .btn-melon {
+            background-color: #FFA69E;
+            border-color: #FFA69E;
+            color: black;
+        }
+
+        .btn-melon:hover, .btn-melon:focus {
+            background-color: #FFC9C2;
+            border-color: #FFC9C2;
+        }
     </style>
 
     <!-- Join Class Button -->
     <div class="container">
         <br>
         <h2 class="display-3 row justify-content-center">My Classes</h2>
-        <a href="{% url 'add_class' %}" class="btn" style="background-color: #FFA69E; border-color: #FFA69E">
+        <a href="{% url 'add_class' %}" class="btn btn-melon">
             <span class="fa fa-plus"></span> Class
         </a>
     </div>

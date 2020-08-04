@@ -1,12 +1,25 @@
 {% extends "teachers/base.html" %}
 
 {% block content %}
+    <style>
+        .btn-blue {
+            border-color: #43A3B1;
+            background-color: #43A3B1;
+            color: white;
+        }
+
+        .btn-blue:focus, .btn-blue:hover {
+            background-color: #388894;
+            border-color: #388894;
+            color: white;
+        }
+    </style>
     <div class="container" style="text-align: center; margin-top: 2em;">
         <h1>Dashboard</h1>
     </div>
     <div class="container" style="margin-top: 2em;">
         <div class="dropdown show">
-            <a class="btn btn-primary dropdown-toggle" style="background-color: #43A3B1; border-color: #43A3B1" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="btn btn-blue dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Select Class
             </a>
 

@@ -43,6 +43,41 @@
             width: auto;
             height: auto;
         }
+
+        .btn-melon {
+            background-color: #FFA69E;
+            border-color: #FFA69E;
+            color: black;
+        }
+
+        .btn-melon:hover, .btn-melon:focus {
+            background-color: #FFC9C2;
+            border-color: #FFC9C2;
+        }
+
+        .btn-aero {
+            border-color: #B8F2E6;
+            background-color: #B8F2E6;
+            color: black;
+        }
+
+        .btn-aero:focus, .btn-aero:hover {
+            border-color: #98ECDB;
+            background-color: #98ECDB;
+            color: black;
+        }
+
+        .btn-blue {
+            border-color: #43A3B1;
+            background-color: #43A3B1;
+            color: white;
+        }
+
+        .btn-blue:focus, .btn-blue:hover {
+            background-color: #388894;
+            border-color: #388894;
+            color: white;
+        }
     </style>
     <script src="https://kit.fontawesome.com/4674fc2949.js" crossorigin="anonymous"></script>
 
@@ -62,7 +97,7 @@
                 document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right;">
                     <i class="fa fa-trash-alt"></i> Delete</button>
                 <button onclick="document.getElementById('id03').style.display='block';
-                document.getElementById('id04').style.display='block';" class="btn btn-primary" style="position: relative; float: right; background-color: #43A3B1; border-color: #43A3B1">
+                document.getElementById('id04').style.display='block';" class="btn btn-blue" style="position: relative; float: right;">
                     <i class="far fa-edit"></i> Edit
                 </button>
             </div>
@@ -92,7 +127,7 @@
                 {% csrf_token %}
                 {{ form | crispy}}
                 <button onclick="document.getElementById('id03').style.display='none'; document.getElementById('id04').style.display='none';" type="button" class="btn btn-secondary">Cancel</button>
-                <button type="submit" class="btn btn-primary" style="background-color: #43A3B1; border-color: #43A3B1">Confirm Edit</button>
+                <button type="submit" class="btn btn-blue">Confirm Edit</button>
             </form>
         </div>
     </div>
@@ -125,7 +160,7 @@
                         automatically repeated on every survey you create – so there's no need to keep
                         adding them. You can view detailed <strong>cumulative data</strong> about student
                         responses to these questions on your dashboard.</p>
-                    <a href="{% url 'view_recurring_questions' classroom.pk %}" class="btn" style="background-color: #FFA69E; border-color: #FFA69E">View Recurring Questions</a>
+                    <a href="{% url 'view_recurring_questions' classroom.pk %}" class="btn btn-melon">View Recurring Questions</a>
                 </div>
             </div>
         </div>
@@ -154,7 +189,7 @@
                                 {{ survey.name }}
                             </a>
                             <span class="pull-right">
-                                <a href="{% url 'view_results' survey.pk %}" class="btn" style="border-color: #B8F2E6; background-color: #B8F2E6">
+                                <a href="{% url 'view_results' survey.pk %}" class="btn btn-aero">
                                     View Results
                                 </a>
                              </span>

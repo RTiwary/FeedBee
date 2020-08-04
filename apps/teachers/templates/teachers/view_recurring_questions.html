@@ -43,6 +43,29 @@
             width: auto;
             height: auto;
         }
+
+        .btn-melon {
+            background-color: #FFA69E;
+            border-color: #FFA69E;
+            color: black;
+        }
+
+        .btn-melon:hover, .btn-melon:focus {
+            background-color: #FFC9C2;
+            border-color: #FFC9C2;
+        }
+
+        .btn-aero {
+            border-color: #B8F2E6;
+            background-color: #B8F2E6;
+            color: black;
+        }
+
+        .btn-aero:focus, .btn-aero:hover {
+            border-color: #98ECDB;
+            background-color: #98ECDB;
+            color: black;
+        }
     </style>
     <script src="https://kit.fontawesome.com/4674fc2949.js" crossorigin="anonymous"></script>
 
@@ -51,7 +74,7 @@
     <div class="content" style="margin-top: 1em;">
         <div class="row">
             <div class="col-4">
-                <a href="{% url 'view_classroom_info' classroom_id %}" type="button" class="btn" style="border-color: #FFA69E; background-color: #FFA69E; -webkit-appearance: none">
+                <a href="{% url 'view_classroom_info' classroom_id %}" type="button" class="btn btn-melon" style="-webkit-appearance: none">
                     <i class="fas fa-home"></i> Classroom Home
                 </a>
             </div>
@@ -130,7 +153,7 @@
                 {% endfor %}
             </div>
             <div class="card-footer">
-                <a href="{% url 'choose_question_type' base_survey_id %}" class="btn btn-sm" style="background-color: #B8F2E6; border-color: #B8F2E6; color: black">
+                <a href="{% url 'choose_question_type' base_survey_id %}" class="btn btn-sm btn-aero">
                     Add question
                 </a>
             </div>
