@@ -6,6 +6,18 @@
             max-height: 320px;
             overflow: scroll;
         }
+
+        .btn-aero {
+            border-color: #B8F2E6;
+            background-color: #B8F2E6;
+            color: black;
+        }
+
+        .btn-aero:focus, .btn-aero:hover {
+            border-color: #98ECDB;
+            background-color: #98ECDB;
+            color: black;
+        }
     </style>
 
     <!-- Displays the classroom name -->
@@ -46,7 +58,7 @@
                                             {{ due }}
                                         </div>
                                         <div class="col-2">
-                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-primary">Take Survey</a>
+                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-aero">Take Survey</a>
                                         </div>
                                     </div>
                                 </li>

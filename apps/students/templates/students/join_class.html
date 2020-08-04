@@ -38,6 +38,18 @@
             width: auto;
             height: auto;
         }
+
+        .btn-blue {
+            border-color: #43A3B1;
+            background-color: #43A3B1;
+            color: white;
+        }
+
+        .btn-blue:focus, .btn-blue:hover {
+            background-color: #388894;
+            border-color: #388894;
+            color: white;
+        }
     </style>
     <script>
         {% if classroom_name and classroom_name == " " %}
@@ -66,7 +78,7 @@
                 <h1>Join {{ classroom_name }}</h1>
                 <p>Are you sure you want to join this classroom?</p>
                 <a href="{% url 'join_class' %}" role="button" class="btn btn-secondary">Cancel</a>
-                <button id="join_class_button_submit" type="submit" class="btn btn-primary" style="background-color: #4EADBC; border-color: #4EADBC">
+                <button id="join_class_button_submit" type="submit" class="btn btn-blue">
                     Join
                 </button>
             </div>
@@ -77,7 +89,7 @@
             <div class="container" style="text-align: center">
                 <h1>Error Encountered</h1>
                 <p>Sorry! It appears this class doesn't exist.</p>
-                <a href="{% url 'join_class' %}" role="button" class="btn btn-primary" style="border-color: #4EADBC; background-color: #4EADBC">
+                <a href="{% url 'join_class' %}" role="button" class="btn btn-blue">
                     OK
                 </a>
             </div>
@@ -94,7 +106,7 @@
             document.getElementById('join_class_button').click();
         } else {
             document.getElementById('join_class_button_submit').click();
-        }" role="button" class="btn btn-primary" style="background-color: #4EADBC; border-color: #4EADBC">
+        }" role="button" class="btn btn-blue">
             Join Class
         </a>
     </form>

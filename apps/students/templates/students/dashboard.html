@@ -6,6 +6,18 @@
             max-height: 700px;
             overflow: scroll;
         }
+
+        .btn-aero {
+            border-color: #B8F2E6;
+            background-color: #B8F2E6;
+            color: black;
+        }
+
+        .btn-aero:focus, .btn-aero:hover {
+            border-color: #98ECDB;
+            background-color: #98ECDB;
+            color: black;
+        }
     </style>
     <br>
     <h2 class="row justify-content-center">Pending Surveys</h2>
@@ -26,7 +38,7 @@
                         <div class="col-3">{{ s.name }}</div>
                         <div class="col-3"> {{ d }}</div>
                         <div class="col-3" style="text-align: right">
-                            <a href="{% url 'take_survey' s.pk %}" class="btn" style="background-color: #B8F2E6; border-color: #B8F2E6; color: black">
+                            <a href="{% url 'take_survey' s.pk %}" class="btn btn-aero">
                                 Take Survey
                             </a>
                         </div>
