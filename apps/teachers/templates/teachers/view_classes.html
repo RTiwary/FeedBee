@@ -28,13 +28,13 @@
         </a>
     </div>
 
-    <div class=" container"">
+    <div class="container">
         <div class="row ">
             <div class="col-sm-12">
                 <div class="card" style="margin-top: 2em">
                     <div class="card-header" style="background-color: #4EADBC; color: white; border-color: #4EADBC">
                         <div class="row">
-                            <div class="col-lg">
+                            <div class="col-10">
                                 <strong>Class</strong>
                             </div>
                             <div class="col-2" style="text-align: center">
@@ -47,7 +47,7 @@
                         {% for class in class_list %}
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col-lg">
+                                    <div class="col-10">
                                         <a href="{% url 'view_classroom_info' class.id %}" >{{ class.name }}</a>
                                     </div>
                                     <div class="col-2" style="text-align: center">
@@ -58,9 +58,8 @@
                         {% empty %}
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col">
-                                    </div>
-                                    <div class="col-6" style="text-align: center">
+                                    <div class="col"></div>
+                                    <div class="col-12" style="text-align: center">
                                         No classrooms are available.
                                     </div>
                                     <div class="col"></div>
@@ -69,6 +68,7 @@
                         {% endfor %}
                     </ul>
                 </div>
+            </div>
         </div>
     </div>
 

@@ -33,10 +33,10 @@
                 <div class="card" style="margin-top: 2em">
                     <div class="card-header" style="background-color: #43A3B1; border-color: #43A3B1; color: white">
                         <div class="row">
-                            <div class="col-lg">
+                            <div class="col-5">
                                 <strong>Survey</strong>
                             </div>
-                            <div class="col-lg">
+                            <div class="col-5">
                                 <strong>Due</strong>
                             </div>
                             <div class="col-2">
@@ -51,10 +51,10 @@
                             {% for survey, due in surveys %}
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col-lg">
+                                        <div class="col-5">
                                             {{ survey.name }}
                                         </div>
-                                        <div class="col-lg">
+                                        <div class="col-5">
                                             {{ due }}
                                         </div>
                                         <div class="col-2">
@@ -68,9 +68,10 @@
                             {% for survey in completed %}
                                     <li class="list-group-item">
                                         <div class="row">
-                                            <div class="col-lg">
+                                            <div class="col-5">
                                                 {{ survey.name }}
                                             </div>
+                                            <div class="col-5"></div>
                                             <div class="col-2">
                                                 <button type="button" class="btn btn-secondary">Completed</button>
                                             </div>

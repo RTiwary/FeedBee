@@ -92,8 +92,8 @@ def add_boolean_question(request, survey_id, question_id=-1):  # question_id is 
             existingQuestion = BooleanQuestion.objects.get(pk=question_id)
             form = BooleanQuestionForm(request.POST, instance=existingQuestion)
 
-        boolean_question = form.save(commit=False)
         if form.is_valid():
+            boolean_question = form.save(commit=False)
             if question_id < 0:
                 boolean_question.survey = survey
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
@@ -107,7 +107,8 @@ def add_boolean_question(request, survey_id, question_id=-1):  # question_id is 
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
             else:
                 return redirect("view_questions", survey_id=survey_id)
-
+        # Add null action so that it can be passed into template
+        action = ""
     else:
         if question_id >= 0:
             existingQuestion = BooleanQuestion.objects.get(pk=question_id)
@@ -139,8 +140,8 @@ def add_text_question(request, survey_id, question_id=-1):
             existingQuestion = TextQuestion.objects.get(pk=question_id)
             form = TextQuestionForm(request.POST, instance=existingQuestion)
 
-        text_question = form.save(commit=False)  # commit=False means get the obj w/o saving to the DB
         if form.is_valid():
+            text_question = form.save(commit=False)  # commit=False means get the obj w/o saving to the DB
             if question_id < 0:
                 text_question.survey = survey
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
@@ -153,6 +154,8 @@ def add_text_question(request, survey_id, question_id=-1):
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
             else:
                 return redirect("view_questions", survey_id=survey_id)
+        # Add null action so that it can be passed into template
+        action = ""
     else:
         if question_id >= 0:
             existingQuestion = TextQuestion.objects.get(pk=question_id)
@@ -161,6 +164,7 @@ def add_text_question(request, survey_id, question_id=-1):
         else:
             form = TextQuestionForm()
             action = "Add"
+
     return render(request, "teachers/add_text_question.html", {'form': form, 'survey': survey, 'action': action,
                                                                'question_format': question_format})
 
@@ -183,8 +187,8 @@ def add_mc_question(request, survey_id, question_id=-1):
             existingQuestion = MultipleChoiceQuestion.objects.get(pk=question_id)
             form = MultipleChoiceQuestionForm(request.POST, instance=existingQuestion)
 
-        mc_question = form.save(commit=False)
         if form.is_valid():
+            mc_question = form.save(commit=False)
             if question_id < 0:
                 mc_question.survey = survey
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
@@ -197,6 +201,8 @@ def add_mc_question(request, survey_id, question_id=-1):
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
             else:
                 return redirect("view_questions", survey_id=survey_id)
+        # Add null action so that it can be passed into template
+        action = ""
     else:
         if question_id >= 0:
             existingQuestion = MultipleChoiceQuestion.objects.get(pk=question_id)
@@ -228,8 +234,8 @@ def add_checkbox_question(request, survey_id, question_id=-1):
             existingQuestion = CheckboxQuestion.objects.get(pk=question_id)
             form = CheckboxQuestionForm(request.POST, instance=existingQuestion)
 
-        checkbox_question = form.save(commit=False)
         if form.is_valid():
+            checkbox_question = form.save(commit=False)
             if question_id < 0:
                 checkbox_question.survey = survey
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
@@ -242,6 +248,8 @@ def add_checkbox_question(request, survey_id, question_id=-1):
                 return redirect("view_recurring_questions", classroom_id=classroom_id)
             else:
                 return redirect("view_questions", survey_id=survey_id)
+        # Add null action so that it can be passed into template
+        action = ""
     else:
         if question_id >= 0:
             existingQuestion = CheckboxQuestion.objects.get(pk=question_id)

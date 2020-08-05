@@ -86,13 +86,10 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-sm">
-
+            <div class="col-9">
+                <h1 class="display-3" style="white-space: nowrap; overflow:auto;">{{ classroom.name }}</h1>
             </div>
-            <div class="col-sm">
-                <h1 class="display-3 row justify-content-center" style="white-space: nowrap;">{{ classroom.name }}</h1>
-            </div>
-            <div class="col-sm">
+            <div class="col-3">
                 <br>
                 <button onclick="document.getElementById('id01').style.display='block';
                 document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right;">
@@ -168,40 +165,47 @@
     </div>
 
     <div class="row">
+
+
+
         <div class="col-sm-12">
             <div class="card" style="margin-top: 2em; margin-bottom: 2em;">
-                <div class="card-header" style="text-align: center; background-color: #43A3B1; border-color: #43A3B1; color: white">
-                    <div class="row">
-                        <div class="col-4" style="text-align: left">
-                            <a href="{% url 'add_survey' classroom.pk %}" class="btn btn-light">
-                                <span class="fa fa-plus"></span> Survey
-                            </a>
-                        </div>
-                        <div class="col-4">
-                            <h5 style="text-align: center; padding: 5px">My Surveys</h5>
-                        </div>
-                        <div class="col"></div>
+            <div class="card-header" style="text-align: center; background-color: #43A3B1; border-color: #43A3B1; color: white">
+                <div class="row">
+                    <div class="col-4" style="text-align: left">
+                        <a href="{% url 'add_survey' classroom.pk %}" class="btn btn-light">
+                            <span class="fa fa-plus"></span> Survey
+                        </a>
                     </div>
+                    <div class="col-4">
+                        <h5 style="text-align: center; padding: 5px">My Surveys</h5>
+                    </div>
+                    <div class="col"></div>
                 </div>
-                <ul class="list-group list-group-flush scrollable">
-                    {% for survey in surveys %}
-                        <li class="list-group-item">
-                            <a href="{% url 'view_questions' survey.pk %}">
-                                {{ survey.name }}
-                            </a>
-                            <span class="pull-right">
+            </div>
+            <ul class="list-group list-group-flush scrollable">
+                {% for survey in surveys %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-9">
+                                <a href="{% url 'view_questions' survey.pk %}">
+                                    {{ survey.name }}
+                                </a>
+                            </div>
+                            <div class="col-3 text-right">
                                 <a href="{% url 'view_results' survey.pk %}" class="btn btn-aero">
                                     View Results
                                 </a>
-                             </span>
-                        </li>
-                    {% empty %}
-                        <li class="list-group-item" style="text-align: center">
-                            No surveys have been created.
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item" style="text-align: center">
+                        No surveys have been created.
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
         </div>
     </div>
     <br>

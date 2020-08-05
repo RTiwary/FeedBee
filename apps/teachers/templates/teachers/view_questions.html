@@ -86,15 +86,15 @@
 
     <div class="content" style="margin-top: 1em;">
         <div class="row">
-            <div class="col-sm">
+            <div class="col-3">
                 <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-melon" style="-webkit-appearance: none">
                     <i class="fas fa-home"></i> Classroom Home
                 </a>
             </div>
-            <div class="col-sm">
-                <h1 class="row justify-content-center" style="white-space: nowrap;">View Questions For {{ survey.name }}</h1>
+            <div class="col-6">
+                <h1 style="white-space: nowrap; overflow:auto;">View Questions For {{ survey.name }}</h1>
             </div>
-            <div class="col-sm">
+            <div class="col-3">
                 <button onclick="document.getElementById('id01').style.display='block';
                 document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right; -webkit-appearance: none;">
                     <i class="fa fa-trash-alt"></i> Delete</button>
@@ -167,18 +167,16 @@
                 {% for question in questions %}
                 <div class="list-group-item">
                     <div class="row">
-                        <div class="col-lg">
-                            <p style="width: 700px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                <a href="{% if question.question_type == "Boolean" %}
-                            {% url 'add_boolean_question' survey_id=survey.pk question_id=question.pk %}
-                            {% elif question.question_type == "Text" %}
-                            {% url 'add_text_question' survey_id=survey.pk question_id=question.pk %}
-                            {% elif question.question_type == "MultipleChoice" %}
-                            {% url 'add_mc_question' survey_id=survey.pk question_id=question.pk %}
-                            {% elif question.question_type == "Checkbox" %}
-                            {% url 'add_checkbox_question' survey_id=survey.pk question_id=question.pk %}
-                            {% endif %}">{{ question.question_text }}</a>
-                            </p>
+                        <div class="col-8" >
+                            <a href="{% if question.question_type == "Boolean" %}
+                                {% url 'add_boolean_question' survey_id=survey.pk question_id=question.pk %}
+                                {% elif question.question_type == "Text" %}
+                                {% url 'add_text_question' survey_id=survey.pk question_id=question.pk %}
+                                {% elif question.question_type == "MultipleChoice" %}
+                                {% url 'add_mc_question' survey_id=survey.pk question_id=question.pk %}
+                                {% elif question.question_type == "Checkbox" %}
+                                {% url 'add_checkbox_question' survey_id=survey.pk question_id=question.pk %}
+                                {% endif %}">{{ question.question_text }}</a>
                         </div>
                         <div class="col-2">
                             {% if question.question_type == "Boolean" %}
