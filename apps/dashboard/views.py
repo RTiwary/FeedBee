@@ -1,3 +1,4 @@
+import datetime
 from copy import deepcopy
 from apps.teachers.views import *
 from collections import OrderedDict
@@ -17,6 +18,8 @@ def dash(request):
 
 
 '''allows teacher to select the survey they want given they already select the classroom'''
+
+
 @login_required
 @user_passes_test(is_teacher)
 def dash_select(request, classroom_id):
@@ -51,6 +54,7 @@ def teacher_dashboard(request, classroom_id, survey_id):
         frequency = '1'
     else:
         frequency = survey.frequency
+        graph_list = [['boolean', 'Response Rate']]
 
     # Get all boolean questions related to survey
     boolean_questions = BooleanQuestion.objects.filter(survey_id=survey_id)
@@ -61,6 +65,9 @@ def teacher_dashboard(request, classroom_id, survey_id):
 
         # Only fetch data if there are responses to a question
         if len(boolean_answers) > 0:
+            if survey.name != 'Base':
+                graph_list[0].extend(display_response_rate_graph(survey, boolean_answers))
+
             title = boolean_question.question_text
             boolean_date, boolean_data = display_unit_boolean_graph(frequency, boolean_answers)
 
@@ -76,6 +83,9 @@ def teacher_dashboard(request, classroom_id, survey_id):
 
         # Only fetch data if there are responses to a question
         if len(text_answers) > 0:
+            if survey.name != 'Base' and len(graph_list[0]) == 2:
+                graph_list[0].extend(display_response_rate_graph(survey, text_answers))
+
             title = text_question.question_text
             responses_list = display_unit_text_graph(frequency, text_answers)
 
@@ -91,6 +101,9 @@ def teacher_dashboard(request, classroom_id, survey_id):
 
         # Only fetch data if there are responses to a question
         if len(mc_answers) > 0:
+            if survey.name != 'Base' and len(graph_list[0]) == 2:
+                graph_list[0].extend(display_response_rate_graph(survey, mc_answers))
+
             title = mc_question.question_text
             mc_date, mc_data = display_unit_mc_graph(frequency, mc_answers)
 
@@ -106,13 +119,15 @@ def teacher_dashboard(request, classroom_id, survey_id):
 
         # Only fetch data if there are responses to a question
         if len(checkbox_answers) > 0:
+            if survey.name != 'Base' and len(graph_list[0]) == 2:
+                graph_list[0].extend(display_response_rate_graph(survey, checkbox_answers))
+
             title = checkbox_question.question_text
             checkbox_date, checkbox_data = display_unit_checkbox_graph(frequency, checkbox_answers)
 
             # Add checkbox_date and checkbox_data to data package
             graph_list.append(['checkbox', title, checkbox_date, checkbox_data])
 
-    print(graph_list)
     return render(request, "dashboard/teacher_dashboard.html", {
         "graph_data": graph_list, 'classroom': classroom, 'curr_survey': survey, 'class_list': class_list,
         'survey_list': survey_list
@@ -187,7 +202,7 @@ def display_unit_mc_graph(frequency, mc_answers):
     for option in options:
         option_data = {'label': option, 'data': []}
         for interval in data:
-            option_data['data'].append(round((data[interval][option]/sum(data[interval].values())) * 100))
+            option_data['data'].append(round((data[interval][option] / sum(data[interval].values())) * 100))
 
         dataset.append(option_data)
 
@@ -220,7 +235,6 @@ def display_unit_checkbox_graph(frequency, checkbox_answers):
     # Calculate percentages for each individual choice
     interval_percentage = []
 
-
     # Add dictionaries for each choice
     choice_title = CheckboxQuestion.objects.filter(pk=checkbox_answers[0].question.pk).first()
     interval_percentage.append({'label': choice_title.option_a, 'data': []})
@@ -242,6 +256,72 @@ def display_unit_checkbox_graph(frequency, checkbox_answers):
     return interval_dates, interval_percentage
 
 
+# def display_response_rate_graph(survey, start_date, question_type, question_pk):
+#     interval_dates = []
+#     start_day = datetime.datetime(*[int(item) for item in findInterval(survey.frequency, start_date).split('-')]) \
+#         .isoweekday()
+#     for day in survey.frequency:
+#         day = int(day)
+#         if start_day > day:
+#             interval_dates.append((start_date + timedelta(days=7 - (start_day - day))).date())
+#         else:
+#             interval_dates.append((start_date + timedelta(days=start_day - day)).date())
+#
+#         while (interval_dates[-1] + datetime.timedelta(days=7)) <= survey.end_date and \
+#                 (interval_dates[-1] + datetime.timedelta(days=7)) <= datetime.date.today():
+#             interval_dates.append(interval_dates[-1] + timedelta(days=7))
+#
+#     if interval_dates[-1] != survey.end_date and survey.end_date <= datetime.date.today():
+#         interval_dates.append(survey.end_date)
+#     interval_dates.append(survey.end_date + timedelta(days=1))
+#     interval_dates.sort()
+#
+#     interval_response_rates = []
+#     for i in range(len(interval_dates) - 1):
+#         if question_type == 'boolean':
+#             interval_response_rates.append((len(BooleanAnswer.objects.filter(question=question_pk)
+#                                                 .exclude(timestamp__lt=interval_dates[i])
+#                                                 .exclude(timestamp__gte=interval_dates[i + 1]))
+#                                             / survey.classroom.students.count()) * 100)
+#         elif question_type == 'text':
+#             interval_response_rates.append((len(TextAnswer.objects.filter(question=question_pk)
+#                                                 .exclude(timestamp__lt=interval_dates[i])
+#                                                 .exclude(timestamp__gte=interval_dates[i + 1]))
+#                                             / survey.classroom.students.count()) * 100)
+#         elif question_type == 'mc':
+#             interval_response_rates.append((len(MultipleChoiceAnswer.objects.filter(question=question_pk)
+#                                                 .exclude(timestamp__lt=interval_dates[i])
+#                                                 .exclude(timestamp__gte=interval_dates[i + 1]))
+#                                             / survey.classroom.students.count()) * 100)
+#         elif question_type == 'checkbox':
+#             interval_response_rates.append((len(CheckboxAnswer.objects.filter(question=question_pk)
+#                                                 .exclude(timestamp__lt=interval_dates[i])
+#                                                 .exclude(timestamp__gte=interval_dates[i + 1]))
+#                                             / survey.classroom.students.count()) * 100)
+#
+#     interval_dates.pop()
+#     return interval_dates, interval_response_rates
+
+
+def display_response_rate_graph(survey, responses):
+    intervals = OrderedDict()
+
+    for r in responses:
+        # Get interval date given the survey and timestamp
+        interval = findInterval(survey.frequency, r.timestamp)
+
+        # Check if interval exists already in dictionary
+        if interval not in intervals:
+            intervals[interval] = 0
+
+        intervals[interval] += 1
+
+    for interval in intervals.keys():
+        intervals[interval] = round(intervals[interval]/survey.classroom.students.count() * 100)
+
+    return list(intervals.keys()), list(intervals.values())
+
+
 # Returns the interval (a date) that an answer belongs to given the timestamp and the survey
 def findInterval(frequency, timestamp):
     answer_date = timestamp.date()
@@ -255,7 +335,7 @@ def findInterval(frequency, timestamp):
         for i in range(0, len(frequency)):
             if answer_date.isoweekday() < int(frequency[i]):
                 if i != 0:
-                    difference = answer_date.isoweekday() - int(frequency[i-1])
+                    difference = answer_date.isoweekday() - int(frequency[i - 1])
                 break
 
     if difference == -7:

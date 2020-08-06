@@ -110,6 +110,10 @@
            for (var i = 0; i < Object.keys(graph_data).length; i++) {
                 var ctx = document.getElementById("myChart" + i);
                 if (graph_data[i][0] === 'boolean') {
+                    var y_label = '% True'
+                    if (graph_data[i][1] == 'Response Rate') {
+                        y_label = '% Responded'
+                    }
                     var myChart = new Chart(ctx, {
                         type: 'line',
                         data: {
@@ -149,10 +153,13 @@
                                     display: true,
                                     scaleLabel: {
                                         display: true,
-                                        labelString: '% True'
+                                        labelString: y_label
                                     },
                                     ticks: {
-                                        beginAtZero: true
+                                        beginAtZero: true,
+                                        steps: 10,
+                                        stepValue: 10,
+                                        max: 100
                                     }
                                 }]
                             }
