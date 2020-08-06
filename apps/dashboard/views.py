@@ -6,7 +6,6 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
 from datetime import timedelta
 
-
 @login_required
 @user_passes_test(is_teacher)
 def dash(request):
@@ -238,7 +237,9 @@ def display_unit_checkbox_graph(frequency, checkbox_answers):
     # Add dictionaries for each choice
     choice_title = CheckboxQuestion.objects.filter(pk=checkbox_answers[0].question.pk).first()
     interval_percentage.append({'label': choice_title.option_a, 'data': []})
-    interval_percentage.append({'label': choice_title.option_b, 'data': []})
+
+    if choice_title.option_b is not None:
+        interval_percentage.append({'label': choice_title.option_b, 'data': []})
 
     if choice_title.option_c is not None:
         interval_percentage.append({'label': choice_title.option_c, 'data': []})

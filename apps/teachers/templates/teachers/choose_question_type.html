@@ -9,6 +9,18 @@
         form {
             font-size: 20px;
         }
+
+        .btn-blue {
+            border-color: #43A3B1;
+            background-color: #43A3B1;
+            color: white;
+        }
+
+        .btn-blue:focus, .btn-blue:hover {
+            background-color: #388894;
+            border-color: #388894;
+            color: white;
+        }
     </style>
 
     {% load crispy_forms_tags %}
@@ -33,7 +45,9 @@
             {% csrf_token %}
             {{ form | crispy}}
             <br>
-            <button type="submit" class="btn btn-primary">Create Question</button>
+            <button type="submit" class="btn btn-blue">
+                Create Question
+            </button>
         </form>
     </div>
 {% endblock content %}

@@ -13,6 +13,8 @@ from apps.students.models import CheckboxAnswer, TextAnswer, BooleanAnswer, Mult
 from apps.teachers.models import CheckboxQuestion, TextQuestion, BooleanQuestion, MultipleChoiceQuestion, Survey, \
     Classroom
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.mail import send_mail
+from .forms import *
 
 
 # test for if user is student
@@ -97,15 +99,34 @@ def view_surveys(request, classroom_id):
     surveys, completed = get_pending_surveys(request.user, all_surveys)
     days_due = get_due_days(surveys)
 
+    lists_empty = False
+    if not surveys and not completed:
+        lists_empty = True
+
     return render(request, "students/view_surveys.html", {'classroom': classroom,
                                                           'surveys': zip(surveys, days_due),
-                                                          'completed': completed})
+                                                          'completed': completed,
+                                                          'lists_empty': lists_empty})
 
 
 @login_required
 @user_passes_test(is_student)
 def suggest_feature(request):
-    return render(request, "students/suggest_feature.html")
+    if request.method == 'POST':
+        form = SuggestFeatureForm(request.POST)
+        if form.is_valid():
+            # Send suggestion to inbox
+            send_mail(
+                'FeedBee: {}'.format(form.cleaned_data['comment_type_choice']),
+                "A user wrote the following:\n\n" + form.cleaned_data['comment'],
+                None,
+                ['edwhuang@umich.edu'],
+                fail_silently=False,
+            )
+            return render(request, "students/suggest_feature.html", {'form': SuggestFeatureForm(), 'toast': "1"})
+
+    form = SuggestFeatureForm()
+    return render(request, "students/suggest_feature.html", {'form': form, 'toast': "-1"})
 
 
 @login_required

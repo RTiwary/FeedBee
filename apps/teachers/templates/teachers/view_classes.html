@@ -6,52 +6,70 @@
             max-height: 360px;
             overflow: scroll;
         }
+
+        .btn-melon {
+            background-color: #FFA69E;
+            border-color: #FFA69E;
+            color: black;
+        }
+
+        .btn-melon:hover, .btn-melon:focus {
+            background-color: #FFC9C2;
+            border-color: #FFC9C2;
+        }
     </style>
 
     <!-- Join Class Button -->
     <div class="container">
         <br>
         <h2 class="display-3 row justify-content-center">My Classes</h2>
-        <a href="{% url 'add_class' %}" class="btn btn-primary">
+        <a href="{% url 'add_class' %}" class="btn btn-melon">
             <span class="fa fa-plus"></span> Class
         </a>
     </div>
 
-    {% if class_list %}
-        <div class=" container"">
-            <div class="row ">
-                <div class="col-sm-12">
-                    <div class="card" style="margin-top: 2em">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-lg">
-                                    <strong>Class</strong>
-                                </div>
-                                <div class="col-2" style="text-align: center">
-                                    <strong>Students</strong>
-                                </div>
+    <div class="container">
+        <div class="row ">
+            <div class="col-sm-12">
+                <div class="card" style="margin-top: 2em">
+                    <div class="card-header" style="background-color: #4EADBC; color: white; border-color: #4EADBC">
+                        <div class="row">
+                            <div class="col-10">
+                                <strong>Class</strong>
+                            </div>
+                            <div class="col-2" style="text-align: center">
+                                <strong>Students</strong>
                             </div>
                         </div>
-
-                        <ul class="list-group list-group-flush scrollable">
-                            {% for class in class_list %}
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-lg">
-                                            <a href="{% url 'view_classroom_info' class.id %}" >{{ class.name }}</a>
-                                        </div>
-                                        <div class="col-2" style="text-align: center">
-                                            {{ class.students.count }}
-                                        </div>
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
                     </div>
+
+                    <ul class="list-group list-group-flush scrollable">
+                        {% for class in class_list %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <a href="{% url 'view_classroom_info' class.id %}" >{{ class.name }}</a>
+                                    </div>
+                                    <div class="col-2" style="text-align: center">
+                                        {{ class.students.count }}
+                                    </div>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col-12" style="text-align: center">
+                                        No classrooms are available.
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
-    {% else %}
-        <br><p style="text-align: center">No classrooms are available.</p>
-    {% endif %}
+    </div>
 
 {% endblock content %}

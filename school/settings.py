@@ -86,13 +86,21 @@ WSGI_APPLICATION = 'school.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test_school',
-        'USER': 'raeed',
+        'NAME': 'new_school',
+        'USER': 'postgres',
+        'PASSWORD': 'Pistons1',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'graph_data_cache',
+        'TIMEOUT': 900,
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

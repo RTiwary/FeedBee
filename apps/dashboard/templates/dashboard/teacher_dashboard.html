@@ -7,6 +7,18 @@
         .scrollable {
             overflow: scroll;
         }
+
+        .btn-blue {
+            border-color: #43A3B1;
+            background-color: #43A3B1;
+            color: white;
+        }
+
+        .btn-blue:focus, .btn-blue:hover {
+            background-color: #388894;
+            border-color: #388894;
+            color: white;
+        }
     </style>
 
     <div class="container" style="text-align: center; margin-top: 2em;">
@@ -15,7 +27,7 @@
 
     <div class="container" style="margin-top: 2em; display: flex">
         <div class="dropdown show">
-            <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="btn btn-blue dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ classroom.name }}
             </a>
 
@@ -34,7 +46,7 @@
 
         <!-- Select Survey dropdown -->
         <div class="dropdown show" style="margin-left: 1em;">
-            <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="btn btn-blue dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ curr_survey.name }}
             </a>
 
