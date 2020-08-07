@@ -47,15 +47,31 @@
         <!-- Select Survey dropdown -->
         <div class="dropdown show" style="margin-left: 1em;">
             <a class="btn btn-blue dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ curr_survey.name }}
+                {% if curr_survey.name == "Base" %}
+                    Yearly Stats
+                {% else %}
+                    {{ curr_survey.name }}
+                {% endif %}
             </a>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for survey in survey_list %}
                     {% if survey.id == curr_survey.id %}
-                        <a class="dropdown-item disabled" href="{% url 'teacher_dashboard' classroom.id survey.id %}">{{ survey.name }}</a>
+                        <a class="dropdown-item disabled" href="{% url 'teacher_dashboard' classroom.id survey.id %}">
+                            {% if survey.name == "Base" %}
+                                Yearly Stats
+                            {% else %}
+                                {{ survey.name }}
+                            {% endif %}
+                        </a>
                     {% else %}
-                        <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">{{ survey.name }}</a>
+                        <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">
+                            {% if survey.name == "Base" %}
+                                Yearly Stats
+                            {% else %}
+                                {{ survey.name }}
+                            {% endif %}
+                        </a>
                     {% endif %}
                 {% empty %}
                     <a class="dropdown-item" href="{% url 'add_survey' classroom.id %}"><span class="fa fa-plus"></span> Survey</a>
