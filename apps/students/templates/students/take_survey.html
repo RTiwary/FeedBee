@@ -2,6 +2,19 @@
 {% block title %} Take Survey {% endblock %}
 
 {% block content %}
+    <style>
+        .btn-blue {
+            border-color: #43A3B1;
+            background-color: #43A3B1;
+            color: white;
+        }
+
+        .btn-blue:focus, .btn-blue:hover {
+            background-color: #388894;
+            border-color: #388894;
+            color: white;
+        }
+    </style>
     <div class="row justify-content-center">
     <h1 style="margin-top: 10px">{{ survey.name }}</h1>
     </div>
@@ -145,7 +158,9 @@
         {% endfor %}
         <br>
 
-        <button type="submit" name="submit", value="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" name="submit", value="submit" class="btn btn-blue">
+            Submit
+        </button>
     </form>
     </div>
     </div>

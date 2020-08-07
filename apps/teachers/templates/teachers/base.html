@@ -15,11 +15,23 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
     <title>Homepage!</title>
+    <style>
+        /* change the link color */
+        .nav-item, .navbar-brand {
+            color: black;
+        }
+
+        /* change the color of active or hovered links */
+        .navbar-brand:focus, .navbar-brand:hover,
+        .nav-link:focus, .nav-link:hover {
+            color: #5E6472;
+        }
+    </style>
 </head>
 
-<body style ="background-color: #ADD8E6">
+<body style ="background-color: #FCF9ED">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-sm" style="background-color: #FFA69E">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#teacher-navbar" aria-controls="teacher-navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

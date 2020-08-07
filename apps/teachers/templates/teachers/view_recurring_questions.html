@@ -43,15 +43,40 @@
             width: auto;
             height: auto;
         }
+
+        .btn-melon {
+            background-color: #FFA69E;
+            border-color: #FFA69E;
+            color: black;
+        }
+
+        .btn-melon:hover, .btn-melon:focus {
+            background-color: #FFC9C2;
+            border-color: #FFC9C2;
+        }
+
+        .btn-aero {
+            border-color: #B8F2E6;
+            background-color: #B8F2E6;
+            color: black;
+        }
+
+        .btn-aero:focus, .btn-aero:hover {
+            border-color: #98ECDB;
+            background-color: #98ECDB;
+            color: black;
+        }
     </style>
     <script src="https://kit.fontawesome.com/4674fc2949.js" crossorigin="anonymous"></script>
 
     <br>
 
-    <div class="content">
+    <div class="content" style="margin-top: 1em;">
         <div class="row">
             <div class="col-4">
-                <a href="{% url 'view_classroom_info' classroom_id %}" type="button" class="btn btn-primary"><i class="fas fa-home"></i> Classroom Home</a>
+                <a href="{% url 'view_classroom_info' classroom_id %}" type="button" class="btn btn-melon" style="-webkit-appearance: none">
+                    <i class="fas fa-home"></i> Classroom Home
+                </a>
             </div>
             <div class="col-8">
                 <h2 style="display: inline">View Recurring Questions</h2>
@@ -76,7 +101,7 @@
         <br>
 
         <div class="card">
-            <div class="card-header">
+            <div class="card-header" style="background-color: #43A3B1; border-color: #43A3B1; color: white">
                 <div class="row">
                     <div class="col-8">
                         <strong>Questions</strong>
@@ -93,9 +118,8 @@
                 {% for question in questions %}
                 <div class="list-group-item">
                     <div class="row">
-                        <div class="col-lg">
-                            <p style="width: 700px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                <a href="{% if question.question_type == "Boolean" %}
+                        <div class="col-8">
+                            <a href="{% if question.question_type == "Boolean" %}
                             {% url 'add_boolean_question' survey_id=base_survey_id question_id=question.pk %}
                             {% elif question.question_type == "Text" %}
                             {% url 'add_text_question' survey_id=base_survey_id question_id=question.pk %}
@@ -104,7 +128,6 @@
                             {% elif question.question_type == "Checkbox" %}
                             {% url 'add_checkbox_question' survey_id=base_survey_id question_id=question.pk %}
                             {% endif %}">{{ question.question_text }}</a>
-                            </p>
                         </div>
                         <div class="col-2">
                             {% if question.question_type == "Boolean" %}
@@ -128,7 +151,9 @@
                 {% endfor %}
             </div>
             <div class="card-footer">
-                <a href="{% url 'choose_question_type' base_survey_id %}" class="btn btn-primary btn-sm">Add question</a>
+                <a href="{% url 'choose_question_type' base_survey_id %}" class="btn btn-sm btn-aero">
+                    Add question
+                </a>
             </div>
         </div>
 
