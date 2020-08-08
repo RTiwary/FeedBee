@@ -87,3 +87,9 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 /.idea/
+
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
