@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '4-umfyrarv6n@wij#2b4158^(1d_(u_bby3s(0sqg19e_3ph!g'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -86,9 +86,8 @@ WSGI_APPLICATION = 'school.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'new_school',
+        'NAME': 'test_school',
         'USER': 'postgres',
-        'PASSWORD': 'Pistons1',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
