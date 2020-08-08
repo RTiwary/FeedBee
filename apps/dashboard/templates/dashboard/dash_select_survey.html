@@ -44,7 +44,13 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for survey in survey_list %}
-                    <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">{{ survey.name }}</a>
+                    <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">
+                        {% if survey.name == "Base" %}
+                            Recurring
+                        {% else %}
+                            {{ survey.name }}
+                        {% endif %}
+                    </a>
                 {% empty %}
                     <a class="dropdown-item" href="{% url 'add_survey' classroom.id %}"><span class="fa fa-plus"></span> Survey</a>
                 {% endfor %}

@@ -346,4 +346,4 @@ def findInterval(frequency, timestamp):
         difference = difference + 7
 
     interval_day = interval_day - timedelta(days=difference)
-    return interval_day.strftime('%Y-%m-%d')
+    return interval_day.strftime('%m/%d/%y')
