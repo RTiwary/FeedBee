@@ -48,7 +48,7 @@
         <div class="dropdown show" style="margin-left: 1em;">
             <a class="btn btn-blue dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {% if curr_survey.name == "Base" %}
-                    Yearly Stats
+                    Recurring
                 {% else %}
                     {{ curr_survey.name }}
                 {% endif %}
@@ -59,7 +59,7 @@
                     {% if survey.id == curr_survey.id %}
                         <a class="dropdown-item disabled" href="{% url 'teacher_dashboard' classroom.id survey.id %}">
                             {% if survey.name == "Base" %}
-                                Yearly Stats
+                                Recurring
                             {% else %}
                                 {{ survey.name }}
                             {% endif %}
@@ -67,7 +67,7 @@
                     {% else %}
                         <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">
                             {% if survey.name == "Base" %}
-                                Yearly Stats
+                                Recurring
                             {% else %}
                                 {{ survey.name }}
                             {% endif %}
