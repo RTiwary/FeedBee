@@ -532,8 +532,9 @@ def view_classroom_info(request, classroom_id):
     surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
     active = 0
     curr_date = datetime.date.today()
+
     for survey in surveys:
-        if curr_date < survey.end_date:
+        if curr_date <= survey.end_date:
             active += 1
 
     return render(request, "teachers/view_classroom_info.html",
