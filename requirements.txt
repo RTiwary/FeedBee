@@ -7,3 +7,4 @@ sqlparse==0.3.1
 django-heroku==0.3.1
 gunicorn==20.0.4
 whitenoise==5.2.0
+dj_database_url==0.5.0
