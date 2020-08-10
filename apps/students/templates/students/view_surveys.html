@@ -18,12 +18,27 @@
             background-color: #98ECDB;
             color: black;
         }
+
+        .btn-melon {
+            background-color: #FFA69E;
+            border-color: #FFA69E;
+            color: black;
+        }
+
+        .btn-melon:hover, .btn-melon:focus {
+            background-color: #FFC9C2;
+            border-color: #FFC9C2;
+            color: black;
+        }
     </style>
 
-    <!-- Displays the classroom name -->
+    <!-- Classroom name and leave class button -->
     <div class="container">
         <br>
         <h2 class="display-3 row justify-content-center">{{ classroom.name }}</h2>
+        <a href="{% url 'leave_class' classroom.pk %}" class="btn btn-melon">
+            Leave Class
+        </a>
     </div>
 
     <!-- Displays all of the student's surveys (completed and not completed), not completed is in the list 'surveys' -->
