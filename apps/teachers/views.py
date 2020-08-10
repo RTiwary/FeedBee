@@ -8,7 +8,8 @@ from apps.students.models import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from itertools import chain
 import operator
-import datetime
+from datetime import datetime
+from pytz import timezone
 
 
 # Create your views here.
@@ -530,8 +531,10 @@ def view_classroom_info(request, classroom_id):
         classroom = Classroom.objects.get(pk=classroom_id)
         form = ClassroomEditForm(initial={'class_name': classroom.name})
     surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
+
     active = 0
-    curr_date = datetime.date.today()
+    eastern = timezone('US/Eastern')
+    curr_date = datetime.now(eastern).date()
 
     for survey in surveys:
         if curr_date <= survey.end_date:
