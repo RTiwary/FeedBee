@@ -45,6 +45,15 @@ def join_class(request, classroom_id=None):
     return render(request, "students/join_class.html", {'form': form})
 
 
+@login_required
+@user_passes_test(is_student)
+def leave_class(request, classroom_id):
+    student = request.user.student_profile
+    classroom = Classroom.objects.get(pk=classroom_id)
+    classroom.students.remove(student)
+    return redirect(student_dashboard)
+
+
 # displays all pending surveys to student
 @login_required
 @user_passes_test(is_student)
