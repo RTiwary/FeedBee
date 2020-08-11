@@ -61,6 +61,16 @@
                                         </div>
                                     </div>
                                 </li>
+                            {% empty %}
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col"></div>
+                                        <div class="col-3" style="text-align: center">
+                                            No classrooms available.
+                                        </div>
+                                        <div class="col"></div>
+                                    </div>
+                                </li>
                             {% endfor %}
                         </ul>
                     </div>
