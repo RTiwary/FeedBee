@@ -30,9 +30,9 @@ def get_env_variable(var_name):
 SECRET_KEY = get_env_variable('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['https://classbop.herokuapp.com/', 'http://127.0.0.1:8000/']
+ALLOWED_HOSTS = ['classbop.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -95,19 +95,18 @@ WSGI_APPLICATION = 'school.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {}
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
-# if DEBUG:
-#     DATABASES['default'] = {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'new_school',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Pistons1',
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
-#     }
-# else:
-#     DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+if DEBUG:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'new_school',
+        'USER': 'postgres',
+        'PASSWORD': 'Pistons1',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+else:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
 CACHES = {
@@ -153,7 +152,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
