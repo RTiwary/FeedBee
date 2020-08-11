@@ -156,6 +156,8 @@ USE_TZ = True
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
+
+COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
