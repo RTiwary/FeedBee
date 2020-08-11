@@ -31,8 +31,17 @@
 	<link href="{% static 'users/css/magnific-popup.css' %}" rel="stylesheet">
 	<link href="{% static 'users/css/styles.css' %}" rel="stylesheet">
 
+    <!-- Begin Mailchimp Signup Form -->
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+
 	<!-- Favicon  -->
     <link rel="icon" href="{% static 'users/images/favicon.png' %}">
+
+    <style type="text/css">
+        #mc_embed_signup{clear: left;}
+        /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+           We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+    </style>
 </head>
 <body data-spy="scroll" data-target=".fixed-top">
 
@@ -725,24 +734,26 @@
                         <h2>The Latest Insights From Other Teachers Around The World</h2>
 
                         <!-- Newsletter Form -->
-                        <form id="newsletterForm" data-toggle="validator" data-focus="false">
-                            <div class="form-group">
-                                <input type="email" class="form-control-input" id="nemail" required>
-                                <label class="label-control" for="nemail">Email</label>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                            {% comment %}<div class="form-group checkbox">
-                                <input type="checkbox" id="nterms" value="Agreed-to-Terms" required>I've read and agree to Tivo's written <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms Conditions</a>
-                                <div class="help-block with-errors"></div>
-                            </div>{% endcomment %}
-                            <div class="form-group">
-                                <button type="submit" class="form-control-submit-button">SUBSCRIBE</button>
-                            </div>
-                            <div class="form-message">
-                                <div id="nmsgSubmit" class="h3 text-center hidden"></div>
-                            </div>
-                        </form>
-                        <!-- end of newsletter form -->
+                        <div id="mc_embed_signup newsletterForm">
+                            <form action="https://classbop.us17.list-manage.com/subscribe/post?u=88650867186ef10a78c0f78e3&amp;id=f66ec83757" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" data-toggle="validator" data-focus="false" novalidate>
+                                <div id="mc_embed_signup_scroll">
+                                    <div class="form-group">
+                                        <input type="email" value="" name="EMAIL" class="email form-control-input" id="mce-EMAIL" required>
+                                        <label class="label-control" for="mce-EMAIL">Email</label>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                                        <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_88650867186ef10a78c0f78e3_f66ec83757" tabindex="-1" value=""></div>
+                                        <div class="clear"><input type="submit" value="SUBSCRIBE" name="subscribe" id="mc-embedded-subscribe" class="form-control-submit-button"></div>
+                                    </div>
+                                    <div class="form-message">
+                                        <div id="nmsgSubmit" class="h3 text-center hidden"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div> <!--End mc_embed_signup-->
 
                     </div> <!-- end of text-container -->
                 </div> <!-- end of col -->
