@@ -46,7 +46,7 @@
                 {% for survey in survey_list %}
                     <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">
                         {% if survey.name == "Base" %}
-                            Yearly Stats
+                            Recurring
                         {% else %}
                             {{ survey.name }}
                         {% endif %}

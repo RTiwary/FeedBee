@@ -93,3 +93,6 @@ fabric.properties
 *.pot
 *.pyc
 __pycache__/
+
+# Bash profile
+.bash_profile
