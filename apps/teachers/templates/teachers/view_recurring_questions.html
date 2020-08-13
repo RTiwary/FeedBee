@@ -73,7 +73,7 @@
 
     <div class="content" style="margin-top: 1em;">
         <div class="row">
-            <div class="col-4">
+            <div class="col-4 d-none d-md-block">
                 <a href="{% url 'view_classroom_info' classroom_id %}" type="button" class="btn btn-melon" style="-webkit-appearance: none">
                     <i class="fas fa-home"></i> Classroom Home
                 </a>
@@ -106,10 +106,10 @@
                     <div class="col-8">
                         <strong>Questions</strong>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2 d-none d-md-block">
                         <strong>Question Type</strong>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2 d-none d-md-block">
                         <strong>Actions</strong>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                             {% url 'add_checkbox_question' survey_id=base_survey_id question_id=question.pk %}
                             {% endif %}">{{ question.question_text }}</a>
                         </div>
-                        <div class="col-2">
+                        <div class="col-2 d-none d-md-block">
                             {% if question.question_type == "Boolean" %}
                                 <span class="badge badge-success">True/False</span>
                             {% elif question.question_type == "Text" %}

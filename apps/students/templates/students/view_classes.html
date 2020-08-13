@@ -40,7 +40,7 @@
                                 <div class="col-9">
                                     <strong>Class</strong>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3 d-none d-md-block">
                                     <strong>Teacher</strong>
                                 </div>
                             </div>
@@ -56,7 +56,7 @@
                                         <div class="col-9" style="white-space: nowrap; overflow:auto;">
                                             <a href="{% url 'view_surveys' class.id %}">{{ class.name }}</a>
                                         </div>
-                                        <div class="col-3" style="white-space: nowrap; overflow:auto;">
+                                        <div class="col-3 d-none d-md-block" style="white-space: nowrap; overflow:auto;">
                                             {{ teacher.first_name }} {{ teacher.last_name }}
                                         </div>
                                     </div>

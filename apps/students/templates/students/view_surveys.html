@@ -48,13 +48,13 @@
                 <div class="card" style="margin-top: 2em">
                     <div class="card-header" style="background-color: #43A3B1; border-color: #43A3B1; color: white">
                         <div class="row">
-                            <div class="col-5">
+                            <div class="col-md-5 col-6">
                                 <strong>Survey</strong>
                             </div>
-                            <div class="col-5">
+                            <div class="col-md-4 col-6">
                                 <strong>Due</strong>
                             </div>
-                            <div class="col-2">
+                            <div class="col-md-3 d-none d-md-block text-center">
                                 <strong>Status</strong>
                             </div>
                         </div>
@@ -66,14 +66,14 @@
                             {% for survey, due in surveys %}
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col-5">
+                                        <div class="col-md-5 col-6">
                                             {{ survey.name }}
                                         </div>
-                                        <div class="col-5">
+                                        <div class="col-md-4 col-6">
                                             {{ due }}
                                         </div>
-                                        <div class="col-2">
-                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-aero">Take Survey</a>
+                                        <div class="col-md-3 col-12 pt-2 pt-md-0 text-center">
+                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-aero btn-block">Take Survey</a>
                                         </div>
                                     </div>
                                 </li>
@@ -83,12 +83,12 @@
                             {% for survey in completed %}
                                     <li class="list-group-item">
                                         <div class="row">
-                                            <div class="col-5">
+                                            <div class="col-md-5 col-6">
                                                 {{ survey.name }}
                                             </div>
-                                            <div class="col-5"></div>
-                                            <div class="col-2">
-                                                <button type="button" class="btn btn-secondary">Completed</button>
+                                            <div class="col-md-4 col-6"></div>
+                                            <div class="col-md-3 col-12 pt-2 pt-md-0">
+                                                <button type="button" class="btn btn-secondary btn-block">Completed</button>
                                             </div>
                                         </div>
                                     </li>
@@ -100,11 +100,9 @@
                         <ul class="list-group list-group-flush scrollable">
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col"></div>
-                                    <div class="col-6" style="text-align: center;">
+                                    <div class="col-12" style="text-align: center;">
                                         No surveys available.
                                     </div>
-                                    <div class="col"></div>
                                 </div>
                             </li>
                         </ul>
