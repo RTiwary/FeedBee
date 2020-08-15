@@ -86,20 +86,22 @@
 
     <div class="content" style="margin-top: 1em;">
         <div class="row">
-            <div class="col-3">
+            <div class="col-3 col-lg-3 d-none d-md-block">
                 <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-melon" style="-webkit-appearance: none">
                     <i class="fas fa-home"></i> Classroom Home
                 </a>
             </div>
-            <div class="col-6">
-                <h1 style="white-space: nowrap; overflow:auto;">View Questions For {{ survey.name }}</h1>
+            <div class="col-md-4 col-lg-5 col-12 text-center" >
+                <h1 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ survey.name }}</h1>
             </div>
-            <div class="col-3">
-                <button onclick="document.getElementById('id01').style.display='block';
-                document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right; -webkit-appearance: none;">
-                    <i class="fa fa-trash-alt"></i> Delete</button>
+            <div class="col-md-2 col-lg-2 col-6">
                 <button onclick="document.getElementById('id03').style.display='block';
                 document.getElementById('id04').style.display='block';" class="btn btn-blue" style="position: relative; float: right;"><i class="far fa-edit"></i> Edit</button>
+            </div>
+            <div class="col-md-3 col-lg-2 col-6">
+                <button onclick="document.getElementById('id01').style.display='block';
+                document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-bottom: 15px; -webkit-appearance: none;">
+                    <i class="fa fa-trash-alt"></i> Delete</button>
             </div>
         </div>
 
@@ -155,10 +157,10 @@
                     <div class="col-8">
                         <strong>Questions</strong>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2 d-none d-md-block">
                         <strong>Question Type</strong>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2 d-none d-md-block">
                         <strong>Actions</strong>
                     </div>
                 </div>
@@ -178,7 +180,7 @@
                                 {% url 'add_checkbox_question' survey_id=survey.pk question_id=question.pk %}
                                 {% endif %}">{{ question.question_text }}</a>
                         </div>
-                        <div class="col-2">
+                        <div class="col-2 d-none d-md-block">
                             {% if question.question_type == "Boolean" %}
                                 <span class="badge badge-success">True/False</span>
                             {% elif question.question_type == "Text" %}

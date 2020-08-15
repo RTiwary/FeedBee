@@ -140,10 +140,12 @@
                             <div class="col-9">
                                 <li class="list-group-item">Classroom Code:</li>
                                 <li class="list-group-item">Student Count:</li>
+                                <li class="list-group-item">Active Surveys Count:</li>
                             </div>
                             <div class="col-3">
                                 <strong><li class="list-group-item" style="text-align: center">{{ classroom.pk }}</li></strong>
                                 <strong><li class="list-group-item" style="text-align: center">{{ classroom.students.count }}</li></strong>
+                                <strong><li class="list-group-item" style="text-align: center">{{ active_surveys }}</li></strong>
                             </div>
                         </div>
                     </ul>
@@ -154,10 +156,10 @@
             <div class="card">
                 <div class="card-body text-center">
                     <h5 class="card-title">Recurring Questions</h5>
-                    <p class="card-text">These are the questions that display growth over time! They are
+                    <p class="card-text">These are cumulative questions that you only have to input once! They are
                         automatically repeated on every survey you create – so there's no need to keep
-                        adding them. You can view detailed <strong>cumulative data</strong> about student
-                        responses to these questions on your dashboard.</p>
+                        adding them. On your dashboard, these questions will be under their own tab called recurring.
+                    </p>
                     <a href="{% url 'view_recurring_questions' classroom.pk %}" class="btn btn-melon">View Recurring Questions</a>
                 </div>
             </div>

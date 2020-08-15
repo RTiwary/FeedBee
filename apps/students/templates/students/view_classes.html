@@ -20,7 +20,7 @@
         }
     </style>
 
-    <!-- Join Class Button -->
+    <!-- Title and Join Class Button -->
     <div class="container">
         <br>
         <h2 class="display-3 row justify-content-center">My Classes</h2>
@@ -40,7 +40,7 @@
                                 <div class="col-9">
                                     <strong>Class</strong>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3 d-none d-md-block">
                                     <strong>Teacher</strong>
                                 </div>
                             </div>
@@ -56,9 +56,19 @@
                                         <div class="col-9" style="white-space: nowrap; overflow:auto;">
                                             <a href="{% url 'view_surveys' class.id %}">{{ class.name }}</a>
                                         </div>
-                                        <div class="col-3" style="white-space: nowrap; overflow:auto;">
+                                        <div class="col-3 d-none d-md-block" style="white-space: nowrap; overflow:auto;">
                                             {{ teacher.first_name }} {{ teacher.last_name }}
                                         </div>
+                                    </div>
+                                </li>
+                            {% empty %}
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col"></div>
+                                        <div class="col-3" style="text-align: center">
+                                            No classrooms available.
+                                        </div>
+                                        <div class="col"></div>
                                     </div>
                                 </li>
                             {% endfor %}

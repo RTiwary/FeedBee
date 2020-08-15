@@ -45,6 +45,15 @@ def join_class(request, classroom_id=None):
     return render(request, "students/join_class.html", {'form': form})
 
 
+@login_required
+@user_passes_test(is_student)
+def leave_class(request, classroom_id):
+    student = request.user.student_profile
+    classroom = Classroom.objects.get(pk=classroom_id)
+    classroom.students.remove(student)
+    return redirect(student_dashboard)
+
+
 # displays all pending surveys to student
 @login_required
 @user_passes_test(is_student)
@@ -164,7 +173,7 @@ def take_survey(request, survey_id):
         list(chain(unit_bool_questions, unit_mc_questions, unit_txt_questions, unit_cb_questions))
     unit_questions = sorted(unit_questions, key=operator.attrgetter('question_rank'))
 
-    questions = list(chain(base_questions, unit_questions))
+    questions = list(chain(unit_questions, base_questions))
 
     # If survey submitted, save responses
     if request.method == 'POST':
