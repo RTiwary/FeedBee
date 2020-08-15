@@ -173,7 +173,7 @@ def take_survey(request, survey_id):
         list(chain(unit_bool_questions, unit_mc_questions, unit_txt_questions, unit_cb_questions))
     unit_questions = sorted(unit_questions, key=operator.attrgetter('question_rank'))
 
-    questions = list(chain(base_questions, unit_questions))
+    questions = list(chain(unit_questions, base_questions))
 
     # If survey submitted, save responses
     if request.method == 'POST':
