@@ -245,13 +245,13 @@ def get_pending_surveys(student, all_surveys):
         freq = sorted(list(s.frequency))
         freq.reverse()
         for d in freq:
-            if int(d) < day:
+            if int(d) <= day:
                 interval_start = date - datetime.timedelta(days=day - int(d))
                 break
 
-        # If no day before today in frequency, choose last day iun frequency(from the week before)
+        # If no day before today in frequency, choose last day in frequency(from the week before)
         else:
-            interval_start = date - datetime.timedelta(days=7 - (int(d) - day))
+            interval_start = date - datetime.timedelta(days=7 - (int(freq[0]) - day))
 
         questions = [BooleanQuestion.objects.filter(survey=s),
                      MultipleChoiceQuestion.objects.filter(survey=s),
@@ -310,7 +310,7 @@ def get_due_days(surveys):
         # If no day after today, use the first day of next week
         else:
             due_day = int(freq[0]) - 2 if int(freq[0]) - 2 >= 0 else 6
-            due_date = date - datetime.timedelta(days=day - int(d))
+            due_date = date - datetime.timedelta(days=day - int(freq[0]))
 
         # If end of current interval is passed end date, due date is the end date
         if due_date > s.end_date:
