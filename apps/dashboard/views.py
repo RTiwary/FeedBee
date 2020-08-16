@@ -177,14 +177,15 @@ def display_unit_mc_graph(frequency, mc_answers):
     # }
     data = OrderedDict()
     options = OrderedDict()
+
     if mc_answers[0].question.option_c is None:
-        options = {'A': 0, 'B': 0}
+        options = {mc_answers[0].question.option_a: 0, mc_answers[0].question.option_b: 0}
     elif mc_answers[0].question.option_d is None:
-        options = {'A': 0, 'B': 0, 'C': 0}
+        options = {mc_answers[0].question.option_a: 0, mc_answers[0].question.option_b: 0, mc_answers[0].question.option_c: 0}
     elif mc_answers[0].question.option_e is None:
-        options = {'A': 0, 'B': 0, 'C': 0, 'D': 0}
+        options = {mc_answers[0].question.option_a: 0, mc_answers[0].question.option_b: 0, mc_answers[0].question.option_c: 0, mc_answers[0].question.option_d: 0}
     else:
-        options = {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0}
+        options = {mc_answers[0].question.option_a: 0, mc_answers[0].question.option_b: 0, mc_answers[0].question.option_c: 0, mc_answers[0].question.option_d: 0, mc_answers[0].question.option_e: 0}
 
     for ans in mc_answers:
         # Get interval date given the survey and timestamp
@@ -194,7 +195,16 @@ def display_unit_mc_graph(frequency, mc_answers):
         if interval not in data:
             data[interval] = deepcopy(options)
 
-        data[interval][ans.answer] += 1
+        if ans.answer == 'A':
+            data[interval][mc_answers[0].question.option_a] += 1
+        elif ans.answer == 'B':
+            data[interval][mc_answers[0].question.option_b] += 1
+        elif ans.answer == 'C':
+            data[interval][mc_answers[0].question.option_c] += 1
+        elif ans.answer == 'D':
+            data[interval][mc_answers[0].question.option_d] += 1
+        else:
+            data[interval][mc_answers[0].question.option_e] += 1
 
     # Calculate percentage for every choice for each interval
     dataset = []
