@@ -5,7 +5,7 @@ import operator
 from django.contrib.auth import logout
 from django.shortcuts import render, get_object_or_404, redirect
 from itertools import chain
-
+from django.http import Http404
 from django.urls import reverse
 from apps.users.models import *
 from apps.students.forms import JoinClassForm
@@ -20,7 +20,6 @@ from .forms import *
 # test for if user is student
 def is_student(user):
     return user.is_student
-
 
 @login_required
 @user_passes_test(is_student)
@@ -50,6 +49,11 @@ def join_class(request, classroom_id=None):
 def leave_class(request, classroom_id):
     student = request.user.student_profile
     classroom = Classroom.objects.get(pk=classroom_id)
+
+    # check if student is in the classroom
+    if student not in classroom.students.all():
+        raise Http404
+
     classroom.students.remove(student)
     return redirect(student_dashboard)
 
@@ -102,6 +106,12 @@ def view_classes(request):
 @user_passes_test(is_student)
 def view_surveys(request, classroom_id):
     classroom = Classroom.objects.get(pk=classroom_id)
+    student = request.user.student_profile
+
+    # check if student is in the classroom
+    if student not in classroom.students.all():
+        raise Http404
+
     all_surveys = Survey.objects.filter(classroom=classroom) \
         .exclude(name="Base").exclude(end_date__lte=datetime.datetime.today())
 
@@ -150,6 +160,11 @@ def logout_request(request):
 def take_survey(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
     student = request.user.student_profile
+    classroom = get_object_or_404(Classroom, pk=survey.classroom.id)
+
+    # check if student is in the classroom
+    if student not in classroom.students.all():
+        raise Http404
 
     # Query for class base questions and place into list sorted by question_rank
     base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)
