@@ -637,7 +637,7 @@ def suggest_feature(request):
                 'FeedBee: {}'.format(form.cleaned_data['comment_type_choice']),
                 "A user wrote the following:\n\n" + form.cleaned_data['comment'],
                 None,
-                ['edwhuang@umich.edu'],
+                ['classbopteam@gmail.com'],
                 fail_silently=False,
             )
             return render(request, "teachers/suggest_feature.html", {'form': SuggestFeatureForm(), 'toast': "1"})
