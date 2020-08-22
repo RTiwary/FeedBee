@@ -10,6 +10,12 @@ from django.contrib import messages
 def homepage(request):
     return render(request, "users/landing_page.html")
 
+def terms_conditions(request):
+    return render(request, "users/terms-conditions.html")
+
+def privacy_policy(request):
+    return render(request, "users/privacy-policy.html")
+
 def register(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)

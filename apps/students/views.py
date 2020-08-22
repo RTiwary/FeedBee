@@ -8,7 +8,6 @@ from itertools import chain
 
 from django.urls import reverse
 from apps.users.models import *
-from apps.students.forms import JoinClassForm
 from apps.students.models import CheckboxAnswer, TextAnswer, BooleanAnswer, MultipleChoiceAnswer
 from apps.teachers.models import CheckboxQuestion, TextQuestion, BooleanQuestion, MultipleChoiceQuestion, Survey, \
     Classroom
@@ -30,13 +29,13 @@ def join_class(request, classroom_id=None):
         if form.is_valid():
             code = form.cleaned_data["class_code"]
             student = request.user.student_profile
-            classroom = Classroom.objects.get(pk=code)
+            classroom = get_object_or_404(Classroom, pk=code)
             classroom.students.add(student)
             return redirect("student_dashboard")
     elif classroom_id is not None and int(classroom_id) >= 0:
         form = JoinClassForm(initial={"class_code": classroom_id})
         try:
-            classroom_name = Classroom.objects.get(pk=int(classroom_id)).name
+            classroom_name = get_object_or_404(Classroom, pk=int(classroom_id)).name
         except Exception:
             classroom_name = " "
         return render(request, "students/join_class.html", {'form': form, 'classroom_name': classroom_name})
@@ -49,7 +48,7 @@ def join_class(request, classroom_id=None):
 @user_passes_test(is_student)
 def leave_class(request, classroom_id):
     student = request.user.student_profile
-    classroom = Classroom.objects.get(pk=classroom_id)
+    classroom = get_object_or_404(Classroom, pk=classroom_id)
     classroom.students.remove(student)
     return redirect(student_dashboard)
 
@@ -101,7 +100,7 @@ def view_classes(request):
 @login_required
 @user_passes_test(is_student)
 def view_surveys(request, classroom_id):
-    classroom = Classroom.objects.get(pk=classroom_id)
+    classroom = get_object_or_404(Classroom, pk=classroom_id)
     all_surveys = Survey.objects.filter(classroom=classroom) \
         .exclude(name="Base").exclude(end_date__lte=datetime.datetime.today())
 

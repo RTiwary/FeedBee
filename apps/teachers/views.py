@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
 from django.urls import reverse
 from .forms import *
@@ -42,7 +42,7 @@ def add_class(request):
 @user_passes_test(is_teacher)
 def delete_class(request, classroom_id):
     # Query for classroom using classroom_id and delete that classroom
-    classroom = Classroom.objects.get(pk=classroom_id)
+    classroom = get_object_or_404(Classroom, pk=classroom_id)
     classroom.delete()
     return redirect("view_classes")
 
@@ -51,7 +51,7 @@ def delete_class(request, classroom_id):
 @user_passes_test(is_teacher)
 def choose_question_type(request, survey_id):
     # for the breadcrumb to know whether to display view recurring questions or view questions
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
     if survey.name == "Base":
         question_format = "Recurring"
     else:
@@ -79,7 +79,7 @@ def choose_question_type(request, survey_id):
 @login_required
 @user_passes_test(is_teacher)
 def add_boolean_question(request, survey_id, question_id=-1):  # question_id is an optional parameter
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
 
     # for the breadcrumb to know whether to display view recurring questions or view questions
     if survey.name == "Base":
@@ -127,7 +127,7 @@ def add_boolean_question(request, survey_id, question_id=-1):  # question_id is 
 @login_required
 @user_passes_test(is_teacher)
 def add_text_question(request, survey_id, question_id=-1):
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
 
     # for the breadcrumb to know whether to display view recurring questions or view questions
     if survey.name == "Base":
@@ -174,7 +174,7 @@ def add_text_question(request, survey_id, question_id=-1):
 @login_required
 @user_passes_test(is_teacher)
 def add_mc_question(request, survey_id, question_id=-1):
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
 
     # for the breadcrumb to know whether to display view recurring questions or view questions
     if survey.name == "Base":
@@ -221,7 +221,7 @@ def add_mc_question(request, survey_id, question_id=-1):
 @login_required
 @user_passes_test(is_teacher)
 def add_checkbox_question(request, survey_id, question_id=-1):
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
 
     # for the breadcrumb to know whether to display view recurring questions or view questions
     if survey.name == "Base":
@@ -292,7 +292,7 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
         questionDecrement.question_rank = questionDecrement.question_rank - 1
         questionDecrement.save()
 
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
 
     # if recurring question, update the display field to 'False', otherwise just delete
     if survey.name == "Base":
@@ -317,7 +317,7 @@ def view_classes(request):
 def view_questions(request, survey_id):
     # If survey edited, update survey metadata(name and end date), else use stored survey metadata
     if request.method == 'POST':
-        survey = Survey.objects.get(pk=survey_id)
+        survey = get_object_or_404(Survey, pk=survey_id)
         form = SurveyEditForm(request.POST, initial={'survey_name': survey.name, 'end_date': survey.end_date})
         if form.is_valid():
             new_name = form.cleaned_data["survey_name"]
@@ -326,7 +326,7 @@ def view_questions(request, survey_id):
             survey.end_date = new_end_date
             survey.save()
     else:
-        survey = Survey.objects.get(pk=survey_id)
+        survey = get_object_or_404(Survey, pk=survey_id)
         form = SurveyEditForm(initial={'survey_name': survey.name, 'end_date': survey.end_date})
 
     # Translate frequency string to days of the week
@@ -353,7 +353,7 @@ def view_questions(request, survey_id):
 def view_recurring_questions(request, classroom_id):
     base_survey_queryset = Survey.objects.filter(name="Base").filter(classroom_id=classroom_id)
     if not base_survey_queryset:
-        survey_classroom = Classroom.objects.get(id=classroom_id)
+        survey_classroom = get_object_or_404(Classroom, pk=classroom_id)
         baseSurvey = Survey.objects.create(name="Base", classroom=survey_classroom)
     else:
         baseSurvey = base_survey_queryset[0]
@@ -397,8 +397,8 @@ def add_survey(request, classroom_id):
 @login_required
 @user_passes_test(is_teacher)
 def delete_survey(request, survey_id):
-    survey = Survey.objects.get(pk=survey_id)
-    classroom = Classroom.objects.get(pk=survey.classroom.pk)
+    survey = get_object_or_404(Survey, pk=survey_id)
+    classroom = get_object_or_404(Classroom, pk=survey.classroom.pk)
     survey.delete()
     return redirect("view_classroom_info", classroom_id=classroom.pk)
 
@@ -409,7 +409,7 @@ def delete_survey(request, survey_id):
 @login_required
 @user_passes_test(is_teacher)
 def view_results(request, survey_id):
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
 
     # Queries for all of the questions in the survey and sort them based on rank
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
@@ -443,7 +443,7 @@ def view_results(request, survey_id):
 @login_required
 @user_passes_test(is_teacher)
 def view_results_alt(request, survey_id):
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
     classroom = survey.classroom
 
     # Get all survey questions and sort by question_rank
@@ -521,14 +521,14 @@ def view_results_alt(request, survey_id):
 @user_passes_test(is_teacher)
 def view_classroom_info(request, classroom_id):
     if request.method == 'POST':
-        classroom = Classroom.objects.get(pk=classroom_id)
+        classroom = get_object_or_404(Classroom, pk=classroom_id)
         form = ClassroomEditForm(request.POST, initial={'class_name': classroom.name})
         if form.is_valid():
             new_name = form.cleaned_data["class_name"]
             classroom.name = new_name
             classroom.save()
     else:
-        classroom = Classroom.objects.get(pk=classroom_id)
+        classroom = get_object_or_404(Classroom, pk=classroom_id)
         form = ClassroomEditForm(initial={'class_name': classroom.name})
     surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
 

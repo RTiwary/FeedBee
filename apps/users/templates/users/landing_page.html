@@ -9,21 +9,22 @@
     as easily as possible, providing a method for students to take agency in the classroom">
     <meta name="author" content="ClassBop">
 
+    <!-- load static files -->
+    {% load static %}
+
     <!-- OG Meta Tags to improve the way the post looks when you share the page on LinkedIn, Facebook, Google+ -->
-	<meta property="og:site_name" content="" /> <!-- website name -->
-	<meta property="og:site" content="" /> <!-- website link -->
-	<meta property="og:title" content=""/> <!-- title shown in the actual shared post -->
-	<meta property="og:description" content="" /> <!-- description shown in the actual shared post -->
-	<meta property="og:image" content="" /> <!-- image link, make sure it's jpg -->
-	<meta property="og:url" content="" /> <!-- where do you want your post to link to -->
+	<meta property="og:site_name" content="ClassBop" /> <!-- website name -->
+	<meta property="og:site" content="www.classbop.com" /> <!-- website link -->
+	<meta property="og:title" content="ClassBop"/> <!-- title shown in the actual shared post -->
+	<meta property="og:description" content="ClassBop is a platform to help teachers get easy and consistent feedback from their students!" /> <!-- description shown in the actual shared post -->
+	<meta property="og:image" content="{% static 'users/images/ClassBop-02.jpg' %}" /> <!-- image link, make sure it's jpg -->
+	<meta property="og:url" content=www.classbop.com"" /> <!-- where do you want your post to link to -->
 	<meta property="og:type" content="article" />
 
     <!-- Website Title -->
     <title>ClassBop</title>
 
     <!-- Styles -->
-    {% load static %}
-
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap&subset=latin-ext" rel="stylesheet">
     <link href="{% static 'users/css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'users/css/fontawesome-all.css' %}" rel="stylesheet">
@@ -42,8 +43,6 @@
     <link rel="mask-icon" href="{% static 'users/images/safari-pinned-tab.svg' %}" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
-
-    <!-- <link rel="icon" href="{% static 'users/images/ClassBop-01.png' %}"> -->
 
     <style type="text/css">
         #mc_embed_signup{clear: left;}
@@ -166,22 +165,22 @@
                         <div class="swiper-container image-slider">
                             <div class="swiper-wrapper">
                                 <div class="swiper-slide">
-                                        <img class="img-fluid" src="{% static 'users/images/customer-logo-1.png' %}" alt="alternative">
+                                      <img class="" height="100" src="{% static 'users/images/customer-logo-1.png' %}" alt="alternative">
                                 </div>
                                 <div class="swiper-slide">
-                                        <img class="img-fluid" src="{% static 'users/images/customer-logo-2.png' %}" alt="alternative">
+{#                                        <img class="" height="100" src="{% static 'users/images/customer-logo-1.png' %}" alt="alternative">#}
                                 </div>
                                 <div class="swiper-slide">
-                                        <img class="img-fluid" src="{% static 'users/images/customer-logo-3.png' %}" alt="alternative">
+                                      <img class="" height="100" src="{% static 'users/images/customer-logo-2.jpg' %}" alt="alternative">
                                 </div>
                                 <div class="swiper-slide">
-                                        <img class="img-fluid" src="{% static 'users/images/customer-logo-4.png' %}" alt="alternative">
+{#                                        <img class="" height="100" src="{% static 'users/images/customer-logo-2.jpg' %}" alt="alternative">#}
                                 </div>
                                 <div class="swiper-slide">
-                                        <img class="img-fluid" src="{% static 'users/images/customer-logo-5.png' %}" alt="alternative">
+                                       <img class="" height="100" src="{% static 'users/images/customer-logo-3.jpg' %}" alt="alternative">
                                 </div>
                                 <div class="swiper-slide">
-                                        <img class="img-fluid" src="{% static 'users/images/customer-logo-6.png' %}" alt="alternative">
+{#                                        <img class="img-fluid" src="{% static 'users/images/customer-logo-6.png' %}" alt="alternative">#}
                                 </div>
                             </div> <!-- end of swiper-wrapper -->
                         </div> <!-- end of swiper container -->
@@ -210,7 +209,7 @@
                     <!-- Card -->
                     <div class="card">
                         <div class="card-image">
-                            <img class="img-fluid" src="{% static 'users/images/create-survey.svg' %}" alt="alternative">
+                            <img class="" height="230" src="{% static 'users/images/create-survey.svg' %}" alt="alternative">
                         </div>
                         <div class="card-body">
                             <h4 class="card-title">Create Recurring Surveys</h4>
@@ -222,7 +221,7 @@
                     <!-- Card -->
                     <div class="card">
                         <div class="card-image">
-                            <img class="img-fluid" src="{% static 'users/images/look-at-data.svg' %}" alt="alternative">
+                            <img class="" height="230" src="{% static 'users/images/look-at-data.svg' %}" alt="alternative">
                         </div>
                         <div class="card-body">
                             <h4 class="card-title">View Data Over Time</h4>
@@ -234,7 +233,7 @@
                     <!-- Card -->
                     <div class="card">
                         <div class="card-image">
-                            <img class="img-fluid" style="padding-top: 60px" src="{% static 'users/images/students-survey.svg' %}" width="144" height="138" alt="alternative">
+                            <img class="" style="padding-top: 60px" src="{% static 'users/images/students-survey.svg' %}" height="230" alt="alternative">
                         </div>
                         <div class="card-body">
                             <h4 class="card-title">Help Students Take Agency</h4>
@@ -287,7 +286,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="image-container">
-                                        <img class="img-fluid" src="{% static 'users/images/features-1.png' %}" alt="alternative">
+                                        <img class="img-fluid" src="{% static 'users/images/class_info_sc.png' %}" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
                                 <div class="col-lg-6">
@@ -322,7 +321,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="image-container">
-                                        <img class="img-fluid" src="{% static 'users/images/features-2.png' %}" alt="alternative">
+                                        <img class="img-fluid" src="{% static 'users/images/view_questions_sc.png' %}" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
                                 <div class="col-lg-6">
@@ -479,10 +478,11 @@
                         without providing feedback, please wait until testing is over, or send us an email below to let us know.</p>
                 </div> <!-- end of col -->
                 <div class="col-lg-6">
-                    <h6 class="text-left">What is a Recurring Question?</h6>
-                    <p class="text-left"> These are questions you can create at the beginning of the year and is a question you want
-                    automatically repeated on every survey throughout the year. An example would be something general like "Rate your
-                    understanding from 1-4" or "Are there any concerns you need immediately addressed?"</p>
+                    <h6 class="text-left">How do I get my students to respond to my surveys?</h6>
+                    <p class="text-left"> This is a difficult question to answer because we understand not everyone will be equally invested
+                        in such a process, which can be due to a number of reasons. We recommend motivating students by giving them grade points
+                        for responding to surveys consistently. Although we keep the responses anonymous, you can see a graph of the average response rate
+                        and can assign points to everyone if the response rate is above, for instance, 80%.</p>
                 </div> <!-- end of col -->
                 <div class="col-lg-6" style="padding-top: 15px">
                     <h6 class="text-left">Do you store or sell confidential student data?</h6>
@@ -834,7 +834,7 @@
                             </li>
                             <li class="media">
                                 <i class="fas fa-square"></i>
-                                <div class="media-body">Read our <a class="white" href="terms-conditions.html">Terms & Conditions</a>, <a class="white" href="privacy-policy.html">Privacy Policy</a></div>
+                                <div class="media-body">Read our <a class="white" href="/terms-conditions">Terms & Conditions</a>, <a class="white" href="/privacy-policy">Privacy Policy</a></div>
                             </li>
                         </ul>
                     </div>
@@ -849,7 +849,7 @@
                             </li>
                             <li class="media">
                                 <i class="fas fa-envelope"></i>
-                                <div class="media-body"><a class="white" href="mailto:contact@tivo.com">rtiwary@umich.edu</a></div>
+                                <div class="media-body"><a class="white" href="mailto:classbopteam@gmail.com">classbopteam@gmail.com</a></div>
                             </li>
                         </ul>
                     </div>
