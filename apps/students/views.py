@@ -5,7 +5,7 @@ import operator
 from django.contrib.auth import logout
 from django.shortcuts import render, get_object_or_404, redirect
 from itertools import chain
-
+from django.http import Http404
 from django.urls import reverse
 from apps.users.models import *
 from apps.students.models import CheckboxAnswer, TextAnswer, BooleanAnswer, MultipleChoiceAnswer
@@ -19,7 +19,6 @@ from .forms import *
 # test for if user is student
 def is_student(user):
     return user.is_student
-
 
 @login_required
 @user_passes_test(is_student)
@@ -49,6 +48,11 @@ def join_class(request, classroom_id=None):
 def leave_class(request, classroom_id):
     student = request.user.student_profile
     classroom = get_object_or_404(Classroom, pk=classroom_id)
+
+    # check if student is in the classroom
+    if student not in classroom.students.all():
+        raise Http404
+
     classroom.students.remove(student)
     return redirect(student_dashboard)
 
@@ -101,6 +105,13 @@ def view_classes(request):
 @user_passes_test(is_student)
 def view_surveys(request, classroom_id):
     classroom = get_object_or_404(Classroom, pk=classroom_id)
+
+    student = request.user.student_profile
+
+    # check if student is in the classroom
+    if student not in classroom.students.all():
+        raise Http404
+
     all_surveys = Survey.objects.filter(classroom=classroom) \
         .exclude(name="Base").exclude(end_date__lte=datetime.datetime.today())
 
@@ -128,7 +139,7 @@ def suggest_feature(request):
                 'FeedBee: {}'.format(form.cleaned_data['comment_type_choice']),
                 "A user wrote the following:\n\n" + form.cleaned_data['comment'],
                 None,
-                ['edwhuang@umich.edu'],
+                ['classbopteam@gmail.com'],
                 fail_silently=False,
             )
             return render(request, "students/suggest_feature.html", {'form': SuggestFeatureForm(), 'toast': "1"})
@@ -149,6 +160,11 @@ def logout_request(request):
 def take_survey(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
     student = request.user.student_profile
+    classroom = get_object_or_404(Classroom, pk=survey.classroom.id)
+
+    # check if student is in the classroom
+    if student not in classroom.students.all():
+        raise Http404
 
     # Query for class base questions and place into list sorted by question_rank
     base_survey = Survey.objects.filter(name="Base", classroom=survey.classroom)
@@ -244,13 +260,13 @@ def get_pending_surveys(student, all_surveys):
         freq = sorted(list(s.frequency))
         freq.reverse()
         for d in freq:
-            if int(d) < day:
+            if int(d) <= day:
                 interval_start = date - datetime.timedelta(days=day - int(d))
                 break
 
-        # If no day before today in frequency, choose last day iun frequency(from the week before)
+        # If no day before today in frequency, choose last day in frequency(from the week before)
         else:
-            interval_start = date - datetime.timedelta(days=7 - (int(d) - day))
+            interval_start = date - datetime.timedelta(days=7 - (int(freq[0]) - day))
 
         questions = [BooleanQuestion.objects.filter(survey=s),
                      MultipleChoiceQuestion.objects.filter(survey=s),
@@ -309,7 +325,7 @@ def get_due_days(surveys):
         # If no day after today, use the first day of next week
         else:
             due_day = int(freq[0]) - 2 if int(freq[0]) - 2 >= 0 else 6
-            due_date = date - datetime.timedelta(days=day - int(d))
+            due_date = date - datetime.timedelta(days=day - int(freq[0]))
 
         # If end of current interval is passed end date, due date is the end date
         if due_date > s.end_date:

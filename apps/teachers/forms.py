@@ -8,12 +8,17 @@ from apps.teachers.models import *
 '''
 Form for creating a new classroom
 '''
+
+
 class ClassroomCreationForm(forms.Form):
     class_name = forms.CharField(label='Class Name', max_length=100)
+
 
 '''
 Form for editing the name of a classroom
 '''
+
+
 class ClassroomEditForm(forms.Form):
     class_name = forms.CharField(label='Class Name', max_length=100)
 
@@ -45,6 +50,8 @@ class SurveyCreationForm(forms.Form):
                                widget=forms.TextInput(attrs={'type': 'date',
                                                              'placeholder': 'YYYY-MM-DD', 'required': 'required'}))
     frequency = forms.MultipleChoiceField(
+        help_text='Select the days you want to send out new surveys. Surveys are due the day before the next survey '
+                  'is sent out.',
         required=True,
         widget=forms.CheckboxSelectMultiple,
         choices=INTERVAL_CHOICES,
@@ -54,29 +61,37 @@ class SurveyCreationForm(forms.Form):
 '''
 Form for editing the name and end date of a survey in a classroom
 '''
+
+
 class SurveyEditForm(forms.Form):
     survey_name = forms.CharField(label='Survey Name', max_length=100)
     end_date = forms.DateField(label="Survey/Unit End Date",
                                widget=forms.TextInput(attrs={'type': 'date',
                                                              'placeholder': 'YYYY-MM-DD', 'required': 'required'}))
 
+
 '''
 An array storing the mapping between a question type's 
 database name and the name used on the user interface
 '''
-QUESTION_TYPE_CHOICES=[('Boolean','True or False'), ('Text','Short Answer'), ('MultipleChoice','Multiple Choice'),
-                       ('Checkbox','Checkbox')]
+QUESTION_TYPE_CHOICES = [('Boolean', 'True or False'), ('Text', 'Short Answer'), ('MultipleChoice', 'Multiple Choice'),
+                         ('Checkbox', 'Checkbox')]
 
 '''
 Form for choosing a question type to add to a survey
 '''
+
+
 class QuestionTypeForm(forms.Form):
     question_type_choice = forms.ChoiceField(label="What Type of Question Would You Like to Create?",
                                              choices=QUESTION_TYPE_CHOICES, widget=forms.RadioSelect)
 
+
 '''
 Form for adding a True/False question in a survey
 '''
+
+
 class BooleanQuestionForm(ModelForm):
     class Meta:
         model = BooleanQuestion
@@ -85,9 +100,12 @@ class BooleanQuestionForm(ModelForm):
             'question_text': 'Question Text',
         }
 
+
 '''
 Form for adding a short answer question in a survey
 '''
+
+
 class TextQuestionForm(ModelForm):
     class Meta:
         model = TextQuestion
@@ -96,9 +114,12 @@ class TextQuestionForm(ModelForm):
             'question_text': 'Question Text',
         }
 
+
 '''
 Form for adding a MC question(choices A-E) in a survey
 '''
+
+
 class MultipleChoiceQuestionForm(ModelForm):
     class Meta:
         model = MultipleChoiceQuestion
@@ -112,9 +133,12 @@ class MultipleChoiceQuestionForm(ModelForm):
             'option_e': 'Option E',
         }
 
+
 '''
 Form for adding a checkbox question(choices A-E) in a survey
 '''
+
+
 class CheckboxQuestionForm(ModelForm):
     class Meta:
         model = CheckboxQuestion
@@ -133,13 +157,15 @@ class CheckboxQuestionForm(ModelForm):
 An array storing the mapping between a question type's 
 database name and the name used on the user interface
 '''
-COMMENT_TYPE_CHOICES=[('Feature Suggestion','Feature Suggestion'), ('Small Bug','Report Small Bug'),
-                      ('Large Bug','Report Large Bug'), ('Other','Other')]
+COMMENT_TYPE_CHOICES = [('Feature Suggestion', 'Feature Suggestion'), ('Small Bug', 'Report Small Bug'),
+                        ('Large Bug', 'Report Large Bug'), ('Other', 'Other')]
 
 '''
 Form for suggesting a new feature
 '''
+
+
 class SuggestFeatureForm(forms.Form):
     comment_type_choice = forms.ChoiceField(label="Category",
-                                             choices=COMMENT_TYPE_CHOICES, widget=forms.RadioSelect)
+                                            choices=COMMENT_TYPE_CHOICES, widget=forms.RadioSelect)
     comment = forms.CharField(label='Comment', max_length=500)

@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from apps.teachers.models import *
 from apps.students.models import *
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import Http404
 from itertools import chain
 import operator
 from datetime import datetime
@@ -43,6 +44,10 @@ def add_class(request):
 def delete_class(request, classroom_id):
     # Query for classroom using classroom_id and delete that classroom
     classroom = get_object_or_404(Classroom, pk=classroom_id)
+    # makes sure user is the owner of this class
+    teacher = request.user.teacher_profile
+    if teacher != classroom.teacher:
+        raise Http404
     classroom.delete()
     return redirect("view_classes")
 
@@ -52,6 +57,12 @@ def delete_class(request, classroom_id):
 def choose_question_type(request, survey_id):
     # for the breadcrumb to know whether to display view recurring questions or view questions
     survey = get_object_or_404(Survey, pk=survey_id)
+
+    # makes sure user is the teacher who created this survey and class
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
+
     if survey.name == "Base":
         question_format = "Recurring"
     else:
@@ -80,6 +91,11 @@ def choose_question_type(request, survey_id):
 @user_passes_test(is_teacher)
 def add_boolean_question(request, survey_id, question_id=-1):  # question_id is an optional parameter
     survey = get_object_or_404(Survey, pk=survey_id)
+
+    # makes sure user is the teacher that created the survey
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
 
     # for the breadcrumb to know whether to display view recurring questions or view questions
     if survey.name == "Base":
@@ -129,6 +145,11 @@ def add_boolean_question(request, survey_id, question_id=-1):  # question_id is 
 def add_text_question(request, survey_id, question_id=-1):
     survey = get_object_or_404(Survey, pk=survey_id)
 
+    # makes sure user is the teacher that created the survey
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
+
     # for the breadcrumb to know whether to display view recurring questions or view questions
     if survey.name == "Base":
         question_format = "Recurring"
@@ -176,6 +197,11 @@ def add_text_question(request, survey_id, question_id=-1):
 def add_mc_question(request, survey_id, question_id=-1):
     survey = get_object_or_404(Survey, pk=survey_id)
 
+    # makes sure user is the teacher that created the survey
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
+
     # for the breadcrumb to know whether to display view recurring questions or view questions
     if survey.name == "Base":
         question_format = "Recurring"
@@ -222,6 +248,11 @@ def add_mc_question(request, survey_id, question_id=-1):
 @user_passes_test(is_teacher)
 def add_checkbox_question(request, survey_id, question_id=-1):
     survey = get_object_or_404(Survey, pk=survey_id)
+
+    # makes sure user is the teacher that created the survey
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
 
     # for the breadcrumb to know whether to display view recurring questions or view questions
     if survey.name == "Base":
@@ -294,6 +325,11 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
 
     survey = get_object_or_404(Survey, pk=survey_id)
 
+    # makes sure user is the teacher that created the survey before trying to delete
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
+
     # if recurring question, update the display field to 'False', otherwise just delete
     if survey.name == "Base":
         question.update(display=False)
@@ -318,6 +354,12 @@ def view_questions(request, survey_id):
     # If survey edited, update survey metadata(name and end date), else use stored survey metadata
     if request.method == 'POST':
         survey = get_object_or_404(Survey, pk=survey_id)
+
+        # makes sure user is the teacher that created the survey
+        teacher = request.user.teacher_profile
+        if teacher != survey.classroom.teacher:
+            raise Http404
+
         form = SurveyEditForm(request.POST, initial={'survey_name': survey.name, 'end_date': survey.end_date})
         if form.is_valid():
             new_name = form.cleaned_data["survey_name"]
@@ -327,6 +369,12 @@ def view_questions(request, survey_id):
             survey.save()
     else:
         survey = get_object_or_404(Survey, pk=survey_id)
+
+        # makes sure user is the teacher that created the survey
+        teacher = request.user.teacher_profile
+        if teacher != survey.classroom.teacher:
+            raise Http404
+
         form = SurveyEditForm(initial={'survey_name': survey.name, 'end_date': survey.end_date})
 
     # Translate frequency string to days of the week
@@ -351,6 +399,12 @@ def view_questions(request, survey_id):
 @login_required
 @user_passes_test(is_teacher)
 def view_recurring_questions(request, classroom_id):
+    # makes sure user is the teacher that created the classroom
+    classroom = Classroom.objects.get(pk=classroom_id)
+    teacher = request.user.teacher_profile
+    if teacher != classroom.teacher:
+        raise Http404
+
     base_survey_queryset = Survey.objects.filter(name="Base").filter(classroom_id=classroom_id)
     if not base_survey_queryset:
         survey_classroom = get_object_or_404(Classroom, pk=classroom_id)
@@ -374,6 +428,12 @@ def view_recurring_questions(request, classroom_id):
 @login_required
 @user_passes_test(is_teacher)
 def add_survey(request, classroom_id):
+    # makes sure user is the teacher that created the classroom
+    classroom = Classroom.objects.get(pk=classroom_id)
+    teacher = request.user.teacher_profile
+    if teacher != classroom.teacher:
+        raise Http404
+
     if request.method == 'POST':
         form = SurveyCreationForm(request.POST)
         if form.is_valid():
@@ -399,6 +459,12 @@ def add_survey(request, classroom_id):
 def delete_survey(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
     classroom = get_object_or_404(Classroom, pk=survey.classroom.pk)
+
+    # makes sure user is the teacher that created the classroom and survey before deleting
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
+
     survey.delete()
     return redirect("view_classroom_info", classroom_id=classroom.pk)
 
@@ -410,6 +476,11 @@ def delete_survey(request, survey_id):
 @user_passes_test(is_teacher)
 def view_results(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
+
+    # makes sure user is the teacher that created the survey before allowing them to see anything
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
 
     # Queries for all of the questions in the survey and sort them based on rank
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
@@ -445,6 +516,11 @@ def view_results(request, survey_id):
 def view_results_alt(request, survey_id):
     survey = get_object_or_404(Survey, pk=survey_id)
     classroom = survey.classroom
+
+    # makes sure user is the teacher that created the classroom and survey
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
 
     # Get all survey questions and sort by question_rank
     boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
@@ -520,6 +596,11 @@ def view_results_alt(request, survey_id):
 @login_required
 @user_passes_test(is_teacher)
 def view_classroom_info(request, classroom_id):
+    classroom = get_object_or_404(Classroom, pk=classroom_id)
+    teacher = request.user.teacher_profile
+    if teacher != classroom.teacher:
+        raise Http404
+
     if request.method == 'POST':
         classroom = get_object_or_404(Classroom, pk=classroom_id)
         form = ClassroomEditForm(request.POST, initial={'class_name': classroom.name})
@@ -528,7 +609,6 @@ def view_classroom_info(request, classroom_id):
             classroom.name = new_name
             classroom.save()
     else:
-        classroom = get_object_or_404(Classroom, pk=classroom_id)
         form = ClassroomEditForm(initial={'class_name': classroom.name})
     surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
 
@@ -555,7 +635,7 @@ def suggest_feature(request):
                 'FeedBee: {}'.format(form.cleaned_data['comment_type_choice']),
                 "A user wrote the following:\n\n" + form.cleaned_data['comment'],
                 None,
-                ['edwhuang@umich.edu'],
+                ['classbopteam@gmail.com'],
                 fail_silently=False,
             )
             return render(request, "teachers/suggest_feature.html", {'form': SuggestFeatureForm(), 'toast': "1"})
