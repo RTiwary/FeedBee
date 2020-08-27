@@ -14,7 +14,8 @@ from apps.teachers.models import CheckboxQuestion, TextQuestion, BooleanQuestion
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.mail import send_mail
 from .forms import *
-
+from pytz import timezone
+from datetime import datetime as timezonedate
 
 # test for if user is student
 def is_student(user):
@@ -63,7 +64,7 @@ def leave_class(request, classroom_id):
 def student_dashboard(request):
     # Query for all surveys except Base and expired surveys
     all_surveys = Survey.objects.filter(classroom__students__user=request.user) \
-        .exclude(name="Base").exclude(end_date__lte=datetime.datetime.today())
+        .exclude(name="Base").exclude(end_date__lte=timezonedate.now(timezone('US/Eastern')).date())
 
     # Remove surveys that have already been completed for this interval
     surveys, filler = get_pending_surveys(request.user, all_surveys)
@@ -113,7 +114,7 @@ def view_surveys(request, classroom_id):
         raise Http404
 
     all_surveys = Survey.objects.filter(classroom=classroom) \
-        .exclude(name="Base").exclude(end_date__lte=datetime.datetime.today())
+        .exclude(name="Base").exclude(end_date__lte=timezonedate.now(timezone('US/Eastern')).date())
 
     surveys, completed = get_pending_surveys(request.user, all_surveys)
     days_due = get_due_days(surveys)
@@ -248,7 +249,8 @@ def take_survey(request, survey_id):
 # HELPER FUNCTIONS
 # filters out surveys that have already been submitted for the current interval
 def get_pending_surveys(student, all_surveys):
-    date = datetime.date.today()
+    eastern = timezone('US/Eastern')
+    date = timezonedate.now(eastern).date()
     day = datetime.date.isoweekday(date)
     pending = []
     completed = []
@@ -308,7 +310,8 @@ def get_pending_surveys(student, all_surveys):
 
 # Get due date for surveys based on frequencies
 def get_due_days(surveys):
-    date = datetime.date.today()
+    eastern = timezone('US/Eastern')
+    date = timezonedate.now(eastern).date()
     day = datetime.date.isoweekday(date)
     days_due = []
     for s in surveys:
