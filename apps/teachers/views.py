@@ -613,8 +613,8 @@ def view_classroom_info(request, classroom_id):
     surveys = Survey.objects.filter(classroom_id=classroom_id).exclude(name="Base")
 
     active = 0
-    eastern = timezone('US/Eastern')
-    curr_date = datetime.now(eastern).date()
+    tz = timezone(request.user.timezone)
+    curr_date = datetime.now(tz).date()
 
     for survey in surveys:
         if curr_date <= survey.end_date:

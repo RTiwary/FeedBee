@@ -11,15 +11,23 @@ STUDENT_TEACHER_CHOICES =(
     ("Teacher", "Teacher"),
 )
 
+TIMEZONE_CHOICES = (
+    ("US/Eastern", "US/Eastern"),
+    ("US/Central", "US/Central"),
+    ("US/Mountain", "US/Mountain"),
+    ("US/Pacific", "US/Pacific"),
+)
+
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField()
     student_teacher = forms.ChoiceField(choices=STUDENT_TEACHER_CHOICES, label="I am a")
+    timezone_choice = forms.ChoiceField(choices=TIMEZONE_CHOICES, label="Select your local timezone:")
     f_name = forms.CharField(max_length=64, label="First Name")
     l_name = forms.CharField(max_length=64, label="Last Name")
 
     class Meta:
 	    model = User
-	    fields = ["f_name", "l_name", "username", "email", "student_teacher", "password1", "password2"]
+	    fields = ["f_name", "l_name", "username", "email", "student_teacher", "timezone_choice", "password1", "password2"]
 
     def save(self, commit=True):
         user = super(RegistrationForm, self).save(commit=False)
@@ -27,6 +35,7 @@ class RegistrationForm(UserCreationForm):
         user.email = self.cleaned_data["email"]
         user.first_name = self.cleaned_data["f_name"]
         user.last_name = self.cleaned_data["l_name"]
+        user.timezone = self.cleaned_data["timezone_choice"]
         if self.cleaned_data["student_teacher"] == "Student":
             user.is_student = True
         else:

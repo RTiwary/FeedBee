@@ -64,12 +64,12 @@ def leave_class(request, classroom_id):
 def student_dashboard(request):
     # Query for all surveys except Base and expired surveys
     all_surveys = Survey.objects.filter(classroom__students__user=request.user) \
-        .exclude(name="Base").exclude(end_date__lte=timezonedate.now(timezone('US/Eastern')).date())
+        .exclude(name="Base").exclude(end_date__lt=timezonedate.now(timezone(request.user.timezone)).date())
 
     # Remove surveys that have already been completed for this interval
     surveys, filler = get_pending_surveys(request.user, all_surveys)
     # Get due date for each survey
-    days_due = get_due_days(surveys)
+    days_due = get_due_days(surveys, request.user.timezone)
 
     return render(request, "students/dashboard.html", {
         'surveys': zip(surveys, days_due),
@@ -114,10 +114,10 @@ def view_surveys(request, classroom_id):
         raise Http404
 
     all_surveys = Survey.objects.filter(classroom=classroom) \
-        .exclude(name="Base").exclude(end_date__lte=timezonedate.now(timezone('US/Eastern')).date())
+        .exclude(name="Base").exclude(end_date__lt=timezonedate.now(timezone(request.user.timezone)).date())
 
     surveys, completed = get_pending_surveys(request.user, all_surveys)
-    days_due = get_due_days(surveys)
+    days_due = get_due_days(surveys, request.user.timezone)
 
     lists_empty = False
     if not surveys and not completed:
@@ -248,9 +248,10 @@ def take_survey(request, survey_id):
 
 # HELPER FUNCTIONS
 # filters out surveys that have already been submitted for the current interval
+# student is a user object
 def get_pending_surveys(student, all_surveys):
-    eastern = timezone('US/Eastern')
-    date = timezonedate.now(eastern).date()
+    tz = timezone(student.timezone)
+    date = timezonedate.now(tz).date()
     day = datetime.date.isoweekday(date)
     pending = []
     completed = []
@@ -309,9 +310,8 @@ def get_pending_surveys(student, all_surveys):
 
 
 # Get due date for surveys based on frequencies
-def get_due_days(surveys):
-    eastern = timezone('US/Eastern')
-    date = timezonedate.now(eastern).date()
+def get_due_days(surveys, tz):
+    date = timezonedate.now(timezone(tz)).date()
     day = datetime.date.isoweekday(date)
     days_due = []
     for s in surveys:
