@@ -1,22 +1,13 @@
 {% extends "students/base.html" %}
 
+{% block title %}
+    My Classes • Classbop
+{% endblock %}
+
 {% block content %}
     <style>
         .scrollable {
             max-height: 360px;
-            overflow: scroll;
-        }
-
-        .btn-melon {
-            background-color: #FFA69E;
-            border-color: #FFA69E;
-            color: black;
-        }
-
-        .btn-melon:hover, .btn-melon:focus {
-            background-color: #FFC9C2;
-            border-color: #FFC9C2;
-            color: black;
         }
     </style>
 
@@ -24,7 +15,7 @@
     <div class="container">
         <br>
         <h2 class="display-3 row justify-content-center">My Classes</h2>
-        <a href="{% url 'join_class' %}" class="btn btn-melon">
+        <a href="{% url 'join_class' %}" class="btn btn-blue">
             <span class="fa fa-plus"></span> Class
         </a>
     </div>
@@ -35,7 +26,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card" style="margin-top: 2em; overflow-wrap: initial">
-                        <div class="card-header" style="background-color: #43a3b1; color: white; border-color: #43A3B1">
+                        <div class="card-header">
                             <div class="row">
                                 <div class="col-9">
                                     <strong>Class</strong>

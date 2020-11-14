@@ -20,3 +20,86 @@
 .navbar {
     background-color: #5f4dee;
 }
+
+.btn-blue {
+    -webkit-appearance: none;
+    border-color: #5f4dee;
+    background-color: #5f4dee;
+    color: white;
+}
+
+.btn-blue:focus, .btn-blue:hover {
+    -webkit-appearance: none;
+    background-color: #4732ec;
+    border-color: #4732ec;
+    color: white;
+}
+
+h1 {
+    font-family: 'ABeeZee', sans-serif;
+}
+
+.container, .row {
+    font-family: 'ABeeZee', sans-serif;
+}
+
+.scrollable {
+    overflow: scroll;
+}
+
+.card-header {
+    border-color: #5f4dee;
+    background-color: #5f4dee;
+    color: white;
+}
+
+.btn-coral {
+    -webkit-appearance: none;
+    background-color: #fd7479;
+    border-color: #fd7479;
+    color: white;
+}
+
+.btn-coral:hover, .btn-coral:focus {
+    -webkit-appearance: none;
+    background-color: #FD5E64;
+    border-color: #FD5E64;
+    color: white;
+}
+
+.asteriskField {
+    display: none;
+}
+
+* {box-sizing: border-box}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: #474e5d;
+    padding-top: 50px;
+    opacity: 0.6;
+}
+
+/* Modal Content/Box */
+.modal-content {
+    z-index: 3;
+    position: fixed;
+    display: none; /* Hidden by default */
+    background-color: #fefefe;
+    top: 50%;
+    left: 50%;
+    margin: 0 auto;
+    margin-left: -200px;
+    margin-top: -200px;
+    padding: 20px;
+    width: auto;
+    height: auto;
+}

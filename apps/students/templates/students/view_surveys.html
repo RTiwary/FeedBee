@@ -1,34 +1,13 @@
 {% extends "students/base.html" %}
 
+{% block title %}
+    {{ classroom.name }} Surveys • Classbop
+{% endblock %}
+
 {% block content %}
     <style>
         .scrollable {
             max-height: 320px;
-            overflow: scroll;
-        }
-
-        .btn-aero {
-            border-color: #B8F2E6;
-            background-color: #B8F2E6;
-            color: black;
-        }
-
-        .btn-aero:focus, .btn-aero:hover {
-            border-color: #98ECDB;
-            background-color: #98ECDB;
-            color: black;
-        }
-
-        .btn-melon {
-            background-color: #FFA69E;
-            border-color: #FFA69E;
-            color: black;
-        }
-
-        .btn-melon:hover, .btn-melon:focus {
-            background-color: #FFC9C2;
-            border-color: #FFC9C2;
-            color: black;
         }
     </style>
 
@@ -36,7 +15,7 @@
     <div class="container">
         <br>
         <h2 class="display-3 row justify-content-center">{{ classroom.name }}</h2>
-        <a href="{% url 'leave_class' classroom.pk %}" class="btn btn-melon">
+        <a href="{% url 'leave_class' classroom.pk %}" class="btn btn-blue">
             Leave Class
         </a>
     </div>
@@ -46,7 +25,7 @@
         <div class="row ">
             <div class="col-sm-12">
                 <div class="card" style="margin-top: 2em">
-                    <div class="card-header" style="background-color: #43A3B1; border-color: #43A3B1; color: white">
+                    <div class="card-header">
                         <div class="row">
                             <div class="col-md-5 col-6">
                                 <strong>Survey</strong>
@@ -73,7 +52,7 @@
                                             {{ due }}
                                         </div>
                                         <div class="col-md-3 col-12 pt-2 pt-md-0 text-center">
-                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-aero btn-block">Take Survey</a>
+                                            <a href="{% url 'take_survey' survey.pk %}" class="btn btn-coral btn-block">Take Survey</a>
                                         </div>
                                     </div>
                                 </li>
