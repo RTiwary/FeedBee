@@ -7,28 +7,31 @@
             overflow: scroll;
         }
 
-        .btn-melon {
-            background-color: #FFA69E;
-            border-color: #FFA69E;
-            color: black;
+        .btn-blue {
+            border-color: #5f4dee;
+            background-color: #5f4dee;
+            color: white;
         }
 
-        .btn-melon:hover, .btn-melon:focus {
-            background-color: #FFC9C2;
-            border-color: #FFC9C2;
+        .btn-blue:focus, .btn-blue:hover {
+            background-color: #4732ec;
+            border-color: #4732ec;
+            color: white;
         }
     </style>
 
     <!-- Join Class Button -->
-    <div class="container">
+    <div class="container" style="font-family: 'ABeeZee', sans-serif;">
         <br>
-        <h2 class="display-3 row justify-content-center">My Classes</h2>
-        <a href="{% url 'add_class' %}" class="btn btn-melon">
+        <h2 class="display-3 row justify-content-center">
+            My Classes
+        </h2>
+        <a href="{% url 'add_class' %}" class="btn btn-blue">
             <span class="fa fa-plus"></span> Class
         </a>
     </div>
 
-    <div class="container">
+    <div class="container" style="font-family: 'ABeeZee', sans-serif;">
         <div class="row ">
             <div class="col-sm-12">
                 <div class="card" style="margin-top: 2em">

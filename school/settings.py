@@ -31,7 +31,7 @@ def get_env_variable(var_name):
 SECRET_KEY = get_env_variable('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['classbop.herokuapp.com', '127.0.0.1']
 
@@ -106,7 +106,7 @@ if DEBUG:
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'new_school',
         'USER': 'postgres',
-        'PASSWORD': 'Pistons1',
+        'PASSWORD': 'Celtics1',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }

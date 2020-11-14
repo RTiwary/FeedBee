@@ -7,25 +7,54 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Login</title>
+    <!-- Font stuff -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+
+    <title>Login • Classbop</title>
 
     <style type="text/css">
-        .btn-primary
+        .btn-login {
+            padding: 8px;
+            text-align: center;
+            display: inline-block;
+            font-size: 18px;
+            -webkit-border-radius: 10px 10px 10px 10px;
+            border-radius: 30px 30px 30px 30px;
+        }
+
+        .btn-blue
          {
-            background-color: #5E6472;
-            border-color: #5E6472;
+            background-color: #5f4dee;
+            border-color: #5f4dee;
+            color: white;
         }
 
-        .btn-primary:hover,
-        .btn-primary:active,
-        .btn-primary:visited,
-        .btn-primary:active:focus,
-        .btn-primary:focus
+        .btn-blue:hover,
+        .btn-blue:active,
+        .btn-blue:visited,
+        .btn-blue:active:focus,
+        .btn-blue:focus
         {
-            background-color: #4EADBC;
-            border-color: #4EADBC;
+            background-color: white;
+            border-color: #5f4dee;
+            color: #5f4dee;
+            cursor: pointer;
         }
 
+        .form-content {
+            -webkit-border-radius: 10px 10px 10px 10px;
+            border-radius: 10px 10px 10px 10px;
+            -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+            box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 450px;
+            padding: 25px 45px 55px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid rgba(0,0,0,0.1);
+            font-family: 'ABeeZee', sans-serif;
+        }
     </style>
 
     {% load static %}
@@ -39,25 +68,28 @@
 </head>
 
 {% load crispy_forms_tags %}
-<body style ="background-color: #FCF9ED ">
-    <br>
-
+<body style="background-color: #5f4dee">
     <div class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-danger col-sm-8" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
+        <div class="form-content" style="margin-top: 5em;">
+            <h1 style="font-family: 'ABeeZee', sans-serif; margin-top:0.5em; margin-bottom: 0.5em;">Welcome Back!</h1>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
 
-        <form method="POST" class="form-group col-sm-8">
-            {% csrf_token %}
-            {{form | crispy}}
-            <button type="submit" class="btn btn-primary">Login</button>
-            <p style="padding-top: 15px">Don't have an account? Create one <a href="/register">here</a>!</p>
-            <a href="/password_reset">Forgot your password?</a>
-        </form>
+            <form method="POST" class="form-group">
+                {% csrf_token %}
+                {{form | crispy}}
+                <button type="submit" class="btn-block btn-blue btn-login mt-3" style="font-family: 'ABeeZee', sans-serif;">
+                    Log In
+                </button>
+                <p style="padding-top: 15px; margin-top: 1em;">Don't have an account? Create one <a href="/register">here</a>!</p>
+                <a href="/password_reset">Forgot your password?</a>
+            </form>
+        </div>
     </div>
 
     <!-- Optional JavaScript -->

@@ -18,6 +18,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <!-- Font stuff -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -38,13 +42,15 @@
     <style>
         /* change the link color */
         .nav-item, .navbar-brand {
-            color: black;
+            color: #EBEBEB;
+            font-family: 'ABeeZee', sans-serif;
         }
 
         /* change the color of active or hovered links */
         .navbar-brand:focus, .navbar-brand:hover,
         .nav-link:focus, .nav-link:hover {
-            color: #5E6472;
+            color: white;
+            font-family: 'ABeeZee', sans-serif;
         }
 
         /* displays the navbar toggle button */
@@ -55,15 +61,15 @@
     </style>
 </head>
 
-<body style ="background-color: #FCF9ED">
+<body>
     <header>
-        <nav class="navbar navbar-expand-sm" style="background-color: #FFA69E">
+        <nav class="navbar navbar-expand-sm" style="background-color: #5f4dee">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#teacher-navbar" aria-controls="teacher-navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"><i class="fa fa-navicon" id="navbar-toggle-custom"></i></span>
             </button>
             <a class="navbar-brand" href="/teacher/view_classes">
                 {% load static %}
-                <img src="{% static 'users/images/ClassBopPacificBlue2.png' %}" width="150" alt="ClassBop">
+                <img src="{% static 'users/images/ClassBop2-03.png' %}" width="150" alt="ClassBop">
             </a>
 
             <div class="collapse navbar-collapse" id="teacher-navbar">
