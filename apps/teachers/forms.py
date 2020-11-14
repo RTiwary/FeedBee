@@ -166,7 +166,7 @@ Form for suggesting a new feature
 
 
 class SuggestFeatureForm(forms.Form):
-    comment_type_choice = forms.ChoiceField(label="Category",
-                                            choices=COMMENT_TYPE_CHOICES, widget=forms.RadioSelect)
+    comment_type_choice = forms.ChoiceField(label="Category", choices=COMMENT_TYPE_CHOICES,
+                                            widget=forms.RadioSelect(attrs={'required': "True"}))
     comment = forms.CharField(label='Comment', max_length=500,
                               widget=forms.Textarea(attrs={'placeholder': 'Add any suggestions or other feedback'}))
