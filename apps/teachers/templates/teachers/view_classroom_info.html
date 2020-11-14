@@ -4,80 +4,6 @@
     <style>
         .scrollable {
             max-height: 340px;
-            overflow: scroll;
-        }
-
-        .asteriskField {
-            display: none;
-        }
-
-        * {box-sizing: border-box}
-
-        /* The Modal (background) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 2; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: #474e5d;
-            padding-top: 50px;
-            opacity: 0.6;
-        }
-
-        /* Modal Content/Box */
-        .modal-content {
-            z-index: 3;
-            position: fixed;
-            display: none; /* Hidden by default */
-            background-color: #fefefe;
-            top: 50%;
-            left: 50%;
-            margin: 0 auto;
-            margin-left: -200px;
-            margin-top: -200px;
-            padding: 20px;
-            width: auto;
-            height: auto;
-        }
-
-        .btn-melon {
-            background-color: #FFA69E;
-            border-color: #FFA69E;
-            color: black;
-        }
-
-        .btn-melon:hover, .btn-melon:focus {
-            background-color: #FFC9C2;
-            border-color: #FFC9C2;
-            color: black;
-        }
-
-        .btn-aero {
-            border-color: #B8F2E6;
-            background-color: #B8F2E6;
-            color: black;
-        }
-
-        .btn-aero:focus, .btn-aero:hover {
-            border-color: #98ECDB;
-            background-color: #98ECDB;
-            color: black;
-        }
-
-        .btn-blue {
-            border-color: #43A3B1;
-            background-color: #43A3B1;
-            color: white;
-        }
-
-        .btn-blue:focus, .btn-blue:hover {
-            background-color: #388894;
-            border-color: #388894;
-            color: white;
         }
     </style>
     <script src="https://kit.fontawesome.com/4674fc2949.js" crossorigin="anonymous"></script>
@@ -92,7 +18,7 @@
             <div class="col-3">
                 <br>
                 <button onclick="document.getElementById('id01').style.display='block';
-                document.getElementById('id02').style.display='block';" class="btn btn-danger" style="margin-left: 15px; margin-bottom: 15px; float: right;">
+                document.getElementById('id02').style.display='block';" class="btn btn-red" style="margin-left: 15px; margin-bottom: 15px; float: right;">
                     <i class="fa fa-trash-alt"></i> Delete</button>
                 <button onclick="document.getElementById('id03').style.display='block';
                 document.getElementById('id04').style.display='block';" class="btn btn-blue" style="position: relative; float: right;">
@@ -111,7 +37,7 @@
                 <h1>Delete Classroom</h1>
                 <p>Are you sure you want to delete this classroom?</p>
                 <button onclick="document.getElementById('id01').style.display='none'; document.getElementById('id02').style.display='none';" type="button" class="btn btn-secondary">Cancel</button>
-                <a href="{% url 'delete_class' classroom.pk %}" type="button" class="btn btn-danger" style="-webkit-appearance: none">Delete</a>
+                <a href="{% url 'delete_class' classroom.pk %}" type="button" class="btn btn-red" style="-webkit-appearance: none">Delete</a>
         </div>
     </div>
 
@@ -160,7 +86,7 @@
                         automatically repeated on every survey you create – so there's no need to keep
                         adding them. On your dashboard, these questions will be under their own tab called recurring.
                     </p>
-                    <a href="{% url 'view_recurring_questions' classroom.pk %}" class="btn btn-melon">View Recurring Questions</a>
+                    <a href="{% url 'view_recurring_questions' classroom.pk %}" class="btn btn-coral">View Recurring Questions</a>
                 </div>
             </div>
         </div>
@@ -172,7 +98,7 @@
 
         <div class="col-sm-12">
             <div class="card" style="margin-top: 2em; margin-bottom: 2em;">
-            <div class="card-header" style="text-align: center; background-color: #43A3B1; border-color: #43A3B1; color: white">
+            <div class="card-header">
                 <div class="row">
                     <div class="col-4" style="text-align: left">
                         <a href="{% url 'add_survey' classroom.pk %}" class="btn btn-light">
@@ -195,7 +121,7 @@
                                 </a>
                             </div>
                             <div class="col-3 text-right">
-                                <a href="{% url 'view_results' survey.pk %}" class="btn btn-aero">
+                                <a href="{% url 'view_results' survey.pk %}" class="btn btn-coral">
                                     View Results
                                 </a>
                             </div>

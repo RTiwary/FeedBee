@@ -27,6 +27,7 @@
     <title>ClassBop</title>
     <!-- Favicon  -->
     {% load static %}
+    <link href="{% static 'students/styles.css' %}" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'users/images/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'users/images/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'users/images/favicon-16x16.png' %}">
@@ -34,38 +35,15 @@
     <link rel="mask-icon" href="{% static 'users/images/safari-pinned-tab.svg' %}" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
-
-    <style>
-        /* change the link color */
-        .nav-item, .navbar-brand {
-            color: #EBEBEB;
-            font-family: 'ABeeZee', sans-serif;
-        }
-
-        /* change the color of active or hovered links */
-        .navbar-brand:focus, .navbar-brand:hover,
-        .nav-link:focus, .nav-link:hover {
-            color: white;
-            font-family: 'ABeeZee', sans-serif;
-        }
-
-
-        /* displays the navbar toggle button */
-        #navbar-toggle-custom {
-            color: black;
-            font-size: 28px;
-        }
-    </style>
 </head>
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm" style="background-color: #5f4dee">
+        <nav class="navbar navbar-expand-sm">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#student-navbar" aria-controls="student-navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"><i class="fa fa-navicon" id="navbar-toggle-custom"></i></span>
             </button>
             <a class="navbar-brand" href="/student/student_dashboard">
-                {% load static %}
                 <img src="{% static 'users/images/ClassBop2-03.png' %}" width="150" alt="ClassBop">
             </a>
 

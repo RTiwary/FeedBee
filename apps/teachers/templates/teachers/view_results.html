@@ -4,19 +4,6 @@
     <style>
         .scrollable {
             max-height: 320px;
-            overflow: scroll;
-        }
-
-        .btn-blue {
-            border-color: #43A3B1;
-            background-color: #43A3B1;
-            color: white;
-        }
-
-        .btn-blue:focus, .btn-blue:hover {
-            background-color: #388894;
-            border-color: #388894;
-            color: white;
         }
     </style>
 
@@ -39,7 +26,7 @@
     </div>
 
     <!-- Displays the question for a survey and all responses for each question -->
-    <div class="container">
+    <div class="container" style="margin-bottom: 3em;">
         {% for question, answer_list in q_and_a.items %}
             <div class="row ">
                 <div class="col-sm-12">

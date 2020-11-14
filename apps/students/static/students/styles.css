@@ -1,0 +1,22 @@
+/* change the link color */
+.nav-item, .navbar-brand {
+    color: #EBEBEB;
+    font-family: 'ABeeZee', sans-serif;
+}
+
+/* change the color of active or hovered links */
+.navbar-brand:focus, .navbar-brand:hover,
+.nav-link:focus, .nav-link:hover {
+    color: white;
+    font-family: 'ABeeZee', sans-serif;
+}
+
+/* displays the navbar toggle button */
+#navbar-toggle-custom {
+    color: white;
+    font-size: 28px;
+}
+
+.navbar {
+    background-color: #5f4dee;
+}

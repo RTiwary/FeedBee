@@ -1,0 +1,129 @@
+/* change the link color */
+.nav-item, .navbar-brand {
+    color: #EBEBEB;
+    font-family: 'ABeeZee', sans-serif;
+}
+
+/* change the color of active or hovered links */
+.navbar-brand:focus, .navbar-brand:hover,
+.nav-link:focus, .nav-link:hover {
+    color: white;
+    font-family: 'ABeeZee', sans-serif;
+}
+
+/* displays the navbar toggle button */
+#navbar-toggle-custom {
+    color: white;
+    font-size: 28px;
+}
+
+.navbar {
+    background-color: #5f4dee;
+}
+
+.btn-blue {
+    -webkit-appearance: none;
+    border-color: #5f4dee;
+    background-color: #5f4dee;
+    color: white;
+}
+
+.btn-blue:focus, .btn-blue:hover {
+    -webkit-appearance: none;
+    background-color: #4732ec;
+    border-color: #4732ec;
+    color: white;
+}
+
+h1 {
+    font-family: 'ABeeZee', sans-serif;
+}
+
+.container {
+    font-family: 'ABeeZee', sans-serif;
+}
+
+.scrollable {
+    overflow: scroll;
+}
+
+.card-header {
+    border-color: #5f4dee;
+    background-color: #5f4dee;
+    color: white;
+}
+
+.asteriskField {
+    display: none;
+}
+
+* {box-sizing: border-box}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: #474e5d;
+    padding-top: 50px;
+    opacity: 0.6;
+}
+
+/* Modal Content/Box */
+.modal-content {
+    z-index: 3;
+    position: fixed;
+    display: none; /* Hidden by default */
+    background-color: #fefefe;
+    top: 50%;
+    left: 50%;
+    margin: 0 auto;
+    margin-left: -200px;
+    margin-top: -200px;
+    padding: 20px;
+    width: auto;
+    height: auto;
+}
+
+.btn-coral {
+    -webkit-appearance: none;
+    background-color: #fd7479;
+    border-color: #fd7479;
+    color: white;
+}
+
+.btn-coral:hover, .btn-coral:focus {
+    -webkit-appearance: none;
+    background-color: #FD5E64;
+    border-color: #FD5E64;
+    color: white;
+}
+
+.btn-red {
+    -webkit-appearance: none;
+    background-color: #FD353C;
+    border-color: #FD353C;
+    color: white;
+}
+
+.btn-red:hover, .btn-red:focus {
+    -webkit-appearance: none;
+    background-color: #DE020A;
+    border-color: #DE020A;
+    color: white;
+}
+
+form {
+    font-size: 20px;
+}
+
+.badge-coral {
+    background-color: #fd7479;
+    border-color: #fd7479;
+    color: white;
+}
