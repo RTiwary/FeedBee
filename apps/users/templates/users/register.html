@@ -70,6 +70,7 @@
 
 {% load crispy_forms_tags %}
 <body style ="background-color: #5f4dee">
+    <div id="particles-js" style="position:fixed; height: 100%; width: 100%; top: 0; z-index:-10;"></div>
     <div class="container">
         <div class="form-content" style="margin-top: 3em; margin-bottom: 3em;">
             <h1 style="font-family: 'ABeeZee', sans-serif; margin-top:0.5em; margin-bottom: 0.5em; text-align: center">
@@ -107,6 +108,9 @@
     </div>
   
     <!-- Optional JavaScript -->
+    <!-- Import Particles.js stuff -->
+    <script src="{% static 'users/particles.js-master/particles.js' %}"></script>
+    <script src="{% static 'users/particles.js-master/demo/js/app.js' %}"></script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
