@@ -53,6 +53,11 @@ h1 {
     color: white;
 }
 
+.card-header-accordion {
+    background-color: white;
+    border-color: gray;
+}
+
 .asteriskField {
     display: none;
 }
@@ -116,6 +121,14 @@ h1 {
     background-color: #DE020A;
     border-color: #DE020A;
     color: white;
+}
+
+.btn-link {
+    color: #fd7479;
+}
+
+.btn-link:hover, .btn-link:focus {
+    color: #FD5E64;
 }
 
 form {
