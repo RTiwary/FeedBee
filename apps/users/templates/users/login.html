@@ -68,10 +68,11 @@
 </head>
 
 {% load crispy_forms_tags %}
+{% load socialaccount %}
 <body style="background-color: #5f4dee;">
     <div id="particles-js" style="position:fixed; height: 100%; width: 100%; top: 0; z-index:-10;"></div>
     <div class="container">
-        <div class="form-content" style="margin-top: 5em;">
+        <div class="form-content" style="margin-top: 3em; margin-bottom: 3em;">
             <h1 style="font-family: 'ABeeZee', sans-serif; margin-top:0.5em; margin-bottom: 0.5em;">Welcome Back!</h1>
             {% if messages %}
                 {% for message in messages %}
@@ -87,6 +88,8 @@
                 <button type="submit" class="btn-block btn-blue btn-login mt-3" style="font-family: 'ABeeZee', sans-serif;">
                     Log In
                 </button>
+                <p style="padding-top: 15px; margin-top: 1em;">Or log in with</p>
+                <a href="{% provider_login_url 'google' %}">Log in with Google</a>
                 <p style="padding-top: 15px; margin-top: 1em;">Don't have an account? Create one <a href="/register">here</a>!</p>
                 <a href="/password_reset">Forgot your password?</a>
             </form>

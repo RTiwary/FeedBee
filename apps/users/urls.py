@@ -8,6 +8,7 @@ urlpatterns = [
     path('privacy-policy/', views.privacy_policy, name='privacy-policy'),
     path('login/', views.login_request, name='login'),
     path('register/', views.register, name="register"),
+    path('accounts/', include('allauth.urls')),
 
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='users/password_change_done.html'), name='password_change_done'),
 

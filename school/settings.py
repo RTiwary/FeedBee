@@ -44,6 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # <--
+
+
+    'allauth',  # <--
+    'allauth.account',  # <--
+    'allauth.socialaccount',  # <--
+    'allauth.socialaccount.providers.google',  # <--
     'apps.students.apps.StudentsConfig',
     'apps.teachers.apps.TeachersConfig',
     'apps.dashboard.apps.DashboardConfig',
@@ -168,3 +175,28 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = 'login'
 
 django_heroku.settings(locals())
+
+AUTHENTICATION_BACKENDS = (
+ 'django.contrib.auth.backends.ModelBackend',
+ 'allauth.account.auth_backends.AuthenticationBackend',
+ )
+
+SITE_ID = 3
+LOGIN_REDIRECT_URL = '/register'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/login'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+ACCOUNT_FORMS = {
+    'signup': 'users.forms.SocialRegistrationForm',
+}

@@ -21,7 +21,7 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             if user.is_student:
                 Student.objects.create(user=user)
                 return redirect(reverse("join_class"))
@@ -40,7 +40,7 @@ def login_request(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 if user.is_teacher:
                     return redirect(reverse("dash"))
                 else:
