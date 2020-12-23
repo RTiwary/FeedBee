@@ -6,15 +6,18 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 
-# Create your views here.
+
 def homepage(request):
     return render(request, "users/landing_page.html")
+
 
 def terms_conditions(request):
     return render(request, "users/terms-conditions.html")
 
+
 def privacy_policy(request):
     return render(request, "users/privacy-policy.html")
+
 
 def register(request):
     if request.method == "POST":
@@ -32,7 +35,10 @@ def register(request):
         form = RegistrationForm()
     return render(request, "users/register.html", {"form": form})
 
+
 def login_request(request):
+    if request.user.is_authenticated:
+        return redirect('external_login')
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
@@ -54,3 +60,19 @@ def login_request(request):
     return render(request=request,
                   template_name="users/login.html",
                   context={"form": form})
+
+
+def external_login_request(request):
+    # Retrieve email address of logged in user and check database
+    email = request.user.email
+    is_student = True if len(Student.objects.filter(user__email=email)) == 1 else False
+    is_teacher = True if len(Teacher.objects.filter(user__email=email)) == 1 else False
+    if not is_student and not is_teacher:
+        form = AuthenticationForm() # change to timezone form later
+        return render(request=request,
+                      template_name="users/login.html",
+                      context={"form": form})
+    elif is_student:
+        return redirect('student_dashboard')
+    else:
+        return redirect('teacher_dashboard')

@@ -76,9 +76,11 @@
             <h1 style="font-family: 'ABeeZee', sans-serif; margin-top:0.5em; margin-bottom: 0.5em;">Welcome Back!</h1>
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ message }}
-                    </div>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
 

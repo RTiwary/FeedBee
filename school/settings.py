@@ -182,8 +182,8 @@ AUTHENTICATION_BACKENDS = (
  )
 
 SITE_ID = 3
-LOGIN_REDIRECT_URL = '/register'
-ACCOUNT_SIGNUP_REDIRECT_URL = '/login'
+LOGIN_REDIRECT_URL = '/external_login'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/external_login/'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
