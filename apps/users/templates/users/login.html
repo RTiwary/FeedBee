@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
 
     <title>Login • Classbop</title>
+    {% load static %}
 
     <style type="text/css">
         .btn-login {
@@ -55,9 +56,12 @@
             border: 1px solid rgba(0,0,0,0.1);
             font-family: 'ABeeZee', sans-serif;
         }
+
+        #google_signin_button:hover {
+            content: url("../../static/users/images/btn_google_signin_light_pressed_web.png");
+        }
     </style>
 
-    {% load static %}
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'users/images/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'users/images/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'users/images/favicon-16x16.png' %}">
@@ -91,7 +95,9 @@
                     Log In
                 </button>
                 <p style="padding-top: 15px; margin-top: 1em;">Or log in with</p>
-                <a href="{% provider_login_url 'google' %}">Log in with Google</a>
+                <a href="{% provider_login_url 'google' %}">
+                    <img src="{% static 'users/images/btn_google_signin_light_normal_web.png' %}" alt="Google Sign In" id="google_signin_button" width="150px">
+                </a>
                 <p style="padding-top: 15px; margin-top: 1em;">Don't have an account? Create one <a href="/register">here</a>!</p>
                 <a href="/password_reset">Forgot your password?</a>
             </form>
