@@ -1,0 +1,105 @@
+<!doctype html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Font stuff -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+
+    <title>Login • Classbop</title>
+    {% load static %}
+
+    <style type="text/css">
+        .btn-login {
+            padding: 8px;
+            text-align: center;
+            display: inline-block;
+            font-size: 18px;
+            -webkit-border-radius: 10px 10px 10px 10px;
+            border-radius: 30px 30px 30px 30px;
+        }
+
+        .btn-blue
+         {
+            background-color: #5f4dee;
+            border-color: #5f4dee;
+            color: white;
+        }
+
+        .btn-blue:hover,
+        .btn-blue:active,
+        .btn-blue:visited,
+        .btn-blue:active:focus,
+        .btn-blue:focus
+        {
+            background-color: white;
+            border-color: #5f4dee;
+            color: #5f4dee;
+            cursor: pointer;
+        }
+
+        .form-content {
+            -webkit-border-radius: 10px 10px 10px 10px;
+            border-radius: 10px 10px 10px 10px;
+            -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+            box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 450px;
+            padding: 25px 45px 55px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid rgba(0,0,0,0.1);
+            font-family: 'ABeeZee', sans-serif;
+        }
+    </style>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'users/images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'users/images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'users/images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'users/images/site.webmanifest' %}">
+    <link rel="mask-icon" href="{% static 'users/images/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+</head>
+
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+<body style="background-color: #5f4dee;">
+    <div id="particles-js" style="position:fixed; height: 100%; width: 100%; top: 0; z-index:-10;"></div>
+    <div class="container">
+        <div class="form-content" style="margin-top: 3em; margin-bottom: 3em;">
+            <h1 style="font-family: 'ABeeZee', sans-serif; margin-top:0.5em; margin-bottom: 0.5em;">Finish Registration</h1>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" class="form-group">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn-block btn-blue btn-login mt-3" style="font-family: 'ABeeZee', sans-serif;">
+                    Continue
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- Import Particles.js stuff -->
+    <script src="{% static 'users/particles.js-master/particles.js' %}"></script>
+    <script src="{% static 'users/particles.js-master/demo/js/app.js' %}"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>

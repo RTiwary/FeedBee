@@ -84,3 +84,7 @@ class SocialRegistrationForm(DefaultAccountAdapter):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError('A user with that email address already exists.')
         return email
+
+class SocialAdditionalForm(forms.Form):
+    student_teacher = forms.ChoiceField(choices=STUDENT_TEACHER_CHOICES, label="I am a")
+    timezone_choice = forms.ChoiceField(choices=TIMEZONE_CHOICES, label="Select your local timezone:")

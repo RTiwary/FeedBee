@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm
-from apps.users.models import Student, Teacher
+from .forms import RegistrationForm, SocialAdditionalForm
+from apps.users.models import Student, Teacher, User
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
@@ -37,8 +37,6 @@ def register(request):
 
 
 def login_request(request):
-    if request.user.is_authenticated:
-        return redirect('external_login')
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
@@ -63,16 +61,39 @@ def login_request(request):
 
 
 def external_login_request(request):
-    # Retrieve email address of logged in user and check database
-    email = request.user.email
-    is_student = True if len(Student.objects.filter(user__email=email)) == 1 else False
-    is_teacher = True if len(Teacher.objects.filter(user__email=email)) == 1 else False
-    if not is_student and not is_teacher:
-        form = AuthenticationForm() # change to timezone form later
-        return render(request=request,
-                      template_name="users/login.html",
-                      context={"form": form})
-    elif is_student:
+    # Retrieve user object of logged in user
+    user = User.objects.get(email=request.user.email)
+
+    # check if user is a student or teacher and redirects them to correct dashboard
+    if user.is_student:
         return redirect('student_dashboard')
     else:
-        return redirect('teacher_dashboard')
+        return redirect('dash')
+
+
+def finish_registration(request):
+    user = User.objects.filter(email=request.user.email)
+    if request.method == "POST":
+        form = SocialAdditionalForm(request.POST)
+        if form.is_valid():
+            timezone = form.cleaned_data["timezone_choice"]
+            if form.cleaned_data["student_teacher"] == "Student":
+                user.update(timezone=timezone, is_student=True)
+                curr_user = User.objects.get(email=request.user.email)
+                # create student profile
+                Student.objects.create(user=curr_user)
+
+                return redirect(reverse("join_class"))
+            else:
+                user.update(timezone=timezone, is_teacher=True)
+                curr_user = User.objects.get(email=request.user.email)
+
+                # create teacher profile
+                Teacher.objects.create(user=curr_user)
+
+                return redirect(reverse("add_class"))
+    else:
+        form = SocialAdditionalForm()
+    return render(request, 'users/social_auth_signup.html', {
+        'form': form,
+    })
