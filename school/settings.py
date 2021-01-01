@@ -44,13 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',  # <--
+    'django.contrib.sites',
 
-
-    'allauth',  # <--
-    'allauth.account',  # <--
-    'allauth.socialaccount',  # <--
-    'allauth.socialaccount.providers.google',  # <--
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.microsoft',
     'apps.students.apps.StudentsConfig',
     'apps.teachers.apps.TeachersConfig',
     'apps.dashboard.apps.DashboardConfig',
@@ -194,6 +194,9 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
         }
+    },
+    'microsoft': {
+        'tenant': 'organizations',
     }
 }
 
