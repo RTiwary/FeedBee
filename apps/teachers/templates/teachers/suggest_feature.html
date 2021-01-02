@@ -26,16 +26,16 @@
         {% endif %}
     </script>
 
-    <div class="container" style="text-align: center; margin-top: 2em; font-family: 'ABeeZee', sans-serif">
-        <h2>Contact Us</h2>
+    <div class="container">
+        <br>
+        <h3 class="display-3 row justify-content-center">
+            Contact Us
+        </h3>
     </div>
 
     {% load crispy_forms_tags %}
-
-    <div class="row justify-content-center" style="margin-bottom: 3em;">
+    <div class="row justify-content-center" style="margin-bottom: 3em; margin-top: 1em;">
         <form method="POST" class="form-group col-sm-10">
-            <br>
-            <br>
             {% csrf_token %}
             {{ form|crispy }}
             <button type="submit" class="btn btn-blue">Submit</button>
