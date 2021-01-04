@@ -57,8 +57,17 @@
             font-family: 'ABeeZee', sans-serif;
         }
 
-        #google_signin_button:hover {
-            content: url("../../static/users/images/btn_google_signin_light_pressed_web.png");
+        {##google_signin_button:hover  {#}
+        {#    content: url("../../static/users/images/btn_google_signin_light_pressed_web@2x.png");#}
+        {#}#}
+
+        #google_signin_button {
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        #microsoft_signin_button {
+            text-decoration: none;
         }
 
         /* from Scott Zirkel's HR with centered text */
@@ -129,9 +138,14 @@
                 <div style="margin-top: 2.5em; margin-bottom: 1.5em;">
                     <hr class="hr-text" data-content="or">
                 </div>
-                <a href="{% provider_login_url 'google' %}">
-                    <img src="{% static 'users/images/btn_google_signin_light_normal_web.png' %}" alt="Google Sign In" id="google_signin_button" width="150px">
-                </a>
+                <div>
+                    <a href="{% provider_login_url 'google' %}" id="google_signin_button">
+                        <img src="{% static 'users/images/btn_google_signin_light_normal_web@2x.png' %}" alt="Google Sign In" width="150px">
+                    </a>
+                    <a href="{% provider_login_url 'microsoft' %}" id="microsoft_signin_button">
+                        <img src="{% static 'users/images/microsoft_signin_light.svg' %}" alt="Microsoft Sign In" width="155px">
+                    </a>
+                </div>
                 <p style="padding-top: 15px; margin-top: 1em;">Don't have an account? Create one <a href="/register">here</a>!</p>
                 <a href="/password_reset">Forgot your password?</a>
             </form>
