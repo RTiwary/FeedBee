@@ -57,10 +57,6 @@
             font-family: 'ABeeZee', sans-serif;
         }
 
-        {##google_signin_button:hover  {#}
-        {#    content: url("../../static/users/images/btn_google_signin_light_pressed_web@2x.png");#}
-        {#}#}
-
         #google_signin_button {
             text-decoration: none;
             margin-right: 20px;
@@ -68,6 +64,10 @@
 
         #microsoft_signin_button {
             text-decoration: none;
+        }
+
+        #third-party-login {
+            text-align: center;
         }
 
         /* from Scott Zirkel's HR with centered text */
@@ -138,7 +138,7 @@
                 <div style="margin-top: 2.5em; margin-bottom: 1.5em;">
                     <hr class="hr-text" data-content="or">
                 </div>
-                <div>
+                <div id="third-party-login">
                     <a href="{% provider_login_url 'google' %}" id="google_signin_button">
                         <img src="{% static 'users/images/btn_google_signin_light_normal_web@2x.png' %}" alt="Google Sign In" width="150px">
                     </a>
