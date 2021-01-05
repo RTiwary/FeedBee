@@ -72,14 +72,15 @@ def choose_question_type(request, survey_id):
         form = QuestionTypeForm(request.POST)
         if form.is_valid():
             question_type_choice = form.cleaned_data["question_type_choice"]
+            anonymous_in = form.cleaned_data["anonymous"]
             if question_type_choice == "Boolean":
-                return redirect("add_boolean_question", survey_id=survey_id)
+                return redirect("add_boolean_question", survey_id=survey_id, anonymous=anonymous_in)
             elif question_type_choice == "Text":
-                return redirect("add_text_question", survey_id=survey_id)
+                return redirect("add_text_question", survey_id=survey_id, anonymous=anonymous_in)
             elif question_type_choice == "MultipleChoice":
-                return redirect("add_mc_question", survey_id=survey_id)
+                return redirect("add_mc_question", survey_id=survey_id, anonymous=anonymous_in)
             elif question_type_choice == "Checkbox":
-                return redirect("add_checkbox_question", survey_id=survey_id)
+                return redirect("add_checkbox_question", survey_id=survey_id, anonymous=anonymous_in)
 
     else:
         form = QuestionTypeForm()
@@ -89,7 +90,7 @@ def choose_question_type(request, survey_id):
 
 @login_required
 @user_passes_test(is_teacher)
-def add_boolean_question(request, survey_id, question_id=-1):  # question_id is an optional parameter
+def add_boolean_question(request, survey_id, anonymous=True, question_id=-1):  # question_id is an optional parameter
     survey = get_object_or_404(Survey, pk=survey_id)
 
     # makes sure user is the teacher that created the survey
@@ -117,6 +118,7 @@ def add_boolean_question(request, survey_id, question_id=-1):  # question_id is 
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
                                 survey.mc_questions.count() + survey.checkbox_questions.count()
                 boolean_question.question_rank = objects_count + 1
+                boolean_question.anonymous = anonymous
                 boolean_question.save()
 
             boolean_question.save()
@@ -142,7 +144,7 @@ def add_boolean_question(request, survey_id, question_id=-1):  # question_id is 
 
 @login_required
 @user_passes_test(is_teacher)
-def add_text_question(request, survey_id, question_id=-1):
+def add_text_question(request, survey_id, anonymous=True, question_id=-1):
     survey = get_object_or_404(Survey, pk=survey_id)
 
     # makes sure user is the teacher that created the survey
@@ -170,6 +172,7 @@ def add_text_question(request, survey_id, question_id=-1):
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
                                 survey.mc_questions.count() + survey.checkbox_questions.count()
                 text_question.question_rank = objects_count + 1
+                text_question.anonymous = anonymous
 
             text_question.save()
             classroom_id = survey.classroom.pk
@@ -194,7 +197,7 @@ def add_text_question(request, survey_id, question_id=-1):
 
 @login_required
 @user_passes_test(is_teacher)
-def add_mc_question(request, survey_id, question_id=-1):
+def add_mc_question(request, survey_id, anonymous=True, question_id=-1):
     survey = get_object_or_404(Survey, pk=survey_id)
 
     # makes sure user is the teacher that created the survey
@@ -222,6 +225,7 @@ def add_mc_question(request, survey_id, question_id=-1):
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
                                 survey.mc_questions.count() + survey.checkbox_questions.count()
                 mc_question.question_rank = objects_count + 1
+                mc_question.anonymous = anonymous
 
             mc_question.save()
             classroom_id = survey.classroom.pk
@@ -246,7 +250,7 @@ def add_mc_question(request, survey_id, question_id=-1):
 # Adding a checkbox question to a survey
 @login_required
 @user_passes_test(is_teacher)
-def add_checkbox_question(request, survey_id, question_id=-1):
+def add_checkbox_question(request, survey_id, anonymous=True, question_id=-1):
     survey = get_object_or_404(Survey, pk=survey_id)
 
     # makes sure user is the teacher that created the survey
@@ -274,6 +278,7 @@ def add_checkbox_question(request, survey_id, question_id=-1):
                 objects_count = survey.boolean_questions.count() + survey.text_questions.count() + \
                                 survey.mc_questions.count() + survey.checkbox_questions.count()
                 checkbox_question.question_rank = objects_count + 1
+                checkbox_question.anonymous = anonymous
 
             checkbox_question.save()
             classroom_id = survey.classroom.pk
@@ -494,13 +499,13 @@ def view_results(request, survey_id):
     answers = []
     for question in question_list:
         if question.question_type == "Boolean":
-            answer = BooleanAnswer.objects.filter(question=question).values_list('answer', flat=True)
+            answer = BooleanAnswer.objects.filter(question=question)
         elif question.question_type == "Text":
-            answer = TextAnswer.objects.filter(question=question).values_list('answer', flat=True)
+            answer = TextAnswer.objects.filter(question=question)
         elif question.question_type == "MultipleChoice":
-            answer = MultipleChoiceAnswer.objects.filter(question=question).values_list('answer', flat=True)
+            answer = MultipleChoiceAnswer.objects.filter(question=question)
         elif question.question_type == "Checkbox":
-            answer = CheckboxAnswer.objects.filter(question=question).values_list('answer', flat=True)
+            answer = CheckboxAnswer.objects.filter(question=question)
 
         answers.append(answer)
 

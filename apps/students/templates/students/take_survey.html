@@ -17,7 +17,14 @@
                     {% if q.question_type == "Boolean" %}
                         <div class="card" style="margin-top: 10px;">
                             <div class="card-body">
+                                <div style="padding-right: 5px; display: inline-block;">
                                 <h5 class="card-title">{{ q.question_text }}</h5>
+                                </div>
+                                <div style="display: inline-block;">
+                                {% if not q.anonymous %}
+                                    <span class="badge badge-info">Not Anonymous</span>
+                                {% endif %}
+                                </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="{{ q.id }}_Bool" value="true" id="{{ q.id }}_T_Bool" required>
                                     <label class="form-check-label" for="{{ q.id }}_T_Bool">
@@ -39,7 +46,14 @@
                     {% if q.question_type == "Text" %}
                         <div class="card" style="margin-top: 10px;">
                             <div class="card-body">
+                                <div style="padding-right: 5px; display: inline-block;">
                                 <h5 class="card-title">{{ q.question_text }}</h5>
+                                </div>
+                                <div style="display: inline-block;">
+                                {% if not q.anonymous %}
+                                    <span class="badge badge-info">Not Anonymous</span>
+                                {% endif %}
+                                </div>
                                 <div class="form-group">
                                     <textarea class="form-control" name="{{ q.id }}" rows="2" required></textarea>
                                 </div>
@@ -51,7 +65,14 @@
                     {% if q.question_type == "MultipleChoice" %}
                         <div class="card" style="margin-top: 10px;">
                             <div class="card-body">
+                                <div style="padding-right: 5px; display: inline-block;">
                                 <h5 class="card-title">{{ q.question_text }}</h5>
+                                </div>
+                                <div style="display: inline-block;">
+                                {% if not q.anonymous %}
+                                    <span class="badge badge-info">Not Anonymous</span>
+                                {% endif %}
+                                </div>
                                 {% if q.option_a != null %}
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="{{ q.id }}_MC" value="A" id="{{ q.id }}_A_MC" required>
@@ -100,7 +121,14 @@
                     {% if q.question_type == "Checkbox" %}
                         <div class="card" style="margin-top: 10px;">
                             <div class="card-body">
+                                <div style="padding-right: 5px; display: inline-block;">
                                 <h5 class="card-title">{{ q.question_text }}</h5>
+                                </div>
+                                <div style="display: inline-block;">
+                                {% if not q.anonymous %}
+                                    <span class="badge badge-info">Not Anonymous</span>
+                                {% endif %}
+                                </div>
                                 {% if q.option_a != null %}
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="{{ q.id }}_A_CB" id="{{ q.id }}_A_CB">
