@@ -9,8 +9,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import Http404
 from itertools import chain
 import operator
-from datetime import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
+from apps.dashboard.views import findInterval
 
 
 # Create your views here.
@@ -90,7 +91,7 @@ def choose_question_type(request, survey_id):
 
 @login_required
 @user_passes_test(is_teacher)
-def add_boolean_question(request, survey_id, anonymous=True, question_id=-1):  # question_id is an optional parameter
+def add_boolean_question(request, survey_id, anonymous, question_id=-1):  # question_id is an optional parameter
     survey = get_object_or_404(Survey, pk=survey_id)
 
     # makes sure user is the teacher that created the survey
@@ -144,7 +145,7 @@ def add_boolean_question(request, survey_id, anonymous=True, question_id=-1):  #
 
 @login_required
 @user_passes_test(is_teacher)
-def add_text_question(request, survey_id, anonymous=True, question_id=-1):
+def add_text_question(request, survey_id, anonymous, question_id=-1):
     survey = get_object_or_404(Survey, pk=survey_id)
 
     # makes sure user is the teacher that created the survey
@@ -197,7 +198,7 @@ def add_text_question(request, survey_id, anonymous=True, question_id=-1):
 
 @login_required
 @user_passes_test(is_teacher)
-def add_mc_question(request, survey_id, anonymous=True, question_id=-1):
+def add_mc_question(request, survey_id, anonymous, question_id=-1):
     survey = get_object_or_404(Survey, pk=survey_id)
 
     # makes sure user is the teacher that created the survey
@@ -250,7 +251,7 @@ def add_mc_question(request, survey_id, anonymous=True, question_id=-1):
 # Adding a checkbox question to a survey
 @login_required
 @user_passes_test(is_teacher)
-def add_checkbox_question(request, survey_id, anonymous=True, question_id=-1):
+def add_checkbox_question(request, survey_id, anonymous, question_id=-1):
     survey = get_object_or_404(Survey, pk=survey_id)
 
     # makes sure user is the teacher that created the survey
@@ -474,13 +475,72 @@ def delete_survey(request, survey_id):
     return redirect("view_classroom_info", classroom_id=classroom.pk)
 
 
+@login_required
+@user_passes_test(is_teacher)
+def select_results_interval(request, survey_id):
+    survey = get_object_or_404(Survey, pk=survey_id)
+
+    # makes sure user is the teacher that created the survey before allowing them to see anything
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
+
+    # Queries for all of the questions in the survey and sort them based on rank
+    boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
+    text_questions = TextQuestion.objects.filter(survey=survey_id)
+    mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
+    checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
+    question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
+
+    # For each survey question, query the answers to each question as a list of values
+    answers = []
+    todays_date = datetime.now(timezone(request.user.timezone))
+    earliest_date = todays_date
+    for question in question_list:
+        if question.question_type == "Boolean":
+            answer = BooleanAnswer.objects.filter(question=question)
+        elif question.question_type == "Text":
+            answer = TextAnswer.objects.filter(question=question)
+        elif question.question_type == "MultipleChoice":
+            answer = MultipleChoiceAnswer.objects.filter(question=question)
+        elif question.question_type == "Checkbox":
+            answer = CheckboxAnswer.objects.filter(question=question)
+
+        if len(answer) > 0 and answer.earliest('timestamp').timestamp.date() < earliest_date.date():
+            earliest_date = answer.earliest('timestamp').timestamp
+            answers.append(answer)
+
+    intervals = []
+    if len(answers) > 0:
+        if survey.frequency:
+            freq = survey.frequency
+        else:
+            freq = "7"
+        current_date = datetime.strptime(findInterval(freq, earliest_date), '%m/%d/%y')
+        freq_index = freq.find(str(current_date.isoweekday()))
+        while current_date.date() <= todays_date.date():
+            if survey.name != "Base" and current_date.date() > survey.end_date:
+                break
+            intervals.append(current_date.strftime('%m-%d-%y') + ' to ')
+            freq_index = (freq_index + 1) % len(freq)
+            if freq_index != 0:
+                difference = int(freq[freq_index]) - int(freq[freq_index - 1])
+            else:
+                difference = 7 - (int(freq[-1]) - int(freq[0]))
+            current_date = current_date + timedelta(days=difference)
+            intervals[-1] = intervals[-1] + current_date.strftime('%m-%d-%y')
+
+    return render(request, "teachers/select_results_interval.html", {"intervals": intervals, "survey": survey})
+
 
 # gets the info for teacher to view the results/answers of a survey, returns a dictionary with each question as a key
 # and a list of answers as a value
 @login_required
 @user_passes_test(is_teacher)
-def view_results(request, survey_id):
+def view_results(request, survey_id, interval):
     survey = get_object_or_404(Survey, pk=survey_id)
+    start_date = datetime.strptime(interval[:interval.find(' to ')], '%m-%d-%y')
+    end_date = datetime.strptime(interval[interval.find(' to ') + 4:], '%m-%d-%y')
 
     # makes sure user is the teacher that created the survey before allowing them to see anything
     teacher = request.user.teacher_profile
@@ -499,13 +559,15 @@ def view_results(request, survey_id):
     answers = []
     for question in question_list:
         if question.question_type == "Boolean":
-            answer = BooleanAnswer.objects.filter(question=question)
+            answer = BooleanAnswer.objects.filter(question=question, timestamp__gte=start_date, timestamp__lt=end_date)
         elif question.question_type == "Text":
-            answer = TextAnswer.objects.filter(question=question)
+            answer = TextAnswer.objects.filter(question=question, timestamp__gte=start_date, timestamp__lt=end_date)
         elif question.question_type == "MultipleChoice":
-            answer = MultipleChoiceAnswer.objects.filter(question=question)
+            answer = MultipleChoiceAnswer.objects.filter(question=question, timestamp__gte=start_date,
+                                                         timestamp__lt=end_date)
         elif question.question_type == "Checkbox":
-            answer = CheckboxAnswer.objects.filter(question=question)
+            answer = CheckboxAnswer.objects.filter(question=question, timestamp__gte=start_date,
+                                                   timestamp__lt=end_date)
 
         answers.append(answer)
 
@@ -625,8 +687,11 @@ def view_classroom_info(request, classroom_id):
         if curr_date <= survey.end_date:
             active += 1
 
+    base_survey = Survey.objects.filter(classroom_id=classroom_id, name="Base")[0]
+
     return render(request, "teachers/view_classroom_info.html",
-                  {'form': form, 'classroom': classroom, 'surveys': surveys, 'active_surveys': active})
+                  {'form': form, 'classroom': classroom, 'surveys': surveys, 'active_surveys': active,
+                   'base_survey_id': base_survey.id})
 
 
 @login_required

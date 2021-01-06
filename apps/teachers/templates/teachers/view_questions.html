@@ -104,13 +104,13 @@
                     <div class="row">
                         <div class="col-6" >
                             <a href="{% if question.question_type == "Boolean" %}
-                                {% url 'add_boolean_question' survey_id=survey.pk question_id=question.pk %}
+                                {% url 'add_boolean_question' survey_id=survey.pk anonymous=question.anonymous question_id=question.pk %}
                                 {% elif question.question_type == "Text" %}
-                                {% url 'add_text_question' survey_id=survey.pk question_id=question.pk %}
+                                {% url 'add_text_question' survey_id=survey.pk anonymous=question.anonymous question_id=question.pk %}
                                 {% elif question.question_type == "MultipleChoice" %}
-                                {% url 'add_mc_question' survey_id=survey.pk question_id=question.pk %}
+                                {% url 'add_mc_question' survey_id=survey.pk anonymous=question.anonymous question_id=question.pk %}
                                 {% elif question.question_type == "Checkbox" %}
-                                {% url 'add_checkbox_question' survey_id=survey.pk question_id=question.pk %}
+                                {% url 'add_checkbox_question' survey_id=survey.pk anonymous=question.anonymous question_id=question.pk %}
                                 {% endif %}">{{ question.question_text }}</a>
                         </div>
                         <div class="col-2 d-none d-md-block">

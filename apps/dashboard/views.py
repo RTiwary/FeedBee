@@ -6,6 +6,11 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
 from datetime import timedelta
 
+# tests if user is teacher
+def is_teacher(user):
+    return user.is_teacher
+
+
 @login_required
 @user_passes_test(is_teacher)
 def dash(request):
@@ -236,8 +241,9 @@ def display_unit_checkbox_graph(frequency, checkbox_answers):
             interval_data[interval][i][1] += 1
 
         # Increment if True
-        for checked in checkbox_answer.answer:
-            interval_data[interval][ord(checked) - ord('A')][0] += 1
+        if checkbox_answer.answer:
+            for checked in checkbox_answer.answer:
+                interval_data[interval][ord(checked) - ord('A')][0] += 1
 
     interval_dates = list(interval_data.keys())
 

@@ -16,12 +16,11 @@
 
     <br>
 
-    <!-- Displays button to go to classroom home (dashboard) and the survey name -->
     <div class="container">
         <div class="row">
             <div class="col-3">
                 <br>
-                <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-blue" style="-webkit-appearance: none"><i class="fas fa-home"></i> Classroom Home</a>
+                <a href="{% url 'select_results_interval' survey.id %}" type="button" class="btn btn-blue" style="-webkit-appearance: none">Select New Interval</a>
             </div>
             <div class="col-9">
                 <h2 class="display-3" style="white-space: nowrap; overflow:auto;">{{ survey.name }} Results</h2>
@@ -51,76 +50,62 @@
                                 <span class="badge badge-warning">Short Answer</span>
                             {% endif %}
                         </div>
-                        <div class="card-body">
-                            <table class="table table-bordered table-condensed table-responsive" style="display:table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Student</th>
-                                        <th>Response</th>
-                                    </tr>
-                                </thead>
+                        <ul class="list-group list-group-flush scrollable">
+                            <!-- Show all answers for a question for all questions in a survey -->
+                            {% for ans in answer_list %}
+                                <li class="list-group-item">
+                                    {% if not question.anonymous %}
+                                        <span class="badge badge-pill badge-secondary" style="margin-right: 5px">
+                                            {{ ans.student.user.first_name }}
+                                            {{ ans.student.user.last_name }}
+                                        </span>
+                                    {% endif %}
 
-                                <!-- Show all answers for a question for all questions in a survey -->
-                                {% for ans in answer_list %}
-                                    <tr>
-                                        <th>
-                                            {% if question.anonymous %}
-                                                Anonymous
-                                            {% else %}
-                                                {{ ans.student.user.first_name }}
-                                                {{ ans.student.user.last_name }}
-                                            {% endif %}
-                                        </th>
-                                        <th>
-                                            <li class="list-group-item">
-                                        {% if question.question_type == "MultipleChoice" %}
-                                            {% if ans.answer == 'A' %}
-                                                {{ question.option_a }}
-                                            {% endif %}
-                                            {% if ans.answer == 'B' %}
-                                                {{ question.option_b }}
-                                            {% endif %}
-                                            {% if ans.answer == 'C' %}
-                                                {{ question.option_c }}
-                                            {% endif %}
-                                            {% if ans.answer == 'D' %}
-                                                {{ question.option_d }}
-                                            {% endif %}
-                                            {% if ans.answer == 'E' %}
-                                                {{ question.option_e }}
-                                            {% endif %}
+                                    {% if question.question_type == "MultipleChoice" %}
+                                        {% if ans.answer == 'A' %}
+                                            {{ question.option_a }}
                                         {% endif %}
-                                        {% if question.question_type == "Checkbox" %}
-                                            {% for i in ans.answer %}
-                                                {% if i == 'A' %}
-                                                    {{ question.option_a }} <span style="padding: 5px;"></span>
-                                                {% endif %}
-                                                {% if i == 'B' %}
-                                                    {{ question.option_b }} <span style="padding: 5px;"></span>
-                                                {% endif %}
-                                                {% if i == 'C' %}
-                                                    {{ question.option_c }} <span style="padding: 5px;"></span>
-                                                {% endif %}
-                                                {% if i == 'D' %}
-                                                    {{ question.option_d }} <span style="padding: 5px;"></span>
-                                                {% endif %}
-                                                {% if i == 'E' %}
-                                                    {{ question.option_e }} <span style="padding: 5px;"></span>
-                                                {% endif %}
-                                            {% endfor %}
-                                            {% if ans.answer == "" %}
-                                                None <span style="padding: 5px;"></span>
+                                        {% if ans.answer == 'B' %}
+                                            {{ question.option_b }}
+                                        {% endif %}
+                                        {% if ans.answer == 'C' %}
+                                            {{ question.option_c }}
+                                        {% endif %}
+                                        {% if ans.answer == 'D' %}
+                                            {{ question.option_d }}
+                                        {% endif %}
+                                        {% if ans.answer == 'E' %}
+                                            {{ question.option_e }}
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if question.question_type == "Checkbox" %}
+                                        {% for i in ans.answer %}
+                                            {% if i == 'A' %}
+                                                {{ question.option_a }} <span style="padding: 5px;"></span>
                                             {% endif %}
+                                            {% if i == 'B' %}
+                                                {{ question.option_b }} <span style="padding: 5px;"></span>
+                                            {% endif %}
+                                            {% if i == 'C' %}
+                                                {{ question.option_c }} <span style="padding: 5px;"></span>
+                                            {% endif %}
+                                            {% if i == 'D' %}
+                                                {{ question.option_d }} <span style="padding: 5px;"></span>
+                                            {% endif %}
+                                            {% if i == 'E' %}
+                                                {{ question.option_e }} <span style="padding: 5px;"></span>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if ans.answer == "" %}
+                                            None <span style="padding: 5px;"></span>
                                         {% endif %}
-                                        {% if question.question_type == "Boolean" or question.question_type == "Text" %}
-                                            {{ ans.answer }}
-                                        {% endif %}
-                                    </li>
-                                        </th>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
+                                    {% endif %}
+                                    {% if question.question_type == "Boolean" or question.question_type == "Text" %}
+                                        {{ ans.answer }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>

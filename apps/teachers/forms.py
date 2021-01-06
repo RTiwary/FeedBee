@@ -85,7 +85,9 @@ Form for choosing a question type to add to a survey
 class QuestionTypeForm(forms.Form):
     question_type_choice = forms.ChoiceField(label="What Type of Question Would You Like to Create?",
                                              choices=QUESTION_TYPE_CHOICES, widget=forms.RadioSelect)
-    anonymous = forms.BooleanField(label="Anonymous", widget=forms.CheckboxInput, initial=True, required=False)
+    anonymous = forms.BooleanField(label="Anonymous",
+                                   widget=forms.CheckboxInput(attrs={'style':'height:15px;'}),
+                                   initial=True, required=False)
 
 
 '''
