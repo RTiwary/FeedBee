@@ -55,6 +55,51 @@
             border: 1px solid rgba(0,0,0,0.1);
             font-family: 'ABeeZee', sans-serif;
         }
+
+        #google_signin_button {
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        #microsoft_signin_button {
+            text-decoration: none;
+        }
+
+        #third-party-login {
+            text-align: center;
+        }
+
+        /* from Scott Zirkel's HR with centered text */
+        .hr-text {
+            line-height: 1em;
+            position: relative;
+            outline: 0;
+            border: 0;
+            color: black;
+            text-align: center;
+            height: 1.5em;
+            opacity: .5;
+        }
+
+        .hr-text:before {
+            content: '';
+            background: #818078;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+        }
+
+        .hr-text:after {
+            content: attr(data-content);
+            position: relative;
+            display: inline-block;
+            color: black;
+            padding: 0 .5em;
+            line-height: 1.5em;
+            background-color: #fcfcfa;
+        }
     </style>
 
     <!-- load static files -->
@@ -69,6 +114,7 @@
 </head>
 
 {% load crispy_forms_tags %}
+{% load socialaccount %}
 <body style ="background-color: #5f4dee">
     <div id="particles-js" style="position:fixed; height: 100%; width: 100%; top: 0; z-index:-10;"></div>
     <div class="container">
@@ -78,6 +124,17 @@
             </h1>
             <form method="POST" class="form-group">
                 {% csrf_token %}
+                <div id="third-party-login">
+                    <a href="{% provider_login_url 'google' %}" id="google_signin_button">
+                        <img src="{% static 'users/images/btn_google_signin_light_normal_web@2x.png' %}" alt="Google Sign In" width="150px">
+                    </a>
+                    <a href="{% provider_login_url 'microsoft' %}" id="microsoft_signin_button">
+                        <img src="{% static 'users/images/microsoft_signin_light.svg' %}" alt="Microsoft Sign In" width="155px">
+                    </a>
+                </div>
+                <div style="margin-top: 1.5em; margin-bottom: 1.5em;">
+                    <hr class="hr-text" data-content="or">
+                </div>
                 <div class="form-row">
                     <div class="form-group col-md-4 mb-0">
                         {{ form.student_teacher|as_crispy_field }}

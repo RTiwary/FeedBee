@@ -1,4 +1,5 @@
 <!doctype html>
+{% load static %}
 <head>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-175573458-1"></script>
@@ -16,7 +17,9 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'users/fontawesome-free-5.15.1-web/css/all.css' %}">
 
     <!-- Font stuff -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -30,7 +33,6 @@
     
     <title>{% block title %}Classbop{% endblock %}</title>
     <!-- Favicon  -->
-    {% load static %}
     <link href="{% static 'teachers/styles.css' %}" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'users/images/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'users/images/favicon-32x32.png' %}">
@@ -45,7 +47,7 @@
     <header>
         <nav class="navbar navbar-expand-sm">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#teacher-navbar" aria-controls="teacher-navbar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"><i class="fa fa-navicon" id="navbar-toggle-custom"></i></span>
+                <span class="navbar-toggler-icon"><i class="fa fa-bars" id="navbar-toggle-custom"></i></span>
             </button>
             <a class="navbar-brand" href="/teacher/view_classes">
                 <img src="{% static 'users/images/ClassBop2-03.png' %}" width="150" alt="ClassBop">
@@ -53,9 +55,9 @@
 
             <div class="collapse navbar-collapse" id="teacher-navbar">
                  <div class="navbar-nav ml-auto">
-                     <a class="nav-item nav-link" href="/dashboard/teacher_dashboard/"><span class="fa fa-line-chart"></span> Dashboard</a>
+                     <a class="nav-item nav-link" href="/dashboard/teacher_dashboard/"><span class="fa fa-chart-line"></span> Dashboard</a>
                      <a class="nav-item nav-link" href="/teacher/view_classes"><span class="fa fa-graduation-cap"></span> View Classes</a>
-                     <a class="nav-item nav-link" href="/teacher/suggest_feature"><span class="fa fa-commenting"></span> Contact Us</a>
+                     <a class="nav-item nav-link" href="/teacher/suggest_feature"><span class="fa fa-comment"></span> Contact Us</a>
                      <a class="nav-item nav-link" href="/teacher/logout"><span class="fa fa-user-circle"></span> Logout</a>
                  </div>
             </div>

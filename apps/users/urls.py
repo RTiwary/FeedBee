@@ -10,6 +10,8 @@ urlpatterns = [
     path('register/', views.register, name="register"),
     path('external_login/', views.external_login_request, name="external_login"),
     path('finish-registration/', views.finish_registration, name='finish_registration'),
+
+    path('accounts/social/signup/', views.redirect_login, name='redirect_login'),
     path('accounts/', include('allauth.urls')),
 
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='users/password_change_done.html'), name='password_change_done'),

@@ -37,6 +37,8 @@ def register(request):
 
 
 def login_request(request):
+    if request.user.is_authenticated:
+        return redirect('external_login')
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
@@ -97,3 +99,11 @@ def finish_registration(request):
     return render(request, 'users/social_auth_signup.html', {
         'form': form,
     })
+
+
+def redirect_login(request):
+    messages.error(request, "You created an account through ClassBop but tried to log in with Google/Microsoft. \
+                            Please log in through ClassBop instead.")
+    return redirect('login')
+
+
