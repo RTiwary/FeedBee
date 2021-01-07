@@ -12,12 +12,11 @@
     </style>
     <br>
 
-    <!-- Displays button to go to classroom home (dashboard) and the survey name -->
     <div class="container">
         <div class="row">
             <div class="col-3">
                 <br>
-                <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-blue" style="-webkit-appearance: none"><i class="fas fa-home"></i> Classroom Home</a>
+                <a href="{% url 'select_results_interval' survey.id %}" type="button" class="btn btn-blue" style="-webkit-appearance: none">Select New Interval</a>
             </div>
             <div class="col-9">
                 <h2 class="display-3" style="white-space: nowrap; overflow:auto;">{{ survey.name }} Results</h2>
@@ -49,27 +48,34 @@
                         </div>
                         <ul class="list-group list-group-flush scrollable">
                             <!-- Show all answers for a question for all questions in a survey -->
-                            {% for answer in answer_list %}
+                            {% for ans in answer_list %}
                                 <li class="list-group-item">
+                                    {% if not question.anonymous %}
+                                        <span class="badge badge-pill badge-secondary" style="margin-right: 5px">
+                                            {{ ans.student.user.first_name }}
+                                            {{ ans.student.user.last_name }}
+                                        </span>
+                                    {% endif %}
+
                                     {% if question.question_type == "MultipleChoice" %}
-                                        {% if answer == 'A' %}
+                                        {% if ans.answer == 'A' %}
                                             {{ question.option_a }}
                                         {% endif %}
-                                        {% if answer == 'B' %}
+                                        {% if ans.answer == 'B' %}
                                             {{ question.option_b }}
                                         {% endif %}
-                                        {% if answer == 'C' %}
+                                        {% if ans.answer == 'C' %}
                                             {{ question.option_c }}
                                         {% endif %}
-                                        {% if answer == 'D' %}
+                                        {% if ans.answer == 'D' %}
                                             {{ question.option_d }}
                                         {% endif %}
-                                        {% if answer == 'E' %}
+                                        {% if ans.answer == 'E' %}
                                             {{ question.option_e }}
                                         {% endif %}
                                     {% endif %}
                                     {% if question.question_type == "Checkbox" %}
-                                        {% for i in answer %}
+                                        {% for i in ans.answer %}
                                             {% if i == 'A' %}
                                                 {{ question.option_a }} <span style="padding: 5px;"></span>
                                             {% endif %}
@@ -86,12 +92,12 @@
                                                 {{ question.option_e }} <span style="padding: 5px;"></span>
                                             {% endif %}
                                         {% endfor %}
-                                        {% if answer == "" %}
+                                        {% if ans.answer == "" %}
                                             None <span style="padding: 5px;"></span>
                                         {% endif %}
                                     {% endif %}
                                     {% if question.question_type == "Boolean" or question.question_type == "Text" %}
-                                        {{ answer }}
+                                        {{ ans.answer }}
                                     {% endif %}
                                 </li>
                             {% endfor %}

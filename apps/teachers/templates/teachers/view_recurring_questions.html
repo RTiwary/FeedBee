@@ -40,11 +40,14 @@
         <div class="card mt-5">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-6">
                         <strong>Questions</strong>
                     </div>
                     <div class="col-2 d-none d-md-block">
                         <strong>Question Type</strong>
+                    </div>
+                    <div class="col-2 d-none d-md-block">
+                        <strong>Anonymous</strong>
                     </div>
                     <div class="col-2 d-none d-md-block">
                         <strong>Actions</strong>
@@ -55,15 +58,15 @@
                 {% for question in questions %}
                 <div class="list-group-item">
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-6">
                             <a href="{% if question.question_type == "Boolean" %}
-                            {% url 'add_boolean_question' survey_id=base_survey_id question_id=question.pk %}
+                            {% url 'add_boolean_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
                             {% elif question.question_type == "Text" %}
-                            {% url 'add_text_question' survey_id=base_survey_id question_id=question.pk %}
+                            {% url 'add_text_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
                             {% elif question.question_type == "MultipleChoice" %}
-                            {% url 'add_mc_question' survey_id=base_survey_id question_id=question.pk %}
+                            {% url 'add_mc_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
                             {% elif question.question_type == "Checkbox" %}
-                            {% url 'add_checkbox_question' survey_id=base_survey_id question_id=question.pk %}
+                            {% url 'add_checkbox_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
                             {% endif %}">{{ question.question_text }}</a>
                         </div>
                         <div class="col-2 d-none d-md-block">
@@ -75,6 +78,13 @@
                                 <span class="badge badge-primary">Multiple Choice</span>
                             {% elif question.question_type == "Checkbox" %}
                                 <span class="badge badge-info">Checkbox</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-2 d-none d-md-block">
+                            {% if question.anonymous %}
+                                <span class="badge badge-info">Yes</span>
+                            {% else %}
+                                <span class="badge badge-dark">No</span>
                             {% endif %}
                         </div>
                         <div class="col-2">

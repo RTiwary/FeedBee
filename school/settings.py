@@ -31,7 +31,7 @@ def get_env_variable(var_name):
 SECRET_KEY = get_env_variable('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['classbop.herokuapp.com', '127.0.0.1']
 
@@ -111,7 +111,7 @@ DATABASES = {}
 if DEBUG:
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'new_school',
+        'NAME': 'test_school',
         'USER': 'postgres',
         'PASSWORD': 'Pistons1',
         'HOST': '127.0.0.1',
@@ -181,7 +181,7 @@ AUTHENTICATION_BACKENDS = (
  'allauth.account.auth_backends.AuthenticationBackend',
  )
 
-SITE_ID = 4
+SITE_ID = 5
 LOGIN_REDIRECT_URL = 'external_login'
 ACCOUNT_SIGNUP_REDIRECT_URL = 'finish_registration'
 
