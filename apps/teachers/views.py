@@ -697,8 +697,8 @@ def view_classroom_info(request, classroom_id):
 
 @login_required
 @user_passes_test(is_teacher)
-def suggest_feature(request):
-    return render(request, "teachers/suggest_feature.html", {'toast': "-1"})
+def suggest_feature(request, toast_val=0):
+    return render(request, "teachers/suggest_feature.html", {'toast': toast_val})
 
 
 '''API for submitting a feature suggestion'''

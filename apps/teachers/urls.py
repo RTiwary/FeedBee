@@ -25,7 +25,7 @@ urlpatterns = [
     path('<int:survey_id>/select_results_interval/', views.select_results_interval, name="select_results_interval"),
     path('<int:survey_id>/view_results/<str:interval>/', views.view_results, name="view_results"),
     path('<int:survey_id>/view_results_alt/', views.view_results_alt, name="view_results_alt"),
-    path('contact_us/', views.suggest_feature, name="suggest_feature"),
+    path('contact_us/<int:toast_val>', views.suggest_feature, name="suggest_feature"),
     path('logout/', views.logout_request, name="logout"),
 
     # API Stuff

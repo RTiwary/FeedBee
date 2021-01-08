@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.submit-btn').addEventListener('click', (event) => {
         if (choice !== '') {
             submit_suggestion();
-            alert('Thank you for your feedback!');
         } else {
             console.log('Sorry try again');
             return false;
@@ -101,7 +100,7 @@ function submit_suggestion() {
 
     const commentsInput = document.querySelector(`#comments-form-input`);
 
-    if (choice !== '') {
+    if (choice !== '' && commentsInput.value.trim() !== '') {
         console.log('Submitting feedback');
         fetch(request, {
             method: 'POST',
@@ -114,6 +113,7 @@ function submit_suggestion() {
         .then(response => response.json(), error => console.log(error))
         .then(result => {
             console.log(result);
+            displayToast();
         });
     } else {
         console.log('Sorry. Try again.');
