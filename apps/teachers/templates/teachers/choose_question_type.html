@@ -12,8 +12,8 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href=
-                "{% if question_format == "Recurring" %}{% url 'view_recurring_questions' survey.classroom.pk %}
-                 {% else %}{% url 'view_questions' survey.pk %}
+                "{% if question_format == "Recurring" %}{% url 'teachers:view_recurring_questions' survey.classroom.pk %}
+                 {% else %}{% url 'teachers:view_questions' survey.pk %}
                  {% endif %}
                 ">View {{ question_format }} Questions</a>
             </li>

@@ -17,7 +17,7 @@
         <h3 class="display-3 row justify-content-center">
             My Classes
         </h3>
-        <a href="{% url 'add_class' %}" class="btn btn-blue">
+        <a href="{% url 'teachers:add_class' %}" class="btn btn-blue">
             <span class="fa fa-plus"></span> Class
         </a>
     </div>
@@ -42,7 +42,7 @@
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-10">
-                                        <a href="{% url 'view_classroom_info' class.id %}" >{{ class.name }}</a>
+                                        <a href="{% url 'teachers:view_classroom_info' class.id %}" >{{ class.name }}</a>
                                     </div>
                                     <div class="col-2 d-none d-md-block" style="text-align: center">
                                         {{ class.students.count }}

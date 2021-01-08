@@ -11,13 +11,13 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href=
-                "{% if question_format == "Recurring" %}{% url 'view_recurring_questions' survey.classroom.pk %}
-                 {% else %}{% url 'view_questions' survey.pk %}
+                "{% if question_format == "Recurring" %}{% url 'teachers:view_recurring_questions' survey.classroom.pk %}
+                 {% else %}{% url 'teachers:view_questions' survey.pk %}
                  {% endif %}
                 ">View {{ question_format }} Questions</a>
             </li>
             {% if action == "Add" %}
-            <li class="breadcrumb-item"><a href="{% url 'choose_question_type' survey.pk %}">Choose Question Type</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'teachers:choose_question_type' survey.pk %}">Choose Question Type</a></li>
             {% endif %}
             <li class="breadcrumb-item active" aria-current="page">{{ action }} Short Answer Question</li>
         </ol>

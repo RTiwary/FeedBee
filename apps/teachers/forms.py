@@ -154,22 +154,3 @@ class CheckboxQuestionForm(ModelForm):
             'option_d': 'Option D',
             'option_e': 'Option E',
         }
-
-
-'''
-An array storing the mapping between a question type's 
-database name and the name used on the user interface
-'''
-COMMENT_TYPE_CHOICES = [('Feature Suggestion', 'Feature Suggestion'), ('Small Bug', 'Report Small Bug'),
-                        ('Large Bug', 'Report Large Bug'), ('Other', 'Other')]
-
-'''
-Form for suggesting a new feature
-'''
-
-
-class SuggestFeatureForm(forms.Form):
-    comment_type_choice = forms.ChoiceField(label="Category", choices=COMMENT_TYPE_CHOICES,
-                                            widget=forms.RadioSelect(attrs={'required': "True"}))
-    comment = forms.CharField(label='Comment', max_length=500,
-                              widget=forms.Textarea(attrs={'placeholder': 'Add any suggestions or other feedback'}))

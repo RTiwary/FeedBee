@@ -30,7 +30,7 @@ def register(request):
                 return redirect(reverse("join_class"))
             else:
                 Teacher.objects.create(user=user)
-                return redirect(reverse("add_class"))
+                return redirect("teachers:add_class")
     else:
         form = RegistrationForm()
     return render(request, "users/register.html", {"form": form})
@@ -48,7 +48,7 @@ def login_request(request):
             if user is not None:
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 if user.is_teacher:
-                    return redirect(reverse("dash"))
+                    return redirect("dashboard:dash")
                 else:
                     return redirect('student_dashboard')
 
@@ -70,7 +70,7 @@ def external_login_request(request):
     if user.is_student:
         return redirect('student_dashboard')
     else:
-        return redirect('dash')
+        return redirect('dashboard:dash')
 
 
 def finish_registration(request):
@@ -93,7 +93,7 @@ def finish_registration(request):
                 # create teacher profile
                 Teacher.objects.create(user=curr_user)
 
-                return redirect(reverse("add_class"))
+                return redirect("teachers:add_class")
     else:
         form = SocialAdditionalForm()
     return render(request, 'users/social_auth_signup.html', {

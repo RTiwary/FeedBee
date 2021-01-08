@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-3">
                 <br>
-                <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-blue" style="-webkit-appearance: none"><i class="fas fa-home"></i> Classroom Home</a>
+                <a href="{% url 'teachers:view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-blue" style="-webkit-appearance: none"><i class="fas fa-home"></i> Classroom Home</a>
             </div>
             <div class="col-9">
                 <h2 class="display-3" style="white-space: nowrap; overflow:auto;">View Results</h2>
@@ -29,7 +29,7 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for interval in intervals %}
-                    <a class="dropdown-item" href="{% url 'view_results' survey.id interval %}">{{ interval }}</a>
+                    <a class="dropdown-item" href="{% url 'teachers:view_results' survey.id interval %}">{{ interval }}</a>
                 {% empty %}
                     <div class="dropdown-item">No Responses</div>
                 {% endfor %}

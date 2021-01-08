@@ -1,6 +1,7 @@
 from django.urls import path, register_converter
 from apps.teachers import views
 
+app_name = "teachers"
 
 urlpatterns = [
     path('add_class/', views.add_class, name="add_class"),
@@ -24,6 +25,9 @@ urlpatterns = [
     path('<int:survey_id>/select_results_interval/', views.select_results_interval, name="select_results_interval"),
     path('<int:survey_id>/view_results/<str:interval>/', views.view_results, name="view_results"),
     path('<int:survey_id>/view_results_alt/', views.view_results_alt, name="view_results_alt"),
-    path('suggest_feature/', views.suggest_feature, name="suggest_feature"),
+    path('contact_us/', views.suggest_feature, name="suggest_feature"),
     path('logout/', views.logout_request, name="logout"),
+
+    # API Stuff
+    path('contact_us/submit/', views.submit_suggestion, name='submit_suggestion'),
 ]

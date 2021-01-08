@@ -32,6 +32,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
     <title>{% block title %}Classbop{% endblock %}</title>
+
     <!-- Favicon  -->
     <link href="{% static 'teachers/styles.css' %}" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'users/images/apple-touch-icon.png' %}">
@@ -41,6 +42,9 @@
     <link rel="mask-icon" href="{% static 'users/images/safari-pinned-tab.svg' %}" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
+
+    {% block script %}
+    {% endblock %}
 </head>
 
 <body>
@@ -49,16 +53,16 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#teacher-navbar" aria-controls="teacher-navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"><i class="fa fa-bars" id="navbar-toggle-custom"></i></span>
             </button>
-            <a class="navbar-brand" href="/teacher/view_classes">
+            <a class="navbar-brand" href="{% url 'teachers:view_classes' %}">
                 <img src="{% static 'users/images/ClassBop2-03.png' %}" width="150" alt="ClassBop">
             </a>
 
             <div class="collapse navbar-collapse" id="teacher-navbar">
                  <div class="navbar-nav ml-auto">
-                     <a class="nav-item nav-link" href="/dashboard/teacher_dashboard/"><span class="fa fa-chart-line"></span> Dashboard</a>
-                     <a class="nav-item nav-link" href="/teacher/view_classes"><span class="fa fa-graduation-cap"></span> View Classes</a>
-                     <a class="nav-item nav-link" href="/teacher/suggest_feature"><span class="fa fa-comment"></span> Contact Us</a>
-                     <a class="nav-item nav-link" href="/teacher/logout"><span class="fa fa-user-circle"></span> Logout</a>
+                     <a class="nav-item nav-link" href="{% url 'dashboard:dash' %}"><span class="fa fa-chart-line"></span> Dashboard</a>
+                     <a class="nav-item nav-link" href="{% url 'teachers:view_classes' %}"><span class="fa fa-graduation-cap"></span> View Classes</a>
+                     <a class="nav-item nav-link" href="{% url 'teachers:suggest_feature' %}"><span class="fa fa-comment"></span> Contact Us</a>
+                     <a class="nav-item nav-link" href="{% url 'teachers:logout' %}"><span class="fa fa-user-circle"></span> Logout</a>
                  </div>
             </div>
         </nav>
