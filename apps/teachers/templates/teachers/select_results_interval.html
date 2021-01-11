@@ -1,7 +1,7 @@
 {% extends "teachers/base.html" %}
 
 {% block title %}
-    View Results • Classbop
+    View Results Choose Interval • Classbop
 {% endblock %}
 
 {% block content %}
@@ -9,30 +9,37 @@
     <script src="https://kit.fontawesome.com/4674fc2949.js" crossorigin="anonymous"></script>
 
     <!-- Displays button to go to classroom home (dashboard) and the survey name -->
-    <div class="container">
+    <div class="container" style="margin-top: 20px;">
         <div class="row">
             <div class="col-3">
                 <br>
                 <a href="{% url 'view_classroom_info' survey.classroom_id %}" type="button" class="btn btn-blue" style="-webkit-appearance: none"><i class="fas fa-home"></i> Classroom Home</a>
             </div>
             <div class="col-9">
-                <h2 class="display-3" style="white-space: nowrap; overflow:auto;">View Results</h2>
+                <h2 class="display-3" style="white-space: nowrap; overflow:auto;">View Responses</h2>
             </div>
         </div>
     </div>
 
-    <div class="container" style="margin-top: 2em;">
-        <div class="dropdown show">
-            <a class="btn btn-blue dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Select Interval
-            </a>
+    <div class="container" style="margin-top: 3em;">
+        <div class="row justify-content-center textbox">
+            This page lets you view your students' individual responses. Select an interval for your survey to view
+            all the responses. Questions that have been marked as anonymous will not show student names with responses.
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                {% for interval in intervals %}
-                    <a class="dropdown-item" href="{% url 'view_results' survey.id interval %}">{{ interval }}</a>
-                {% empty %}
-                    <div class="dropdown-item">No Responses</div>
-                {% endfor %}
+            <div class="display-3 row justify-content-center mt-4 mb-3">
+                 <div class="dropdown show">
+                    <a class="btn btn-blue dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select Interval
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {% for interval in intervals %}
+                            <a class="dropdown-item" href="{% url 'view_results' survey.id interval %}">{{ interval }}</a>
+                        {% empty %}
+                            <div class="dropdown-item">No Responses</div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
