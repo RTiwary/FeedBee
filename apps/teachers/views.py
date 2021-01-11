@@ -509,7 +509,7 @@ def select_results_interval(request, survey_id):
 
         if len(answer) > 0 and answer.earliest('timestamp').timestamp.date() < earliest_date.date():
             earliest_date = answer.earliest('timestamp').timestamp
-            answers.append(answer)
+        answers.append(answer)
 
     intervals = []
     if len(answers) > 0:
