@@ -15,7 +15,7 @@
     <div class="content mt-4">
         <div class="row">
             <div class="col-4 d-none d-md-block">
-                <a href="{% url 'view_classroom_info' classroom_id %}" type="button" class="btn btn-blue" style="-webkit-appearance: none">
+                <a href="{% url 'teachers:view_classroom_info' classroom_id %}" type="button" class="btn btn-blue" style="-webkit-appearance: none">
                     <i class="fas fa-home"></i> Classroom Home
                 </a>
             </div>
@@ -60,13 +60,13 @@
                     <div class="row">
                         <div class="col-6">
                             <a href="{% if question.question_type == "Boolean" %}
-                            {% url 'add_boolean_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
+                            {% url 'teachers:add_boolean_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
                             {% elif question.question_type == "Text" %}
-                            {% url 'add_text_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
+                            {% url 'teachers:add_text_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
                             {% elif question.question_type == "MultipleChoice" %}
-                            {% url 'add_mc_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
+                            {% url 'teachers:add_mc_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
                             {% elif question.question_type == "Checkbox" %}
-                            {% url 'add_checkbox_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
+                            {% url 'teachers:add_checkbox_question' survey_id=base_survey_id anonymous=question.anonymous question_id=question.pk %}
                             {% endif %}">{{ question.question_text }}</a>
                         </div>
                         <div class="col-2 d-none d-md-block">
@@ -90,7 +90,7 @@
                         <div class="col-2">
                             <button onclick="document.getElementById('id01').style.display='block';
                             document.getElementById('id02').style.display='block';
-                            document.getElementById('delete_link').href='{% url 'delete_question' survey_id=base_survey_id question_id=question.pk type_id=question.question_type %}';"
+                            document.getElementById('delete_link').href='{% url 'teachers:delete_question' survey_id=base_survey_id question_id=question.pk type_id=question.question_type %}';"
                                     type="button" class="btn btn-red"><i class="fa fa-trash-alt"></i></button>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                 {% endfor %}
             </div>
             <div class="card-footer">
-                <a href="{% url 'choose_question_type' base_survey_id %}" class="btn btn-sm btn-coral">
+                <a href="{% url 'teachers:choose_question_type' base_survey_id %}" class="btn btn-sm btn-coral">
                     Add question
                 </a>
             </div>

@@ -149,3 +149,41 @@ form {
     padding: 30px;
     margin: 20px;
 }
+
+/* credit to CodingNepal for this styling of the options */
+.option {
+    background: #EEECFD;
+    border: 1px solid #5f4dee;
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 17px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 400px;
+}
+
+.option:hover {
+    color: #201093;
+    background: #CDC8F9;
+    border: 1px solid #8A7EF1;
+}
+
+.option-selected {
+    background: #CDC8F9;
+    border: 2px solid #8A7EF1;
+    color: #201093;
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 17px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 400px;
+}

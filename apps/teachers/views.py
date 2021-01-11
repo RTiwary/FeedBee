@@ -6,12 +6,13 @@ from django.core.mail import send_mail
 from apps.teachers.models import *
 from apps.students.models import *
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from itertools import chain
 import operator
 from datetime import datetime, timedelta
 from pytz import timezone
 from apps.dashboard.views import findInterval
+import json
 
 
 # Create your views here.
@@ -30,7 +31,7 @@ def add_class(request):
             name = form.cleaned_data["class_name"]
             teacher = request.user.teacher_profile
             created_classroom = Classroom.objects.create(name=name, teacher=teacher)
-            return redirect("view_recurring_questions", classroom_id=created_classroom.pk)
+            return redirect("teachers:view_recurring_questions", classroom_id=created_classroom.pk)
 
     else:
         form = ClassroomCreationForm()
@@ -50,7 +51,7 @@ def delete_class(request, classroom_id):
     if teacher != classroom.teacher:
         raise Http404
     classroom.delete()
-    return redirect("view_classes")
+    return redirect("teachers:view_classes")
 
 
 @login_required
@@ -75,13 +76,13 @@ def choose_question_type(request, survey_id):
             question_type_choice = form.cleaned_data["question_type_choice"]
             anonymous_in = form.cleaned_data["anonymous"]
             if question_type_choice == "Boolean":
-                return redirect("add_boolean_question", survey_id=survey_id, anonymous=anonymous_in)
+                return redirect("teachers:add_boolean_question", survey_id=survey_id, anonymous=anonymous_in)
             elif question_type_choice == "Text":
-                return redirect("add_text_question", survey_id=survey_id, anonymous=anonymous_in)
+                return redirect("teachers:add_text_question", survey_id=survey_id, anonymous=anonymous_in)
             elif question_type_choice == "MultipleChoice":
-                return redirect("add_mc_question", survey_id=survey_id, anonymous=anonymous_in)
+                return redirect("teachers:add_mc_question", survey_id=survey_id, anonymous=anonymous_in)
             elif question_type_choice == "Checkbox":
-                return redirect("add_checkbox_question", survey_id=survey_id, anonymous=anonymous_in)
+                return redirect("teachers:add_checkbox_question", survey_id=survey_id, anonymous=anonymous_in)
 
     else:
         form = QuestionTypeForm()
@@ -125,9 +126,9 @@ def add_boolean_question(request, survey_id, anonymous, question_id=-1):  # ques
             boolean_question.save()
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
-                return redirect("view_recurring_questions", classroom_id=classroom_id)
+                return redirect("teachers:view_recurring_questions", classroom_id=classroom_id)
             else:
-                return redirect("view_questions", survey_id=survey_id)
+                return redirect("teachers:view_questions", survey_id=survey_id)
         # Add null action so that it can be passed into template
         action = ""
     else:
@@ -178,9 +179,9 @@ def add_text_question(request, survey_id, anonymous, question_id=-1):
             text_question.save()
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
-                return redirect("view_recurring_questions", classroom_id=classroom_id)
+                return redirect("teachers:view_recurring_questions", classroom_id=classroom_id)
             else:
-                return redirect("view_questions", survey_id=survey_id)
+                return redirect("teachers:view_questions", survey_id=survey_id)
         # Add null action so that it can be passed into template
         action = ""
     else:
@@ -231,9 +232,9 @@ def add_mc_question(request, survey_id, anonymous, question_id=-1):
             mc_question.save()
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
-                return redirect("view_recurring_questions", classroom_id=classroom_id)
+                return redirect("teachers:view_recurring_questions", classroom_id=classroom_id)
             else:
-                return redirect("view_questions", survey_id=survey_id)
+                return redirect("teachers:view_questions", survey_id=survey_id)
         # Add null action so that it can be passed into template
         action = ""
     else:
@@ -284,9 +285,9 @@ def add_checkbox_question(request, survey_id, anonymous, question_id=-1):
             checkbox_question.save()
             classroom_id = survey.classroom.pk
             if survey.name == "Base":
-                return redirect("view_recurring_questions", classroom_id=classroom_id)
+                return redirect("teachers:view_recurring_questions", classroom_id=classroom_id)
             else:
-                return redirect("view_questions", survey_id=survey_id)
+                return redirect("teachers:view_questions", survey_id=survey_id)
         # Add null action so that it can be passed into template
         action = ""
     else:
@@ -340,10 +341,10 @@ def delete_question(request, survey_id, question_id, type_id, classroom_id=-1):
     if survey.name == "Base":
         question.update(display=False)
         classroom_id = survey.classroom.pk
-        return redirect("view_recurring_questions", classroom_id=classroom_id)
+        return redirect("teachers:view_recurring_questions", classroom_id=classroom_id)
     else:
         question.delete()
-        return redirect("view_questions", survey_id=survey_id)
+        return redirect("teachers:view_questions", survey_id=survey_id)
 
 
 @login_required
@@ -451,7 +452,7 @@ def add_survey(request, classroom_id):
                 frequency += day
             new_survey = Survey.objects.create(name=name, end_date=end_date, frequency=frequency,
                                                classroom_id=classroom_id)
-            return redirect("view_questions", survey_id=new_survey.id)
+            return redirect("teachers:view_questions", survey_id=new_survey.id)
 
     else:
         form = SurveyCreationForm()
@@ -472,7 +473,7 @@ def delete_survey(request, survey_id):
         raise Http404
 
     survey.delete()
-    return redirect("view_classroom_info", classroom_id=classroom.pk)
+    return redirect("teachers:view_classroom_info", classroom_id=classroom.pk)
 
 
 @login_required
@@ -696,22 +697,36 @@ def view_classroom_info(request, classroom_id):
 
 @login_required
 @user_passes_test(is_teacher)
-def suggest_feature(request):
-    if request.method == 'POST':
-        form = SuggestFeatureForm(request.POST)
-        if form.is_valid():
+def suggest_feature(request, toast_val=0):
+    return render(request, "teachers/suggest_feature.html", {'toast': toast_val})
+
+
+'''API for submitting a feature suggestion'''
+@login_required
+@user_passes_test(is_teacher)
+def submit_suggestion(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    try:
+        data = json.loads(request.body)
+        category = data.get("category", "")
+        comments = data.get("comment", "")
+
+        if category != '':
             # Send suggestion to inbox
             send_mail(
-                'FeedBee: {}'.format(form.cleaned_data['comment_type_choice']),
-                "A user wrote the following:\n\n" + form.cleaned_data['comment'],
+                'FeedBee: {}'.format(category),
+                "A user wrote the following:\n\n" + comments,
                 None,
                 ['classbopteam@gmail.com'],
                 fail_silently=False,
             )
-            return render(request, "teachers/suggest_feature.html", {'form': SuggestFeatureForm(), 'toast': "1"})
 
-    form = SuggestFeatureForm()
-    return render(request, "teachers/suggest_feature.html", {'form': form, 'toast': "-1"})
+    except Exception as e:
+        print(e)
+
+    return JsonResponse({"message": "Feedback submitted successfully."}, status=201)
 
 
 @login_required

@@ -26,9 +26,9 @@
 
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         {% for class in class_list %}
-                            <a class="dropdown-item" href="{% url 'dash_select' class.id %}">{{ class.name }}</a>
+                            <a class="dropdown-item" href="{% url 'dashboard:dash_select' class.id %}">{{ class.name }}</a>
                         {% empty %}
-                            <a class="dropdown-item" href="/teacher/add_class"><span class="fa fa-plus"></span> Class</a>
+                            <a class="dropdown-item" href="{% url 'teachers:add_class' %}"><span class="fa fa-plus"></span> Class</a>
                         {% endfor %}
                     </div>
                 </div>

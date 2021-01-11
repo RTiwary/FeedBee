@@ -2,6 +2,8 @@ from django.urls import path, register_converter
 from apps.dashboard import views
 from django.views.decorators.cache import cache_page
 
+app_name = 'dashboard'
+
 urlpatterns = [
     path('teacher_dashboard/', views.dash, name="dash"),
     path('teacher_dashboard/<int:classroom_id>/', views.dash_select, name="dash_select"),

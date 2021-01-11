@@ -6,14 +6,9 @@
 {% endblock %}
 
 {% block content %}
-    <style>
-        .asteriskField {
-            display: none;
-        }
-    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
     <script>
-        {% if toast == "1" %}
+        {% if toast == 1 %}
             $(document).ready(function(){
                 $('.toast').toast({ delay: 2000 });
                 $('.toast').toast('show');
@@ -24,6 +19,10 @@
                 $('.toast').hide();
             });
         {% endif %}
+
+        function displayToast() {
+            window.location.href = "{% url 'teachers:suggest_feature' 1 %}";
+        }
     </script>
 
     <div class="container">
@@ -34,11 +33,23 @@
     </div>
 
     {% load crispy_forms_tags %}
-    <div class="row justify-content-center" style="margin-bottom: 3em; margin-top: 1em;">
+    <div class="row justify-content-center" style="margin-bottom: 3em; margin-top: 0.5em;">
         <form method="POST" class="form-group col-sm-10">
             {% csrf_token %}
-            {{ form|crispy }}
-            <button type="submit" class="btn btn-blue">Submit</button>
+            <div class="form-group">
+                <label>Select a Category</label>
+                <div class="categories" style="margin-top: 5px;">
+                    <div class="option choice" data-category="a">Feature Suggestion</div>
+                    <div class="option choice" data-category="b">Report Small Bug</div>
+                    <div class="option choice" data-category="c">Report Large Bug</div>
+                    <div class="option choice" data-category="d">Other</div>
+                </div>
+            </div>
+            <div style="margin-top: 1em;">
+                <label>Comment</label>
+                <textarea name="comments" id="comments-form-input" rows="6" placeholder="Add any suggestions or other feedback" class="form-control" required></textarea>
+            </div>
+            <input type="submit" class="btn btn-blue submit-btn mt-3" value="Submit">
         </form>
     </div>
 
@@ -64,3 +75,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 {% endblock content %}
+
+{% block script %}
+    <script src="{% static 'teachers/suggest_feature.js' %}"></script>
+{% endblock %}

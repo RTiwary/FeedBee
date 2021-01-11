@@ -23,12 +23,12 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for class in class_list %}
                     {% if class.id == classroom.id %}
-                        <a class="dropdown-item disabled" href="{% url 'dash_select' class.id %}">{{ class.name }}</a>
+                        <a class="dropdown-item disabled" href="{% url 'dashboard:dash_select' class.id %}">{{ class.name }}</a>
                     {% else %}
-                        <a class="dropdown-item" href="{% url 'dash_select' class.id %}">{{ class.name }}</a>
+                        <a class="dropdown-item" href="{% url 'dashboard:dash_select' class.id %}">{{ class.name }}</a>
                     {% endif %}
                 {% empty %}
-                    <a class="dropdown-item" href="/teacher/add_class"><span class="fa fa-line-add"></span> Class</a>
+                    <a class="dropdown-item" href="{% url 'teachers:add_class' %}"><span class="fa fa-line-add"></span> Class</a>
                 {% endfor %}
             </div>
         </div>
@@ -46,7 +46,7 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for survey in survey_list %}
                     {% if survey.id == curr_survey.id %}
-                        <a class="dropdown-item disabled" href="{% url 'teacher_dashboard' classroom.id survey.id %}">
+                        <a class="dropdown-item disabled" href="{% url 'dashboard:teacher_dashboard' classroom.id survey.id %}">
                             {% if survey.name == "Base" %}
                                 Recurring
                             {% else %}
@@ -54,7 +54,7 @@
                             {% endif %}
                         </a>
                     {% else %}
-                        <a class="dropdown-item" href="{% url 'teacher_dashboard' classroom.id survey.id %}">
+                        <a class="dropdown-item" href="{% url 'dashboard:teacher_dashboard' classroom.id survey.id %}">
                             {% if survey.name == "Base" %}
                                 Recurring
                             {% else %}
@@ -63,7 +63,7 @@
                         </a>
                     {% endif %}
                 {% empty %}
-                    <a class="dropdown-item" href="{% url 'add_survey' classroom.id %}"><span class="fa fa-plus"></span> Survey</a>
+                    <a class="dropdown-item" href="{% url 'teachers:add_survey' classroom.id %}"><span class="fa fa-plus"></span> Survey</a>
                 {% endfor %}
             </div>
         </div>
