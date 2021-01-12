@@ -23,5 +23,5 @@ urlpatterns = [
     path('student/', include('apps.students.urls')),
     path('dashboard/', include('apps.dashboard.urls')),
     path('admin/', admin.site.urls),
-    path('.well-known/microsoft-identity-association.json/', views.microsoftAuth)
+    path('.well-known/microsoft-identity-association.json', views.microsoftAuth)
 ]

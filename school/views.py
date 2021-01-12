@@ -1,13 +1,14 @@
-from django.http import JsonResponse
+from django.http import HttpResponse
 import os
+import json
 
 def microsoftAuth(request):
-    return JsonResponse(
-        {
-            "associatedApplications": [
-                {
-                    "applicationId": os.environ['applicationID']
-                }
-            ]
-        }
-    )
+    data = {
+        "associatedApplications": [
+            {
+                "applicationId": os.environ['applicationID']
+            }
+        ]
+    }
+    dump = json.dumps(data)
+    return HttpResponse(dump, content_type='application/json')
