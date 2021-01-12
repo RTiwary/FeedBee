@@ -119,9 +119,10 @@
     <div id="particles-js" style="position:fixed; height: 100%; width: 100%; top: 0; z-index:-10;"></div>
     <div class="container">
         <div class="form-content" style="margin-top: 3em; margin-bottom: 3em;">
-            <h1 style="font-family: 'ABeeZee', sans-serif; margin-top:0.5em; margin-bottom: 0.5em; text-align: center">
-                Register Here
-            </h1>
+            <h2 style="font-family: 'ABeeZee', sans-serif; margin-top:0.5em; margin-bottom: 0.5em; text-align: center">
+                Register with Google/Microsoft
+            </h2>
+
             <form method="POST" class="form-group">
                 {% csrf_token %}
                 <div id="third-party-login">
@@ -135,6 +136,9 @@
                 <div style="margin-top: 1.5em; margin-bottom: 1.5em;">
                     <hr class="hr-text" data-content="or">
                 </div>
+                <h2 style="font-family: 'ABeeZee', sans-serif; margin-bottom: 0.5em; text-align: center">
+                    Create a new account
+                </h2>
                 <div class="form-row">
                     <div class="form-group col-md-4 mb-0">
                         {{ form.student_teacher|as_crispy_field }}
