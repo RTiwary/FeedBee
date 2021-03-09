@@ -2,7 +2,7 @@ import datetime
 from copy import deepcopy
 from apps.teachers.views import *
 from collections import OrderedDict
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from datetime import timedelta
 
@@ -137,6 +137,110 @@ def teacher_dashboard(request, classroom_id, survey_id):
         'survey_list': survey_list
     })
 
+
+@login_required
+@user_passes_test(is_teacher)
+def choose_interval(request, classroom_id, survey_id):
+    classroom = get_object_or_404(Classroom, pk=classroom_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
+
+    # makes sure user is the teacher that created the survey before allowing them to see anything
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
+
+    # Queries for all of the questions in the survey and sort them based on rank
+    boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
+    text_questions = TextQuestion.objects.filter(survey=survey_id)
+    mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
+    checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
+    question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
+
+    # For each survey question, query the answers to each question as a list of values
+    answers = []
+    todays_date = datetime.now(timezone(request.user.timezone))
+    earliest_date = todays_date
+    for question in question_list:
+        if question.question_type == "Boolean":
+            answer = BooleanAnswer.objects.filter(question=question)
+        elif question.question_type == "Text":
+            answer = TextAnswer.objects.filter(question=question)
+        elif question.question_type == "MultipleChoice":
+            answer = MultipleChoiceAnswer.objects.filter(question=question)
+        elif question.question_type == "Checkbox":
+            answer = CheckboxAnswer.objects.filter(question=question)
+
+        if len(answer) > 0 and answer.earliest('timestamp').timestamp.date() < earliest_date.date():
+            earliest_date = answer.earliest('timestamp').timestamp
+        answers.append(answer)
+
+    intervals = []
+    if len(answers) > 0:
+        if survey.frequency:
+            freq = survey.frequency
+        else:
+            freq = "7"
+        current_date = datetime.strptime(findInterval(freq, earliest_date), '%m/%d/%y')
+        freq_index = freq.find(str(current_date.isoweekday()))
+        while current_date.date() <= todays_date.date():
+            if survey.name != "Base" and current_date.date() > survey.end_date:
+                break
+            intervals.append(current_date.strftime('%m-%d-%y') + ' to ')
+            freq_index = (freq_index + 1) % len(freq)
+            if freq_index != 0:
+                difference = int(freq[freq_index]) - int(freq[freq_index - 1])
+            else:
+                difference = 7 - (int(freq[-1]) - int(freq[0]))
+            current_date = current_date + timedelta(days=difference)
+            intervals[-1] = intervals[-1] + current_date.strftime('%m-%d-%y')
+
+    return render(request, "dashboard/choose_interval.html", {"intervals": intervals, "classroom": classroom, "survey": survey})
+
+
+# gets the info for teacher to view the results/answers of a survey, returns a dictionary with each question as a key
+# and a list of answers as a value
+@login_required
+@user_passes_test(is_teacher)
+def view_individual_responses(request, classroom_id, survey_id, interval):
+    classroom = get_object_or_404(Classroom, pk=classroom_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
+    start_date = datetime.strptime(interval[:interval.find(' to ')], '%m-%d-%y')
+    end_date = datetime.strptime(interval[interval.find(' to ') + 4:], '%m-%d-%y')
+
+    # makes sure user is the teacher that created the survey before allowing them to see anything
+    teacher = request.user.teacher_profile
+    if teacher != survey.classroom.teacher:
+        raise Http404
+
+    # Queries for all of the questions in the survey and sort them based on rank
+    boolean_questions = BooleanQuestion.objects.filter(survey=survey_id)
+    text_questions = TextQuestion.objects.filter(survey=survey_id)
+    mc_questions = MultipleChoiceQuestion.objects.filter(survey=survey_id)
+    checkbox_questions = CheckboxQuestion.objects.filter(survey=survey_id)
+    question_list = list(chain(boolean_questions, text_questions, mc_questions, checkbox_questions))
+    question_list = sorted(question_list, key=operator.attrgetter('question_rank'))
+
+    # For each survey question, query the answers to each question as a list of values
+    answers = []
+    for question in question_list:
+        if question.question_type == "Boolean":
+            answer = BooleanAnswer.objects.filter(question=question, timestamp__gte=start_date, timestamp__lt=end_date)
+        elif question.question_type == "Text":
+            answer = TextAnswer.objects.filter(question=question, timestamp__gte=start_date, timestamp__lt=end_date)
+        elif question.question_type == "MultipleChoice":
+            answer = MultipleChoiceAnswer.objects.filter(question=question, timestamp__gte=start_date,
+                                                         timestamp__lt=end_date)
+        elif question.question_type == "Checkbox":
+            answer = CheckboxAnswer.objects.filter(question=question, timestamp__gte=start_date,
+                                                   timestamp__lt=end_date)
+
+        answers.append(answer)
+
+    # returns a dictionary with each question as the key and a corresponding list of answers as the values
+    q_and_a = dict(zip(question_list, answers))
+
+    return render(request, "dashboard/view_individual_responses.html", {"survey": survey, "classroom": classroom,
+                                                                        'q_and_a': q_and_a})
 
 # Returns data needed to display boolean graph
 def display_unit_boolean_graph(frequency, boolean_answers):
