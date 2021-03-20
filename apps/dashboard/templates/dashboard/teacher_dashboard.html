@@ -10,7 +10,7 @@
     <div class="container">
         <br>
         <h3 class="display-3 row justify-content-center">
-            Dashboard
+            Survey Results
         </h3>
     </div>
 
@@ -67,6 +67,10 @@
                 {% endfor %}
             </div>
         </div>
+
+        <a href="{% url 'dashboard:choose_interval' classroom.id curr_survey.id %}" type="button" class="btn btn-blue col-md-3 offset-md-6" style="-webkit-appearance: none; ">
+            View Individual Responses
+        </a>
     </div>
 
     <div class="container">

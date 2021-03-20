@@ -79,6 +79,12 @@
         {% endfor %}
         <p class="lead">Ending on {{ survey.end_date }}</p>
 
+        <p align="right">
+            <a href="{% url 'teachers:choose_question_type' survey.pk %}" class="btn btn-sm btn-coral">
+                Add question
+            </a>
+        </p>
+
         <! -- Questions Table -->
         <div class="card">
             <div class="card-header">
@@ -139,12 +145,6 @@
                     </div>
                 </div>
                 {% endfor %}
-            </div>
-
-            <div class="card-footer">
-                <a href="{% url 'teachers:choose_question_type' survey.pk %}" class="btn btn-sm btn-coral">
-                    Add question
-                </a>
             </div>
         </div>
     </div>

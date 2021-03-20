@@ -119,13 +119,13 @@
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-9">
-                                <a href="{% url 'teachers:view_questions' survey.pk %}">
+{#                                <a href="{% url 'teachers:view_questions' survey.pk %}">#}
                                     {{ survey.name }}
-                                </a>
+{#                                </a>#}
                             </div>
                             <div class="col-3 text-right">
-                                <a href="{% url 'teachers:select_results_interval' survey.pk %}" class="btn btn-coral">
-                                    View Responses
+                                <a href="{% url 'teachers:view_questions' survey.pk %}" class="btn btn-coral">
+                                    Edit Survey
                                 </a>
                             </div>
                         </div>
