@@ -1,10 +1,27 @@
 {% extends "teachers/base.html" %}
-
+{% load static %}
 {% block title %}
     {{ survey.name }} Questions
 {% endblock %}
 
 {% block content %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="{% static 'users/js/jquery.fittext.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            jQuery("#survey_name").fitText();
+            resize_to_fit();
+        });
+
+        function resize_to_fit() {
+            var fontsize = $('#survey_name').css('font-size');
+            $('#survey_name').css('fontSize', parseFloat(fontsize) - 1);
+
+            if($('#survey_name').height() > 90){
+                resize_to_fit();
+            }
+        }
+    </script>
     <style>
         .scrollable {
             height: 320px;
@@ -21,7 +38,7 @@
                 </a>
             </div>
             <div class="col-md-4 col-lg-5 col-12 text-center" >
-                <h1 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ survey.name }}</h1>
+                <h1 id="survey_name" style="word-break: break-word;">{{ survey.name }}</h1>
             </div>
             <div class="col-md-2 col-lg-2 col-6">
                 <button onclick="document.getElementById('id03').style.display='block';

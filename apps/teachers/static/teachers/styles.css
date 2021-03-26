@@ -186,3 +186,21 @@ form {
     justify-content: space-between;
     max-width: 400px;
 }
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (min-width: 1201px) {
+  #classroomName {
+      font-size: 4vw;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  #classroomName {
+      font-size: 1vw;
+  }
+}

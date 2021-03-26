@@ -1,10 +1,27 @@
 {% extends "teachers/base.html" %}
-
+{% load static %}
 {% block title %}
     {{ classroom.name }} • Classbop
 {% endblock %}
 
 {% block content %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="{% static 'users/js/jquery.fittext.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            jQuery("#classroomName").fitText();
+            resize_to_fit();
+        });
+
+        function resize_to_fit() {
+            var fontsize = $('#classroomName').css('font-size');
+            $('#classroomName').css('fontSize', parseFloat(fontsize) - 1);
+
+            if($('#classroomName').height() > 90){
+                resize_to_fit();
+            }
+        }
+    </script>
     <style>
         .scrollable {
             max-height: 340px;
@@ -14,18 +31,20 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-9">
-                <h1 class="display-3" style="white-space: nowrap; overflow:auto;">{{ classroom.name }}</h1>
+            <div class="col-9" style="height: 20%;">
+                <h1 id="classroomName" class="display-3" style="word-break: break-word;">{{ classroom.name }}</h1>
             </div>
-            <div class="col-3">
-                <br>
-                <button onclick="document.getElementById('id01').style.display='block';
-                document.getElementById('id02').style.display='block';" class="btn btn-red" style="margin-left: 15px; margin-bottom: 15px; float: right;">
-                    <i class="fa fa-trash-alt"></i> Delete</button>
-                <button onclick="document.getElementById('id03').style.display='block';
-                document.getElementById('id04').style.display='block';" class="btn btn-blue" style="position: relative; float: right;">
-                    <i class="far fa-edit"></i> Edit
-                </button>
+            <div class="col-3 flex-center">
+                <div>
+                    <button onclick="document.getElementById('id03').style.display='block';
+                    document.getElementById('id04').style.display='block';" class="btn btn-blue" style="margin: 10px;">
+                        <i class="far fa-edit"></i> Edit
+                    </button>
+                    <button onclick="document.getElementById('id01').style.display='block';
+                    document.getElementById('id02').style.display='block';" class="btn btn-red" style="">
+                        <i class="fa fa-trash-alt"></i> Delete
+                    </button>
+                </div>
             </div>
         </div>
     </div>

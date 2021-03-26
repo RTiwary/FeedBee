@@ -1,10 +1,28 @@
 {% extends "students/base.html" %}
-
+{% load static %}
 {% block title %}
     {{ classroom.name }} Surveys • Classbop
 {% endblock %}
 
 {% block content %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="{% static 'users/js/jquery.fittext.js' %}">
+    </script>
+    <script>
+        $(document).ready(function () {
+            {#jQuery("#classroomName").fitText();#}
+            resize_to_fit();
+        });
+
+        function resize_to_fit() {
+            var fontsize = $('#classroomName').css('font-size');
+            $('#classroomName').css('fontSize', parseFloat(fontsize) - 1);
+
+            if($('#classroomName').height() > 100){
+                resize_to_fit();
+            }
+        }
+    </script>
     <style>
         .scrollable {
             max-height: 320px;
@@ -12,19 +30,24 @@
     </style>
 
     <!-- Classroom name and leave class button -->
-    <div class="container">
-        <br>
-        <h2 class="display-3 row justify-content-center">{{ classroom.name }}</h2>
-        <a href="{% url 'leave_class' classroom.pk %}" class="btn btn-blue">
-            Leave Class
-        </a>
+    <div class="container" style="padding: 30px;">
+        <div class="flex-center">
+            <h1 id="classroomName" class="display-3" style="word-break: break-word;">{{ classroom.name }}</h1>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <a href="{% url 'leave_class' classroom.pk %}" class="btn btn-blue" style="margin-top: 20%">
+                    Leave Class
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- Displays all of the student's surveys (completed and not completed), not completed is in the list 'surveys' -->
-    <div class="container">
+    <div class="container" style="padding: 30px;">
         <div class="row ">
             <div class="col-sm-12">
-                <div class="card" style="margin-top: 2em">
+                <div class="card">
                     <div class="card-header">
                         <div class="row">
                             <div class="col-md-5 col-6">
